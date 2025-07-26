@@ -1,0 +1,92 @@
+.rug_visual_container{
+  height: 100vh;
+  width: 100%;
+  background-color: #660002;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.rug_visual_img{
+  width: 100%;
+  height: 100%;
+  /* margin: 0 auto; */
+  display: flex;
+  justify-content:center;
+  align-items: center;
+  position: relative;
+  
+}
+.rug_visual_img img{
+  width: 92%;
+  height: 85%;
+  border-radius: 20px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.rug_visual_overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.6) 20%, rgba(0, 0, 0, 0) 70%);
+  z-index: 0;
+  pointer-events: none;
+}
+.rug_visual_text {
+  /* background-color: orange; */
+  position: absolute;
+  top: 40%;
+  left: 12%;
+  transform: translateY(-50%);
+  color: white; /* or any contrasting color */
+  max-width: 30%;
+  z-index: 2;
+  h1{
+    font-size: 4.2rem;
+    margin-bottom: 50px;
+  }
+  p{
+    font-size: 1.1rem;
+    line-height: 1.3;
+    margin-left: 10px;
+  }
+  button{
+    margin-top: 50px;
+    margin-left: 10px;
+    color: white;
+    border: 1px solid white;
+    padding: 7px 25px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 1rem;
+    animation: hover 1s ;
+  }
+ 
+  button:hover{
+    background-color:  #660002;
+    border: 1px solid  #660002;
+    transition: 0.2s;
+  }
+
+}
+.larr {
+  z-index: 2;
+  margin: 0;
+  /* margin-left: 20px; */
+  /* background-color: palegoldenrod; */
+}
+.larr svg,.rarr svg{
+  height: 100px;
+  width: 100px;
+  fill: white;
+  z-index: 3;
+  /* background-color: orange; */
+
+}
+.larr,.rarr:hover{
+  cursor: pointer;
+  transition: 0.2s;
+}
+

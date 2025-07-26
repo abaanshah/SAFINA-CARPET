@@ -1,0 +1,62 @@
+.shopmaterial_container {
+  width: 90%;
+  margin: 0 auto;
+  overflow: hidden;
+  /* background-color: #f0f0f0; */
+  padding: 20px 0;
+  box-sizing: border-box;
+}
+.shopmaterial_heading{
+  text-align: center;
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+.shopmaterial_slider {
+  display: flex;
+  gap: 16px;
+  animation: scroll-left 20s linear infinite;
+}
+
+.slider_card {
+  min-width: 350px;
+  height: 400px;
+  background-color: rgb(228, 27, 27);
+  /* border-radius: 12px; */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.slider_card button{
+  display: flex; 
+  align-items: center;
+  justify-content: center; /* or space-between */
+  gap: 8px;
+  white-space: nowrap;
+  border: 1px solid white;
+  border-radius: 20px ;
+  color: white;
+  padding: 10px 20px;
+  position: absolute;
+  bottom: 30px;
+ 
+  img{
+    width: 10px;
+    height: 10px;
+    margin-left: 10px;
+  }
+}
+/* Animation keyframes */
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
