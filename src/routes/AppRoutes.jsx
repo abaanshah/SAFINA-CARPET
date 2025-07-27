@@ -5,7 +5,10 @@ import MainLayout from "../Layouts/MainLayout";
 import Manufacturing from "../pages/Manufacturing/Manufacturing";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import { Guide } from "../pages/Guide/Guide";
-
+import { Purchase } from "../pages/Purchase/Purchase";
+import { Services } from "../pages/Services/Services";
+import { CheckOut } from "../pages/Checkout/Checkout";
+import Blogs from "../pages/Blogs/Blogs";
 
 function AppRoutes() {
   return (
@@ -17,6 +20,12 @@ function AppRoutes() {
           <Route path="/manufacturing" element={<Manufacturing />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/guide" element={<Guide />} />
+          <Route path="/purchase" element={<Purchase />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/checkout" element={<CheckOut />} />
+          <Route path="/blogs" element={<Blogs />} />
+        
+    
           {/* Add more routes as needed */}
         </Routes>
       </MainLayout>
