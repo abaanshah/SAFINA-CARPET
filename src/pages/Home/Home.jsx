@@ -5,6 +5,10 @@ import RugVisual from '../../components/RugVisual/RugVisual';
 import ShopColor from '../../components/ShopColor/ShopColor';
 import ShopSize from '../../components/ShopSize/ShopSize';
 import ShopMaterial from '../../components/ShopMaterial/ShopMaterial';
+import ShopRoom from '../../components/ShopRoom/ShopRoom';
+import ShopDesign from '../../components/ShopDesign/ShopDesign';
+import Story from '../../components/Story/Story';
+import Faq from '../Faqs/Faqs';
 const Home = () => {
   return (
     <div className='home'>
@@ -13,6 +17,12 @@ const Home = () => {
      <ShopColor/>
      <ShopSize/>
      <ShopMaterial/>
+     <ShopRoom/>
+     <ShopDesign/>
+     <Story/>
+     <Faq/>
+
+
     </div>
   )
 }

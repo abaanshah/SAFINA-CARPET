@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Plus, Minus, HelpCircle, ChevronDown } from 'lucide-react';
 
-export default function Faq() {
+export default function AnimatedFAQSection() {
   const [openItems, setOpenItems] = useState(new Set());
   const [hoveredItem, setHoveredItem] = useState(null);
 
@@ -67,7 +67,7 @@ export default function Faq() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-6 mt-10 min-h-screen">
+    <div className="max-w-4xl mx-auto p-6 bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
       {/* Header Section */}
       <div className="text-center mb-12">
         <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-6 shadow-lg">

@@ -18,7 +18,7 @@ const Navbar = () => {
         <div className="search"><a href=""><FiSearch opacity={0.8} color={col}size={n}/></a></div>
         <div className="like"><a href=""><FaRegHeart opacity={0.8} color={col} size={n}/></a></div>
         <div className="bell"><a href=""><FaRegBell opacity={0.8} color={col} size={n}/></a></div>
-        <div className="account"><a href=""><FaRegUser opacity={0.8} color={col} size={n}/></a></div>
+        <div className="account"><a href="http://localhost:8080/"><FaRegUser opacity={0.8} color={col} size={n}/></a></div>
         <div className="cart"><a href=""><FiShoppingCart opacity={0.8} color={col} size={n}/></a></div>
       </div>
     </nav>
