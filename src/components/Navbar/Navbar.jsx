@@ -8,6 +8,7 @@ const n=25;
 const col='#ddd';
 const Navbar = () => {
    return (
+    <header>
     <nav>
       <div className="nav-left">
         <div className="gps"><a href=""><FiMapPin opacity={0.8} color={col} size={n}/>  </a></div>
@@ -22,7 +23,19 @@ const Navbar = () => {
         <div className="cart"><a href=""><FiShoppingCart opacity={0.8} color={col} size={n}/></a></div>
       </div>
     </nav>
+    <div className="links">
+      <a href="/about">ABOUT US</a>
+      <a href="/dashboard">DASHBOARD</a>
+      <a href="/services">SERVICES</a>
+      <a href="/guide">GUIDE</a>
+      <a href="/manufacturing">MANUFACTURING</a>
+      <a href="/purchase">PURCHASE</a>
+      <a href="/checkout">CHECKOUT</a>
+      <a href="/blogs">BLOGS</a>
+      <a href="/faqs">FAQS</a>
+    </div>
+    </header>
   )
 }
 
-export default Navbar
+export default Navbar;

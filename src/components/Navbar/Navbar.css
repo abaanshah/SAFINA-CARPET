@@ -1,4 +1,4 @@
-nav{
+nav {
   width: 100%;
   height: 100px;
   background-color: #860A0C;
@@ -10,34 +10,137 @@ nav{
   color: #ddd;
   z-index: 100;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
-
 }
-.nav-left{
+
+.nav-left {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 35px;
   width: 300px;
-  /* background-color: #057fb8; */
-  .appointment a{
-    display: flex;
-    /* background-color: palegoldenrod; */
-    gap: 5px;
-    justify-content: center;
-    align-items: center;
-  }
 }
-.nav-logo{
+.nav-left .appointment a {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-logo {
   height: 90%;
   width: 150px;
-  img{
-    height: 100%;
-    width: 100%;
-  }
 }
-.nav-right{
+.nav-logo img {
+  height: 100%;
+  width: 100%;
+}
+
+.nav-right {
   display: flex;
   gap: 40px;
   align-items: center;
-  /* background-color: #fff; */
 }
+
+/* Enhanced Links Section */
+.links {
+  position: absolute;
+  width: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  overflow: hidden;
+  flex-wrap: wrap;
+  z-index: 5;
+}
+
+/* Animated background glow */
+.links::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: transparent;
+  animation: rotate 20s linear infinite;
+  opacity: 0.3;
+  z-index: 0;
+  pointer-events: none;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Enhanced link styling */
+.links a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.8rem 1.4rem;
+  text-decoration: none;
+  color: rgb(234, 231, 231);
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.8px;
+  border-radius: 15px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  z-index: 1;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideInUp 0.8s ease forwards;
+  cursor: pointer; /* ✅ Fixed pointer issue */
+}
+
+/* Staggered animation delays */
+.links a:nth-child(1) { animation-delay: 0.1s; }
+.links a:nth-child(2) { animation-delay: 0.2s; }
+.links a:nth-child(3) { animation-delay: 0.3s; }
+.links a:nth-child(4) { animation-delay: 0.4s; }
+.links a:nth-child(5) { animation-delay: 0.5s; }
+.links a:nth-child(6) { animation-delay: 0.6s; }
+.links a:nth-child(7) { animation-delay: 0.7s; }
+.links a:nth-child(8) { animation-delay: 0.8s; }
+.links a:nth-child(9) { animation-delay: 0.9s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.links a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: all 0.4s ease;
+  border-radius: 15px;
+  z-index: -1;
+}
+
+.links a::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 1px solid transparent;
+  border-radius: 15px;
+  background-clip: padding-box;
+  opacity: 0;
+  transition: all 0.4s ease;
+  z-index: -1;
+}
+
