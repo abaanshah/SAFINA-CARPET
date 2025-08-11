@@ -3,13 +3,14 @@ import craftsmanship from "../../assets/craftsmanship.png";
 import funding from "../../assets/funding.png";
 import services from "../../assets/services.png";
 import warranty from "../../assets/warranty.png";
+import "@fontsource/caveat";
 
 const MeetManuf = () => {
   return (
-    <div className="bg-[#FFF5F5] py-16 px-8">
+    <div className="bg-[#FFF5F5] py-16 px-8 mt-20">
       {/* Header */}
-      <div className="text-center mb-12">
-        <h2 className="text-3xl md:text-4xl font-bold text-red-600 italic">
+      <div className="text-center mb-12 text-5xl">
+        <h2 className="caveat-heading text-[#9f1d20] ">
           "MEET MANUFACTURERS DIRECTLY"
         </h2>
       </div>

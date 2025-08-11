@@ -12,11 +12,11 @@
 }
 .ShopColorHeading{
   position: absolute;
-  top: 60px;
-  font-size: 11vw;
+  top: 120px;
+  font-size: 11.5vw;
   color: rgb(182, 182, 183);
   letter-spacing: 5px;
-  width: 98vw;
+  width: 100vw;
   display: flex;
   align-items: center;
   justify-content: center;

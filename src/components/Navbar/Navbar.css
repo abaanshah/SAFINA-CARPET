@@ -12,6 +12,7 @@ header {
   background-color: #860a0c; 
   /* transition: transform 0.5s ease; */
   transition: transform 0.4s ease, opacity 0.4s ease;
+
 }
 header.hide {
   transform: translateY(-100%);
@@ -168,9 +169,9 @@ header.show {
 }
 /* Hide links by default on mobile */
 .links a {
-  color: #eae7e7;
-  font-weight: 600;
-  font-size: 0.9rem;
+  color: #f8ebeb;
+  font-weight: 300;
+  font-size: .95rem;
   text-decoration: none;
   padding: 0.5rem 1rem;
   border-radius: 12px;

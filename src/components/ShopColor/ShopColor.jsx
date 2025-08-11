@@ -10,11 +10,14 @@ import halfwhiteWool from '../../assets/Wools/halfwhite.png'
 import lightmaroonWool from '../../assets/Wools/lightmaroon.png'
 import maroonWool from '../../assets/Wools/maroon.png'
 import rgbWool from '../../assets/Wools/rgb.png'
+import "@fontsource/crimson-text";
+// import "@fontsource/crimson-text/700.css"; // If you need bold
+
 const ShopColor = () => {
   return (
     <div className='ShopColor_container'>
-        <h1 className='ShopColorHeading'>SAFINA CARPETS</h1>
-      
+      <h2 className="w-full text-center text-3xl font-bold">SHOP BY COLOR</h2>
+      <h1 className='ShopColorHeading crimson-heading'>SAFINA CARPETS</h1>      
       <div className="woolcol col1"><img src={grayWool} alt="" /></div>
       <div className="woolcol col1"><img src={blueWool} alt="" /></div>
       <div className="woolcol col1"><img src={brownWool} alt="" /></div>

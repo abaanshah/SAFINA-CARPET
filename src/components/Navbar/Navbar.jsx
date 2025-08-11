@@ -12,6 +12,7 @@ import {
 } from "react-icons/hi2";
 import "./Navbar.css";
 import logo from "../../assets/logo.jpg";
+import "@fontsource/jost/300.css";
 
 
 const Navbar = () => {
@@ -102,7 +103,7 @@ const Navbar = () => {
         </button>
       </nav>
 
-      <div className="links large-screen">
+      <div className="links large-screen jost-heading ">
         <a href="/about">ABOUT US</a>
         <a href="/dashboard">DASHBOARD</a>
         <a

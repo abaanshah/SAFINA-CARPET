@@ -2,3 +2,19 @@
 @tailwind components;
 @tailwind utilities; */
 @import "tailwindcss";
+
+body {
+  font-family: 'Jost', sans-serif;
+  font-weight: 200; /* Light default */
+}
+
+.caveat-heading {
+  font-family: 'Caveat', cursive;
+}
+.jost-heading {
+  font-family: 'Jost', sans-serif;
+  font-weight: 200;
+}
+.crimson-heading {
+  font-family: 'Crimson Text', serif;
+}
