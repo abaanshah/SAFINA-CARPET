@@ -169,9 +169,9 @@ header.show {
 }
 /* Hide links by default on mobile */
 .links a {
-  color: #f8ebeb;
+  color: #e7e3e3;
   font-weight: 300;
-  font-size: .95rem;
+  font-size: 1.2rem;
   text-decoration: none;
   padding: 0.5rem 1rem;
   border-radius: 12px;

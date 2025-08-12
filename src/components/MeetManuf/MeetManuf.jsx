@@ -21,7 +21,7 @@ const MeetManuf = () => {
         {/* Card 1 - Hand Icon */}
         <div className="bg-white rounded-lg p-8 text-center shadow-sm">
           <div className="mb-6 flex justify-center">
-            <div className=" relative">
+            <div className="border-b-1 pb-3.5 border-black relative">
               {/* Hand with pink ribbon */}
               <img src={craftsmanship} alt=""  />
               
@@ -41,7 +41,7 @@ const MeetManuf = () => {
         {/* Card 2 - Money Icon */}
         <div className="bg-white rounded-lg p-8 text-center shadow-sm">
           <div className="mb-6 flex justify-center">
-            <div className="relative">
+            <div className="bg-white border-b-1 pb-3 border-black relative">
               <img src={funding} alt="" />
             </div>
           </div>
@@ -58,8 +58,8 @@ const MeetManuf = () => {
 
         {/* Card 3 - Shield Icon */}
         <div className="bg-white rounded-lg p-8 text-center shadow-sm">
-          <div className="mb-6 flex justify-center">
-            <div className=" relative">
+          <div className=" mb-6 flex justify-center">
+            <div className="border-b-1 pb-3 border-black relative">
              <img src={warranty} alt="" />
             </div>
           </div>
@@ -77,8 +77,8 @@ const MeetManuf = () => {
         {/* Card 4 - Heart Icon */}
         <div className="bg-white rounded-lg p-8 text-center shadow-sm">
           <div className="mb-6 flex justify-center">
-            <div className=" relative">
-            <img src={services} alt="" />
+            <div className="border-b-1 pb-3 border-black relative">
+            <img src={services} alt=""/>
             </div>
           </div>
           <h3 className="text-xl font-semibold text-gray-800 mb-4">
