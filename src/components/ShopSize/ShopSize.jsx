@@ -1,87 +1,52 @@
 import React from "react";
-import "./ShopSize.css";
-import ShopSizeCard from "./ShopSizeCard";
-const ShopSize = () => {
+import { useNavigate } from "react-router-dom";
+
+const sizes = [
+  "3x5","4x6","5x7","6x9","7x10","8x10","9x12","10x14","11x15","12x18","14x20","16x24"
+];
+
+// Static demo carpet image that will always load
+const demoImage = "https://www.loomkart.com/cdn/shop/files/fauxsilkcarpetloomkart_neosilk550017_3.jpg?v=1753537930";
+
+export default function ShopBySize() {
+  const navigate = useNavigate();
+
+  const handleClick = (size) => {
+    navigate(`/catalog?size=${size}`);
+  };
+
   return (
-    // <div className="shopsize_container">
-     <section className="bg-[#E5E5E5] max-w-[100vw] mx-auto px-4 py-8">
-      <h2 className="sizeheading">SHOP BY SIZE</h2>
-      <div className="w-[90vw] m-auto grid gap-8 grid-cols-6">  <ShopSizeCard
-          // image="https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d"
-          title="Mountain Escape"
-         />
+    <div className="px-6 py-12 bg-[#E5E5E5]">
+      <h2 className="text-4xl font-bold text-center mb-12 text-gray-800">
+        SHOP BY SIZE
+      </h2>
 
-        <ShopSizeCard
-          // image="https://images.unsplash.com/photo-1526403227224-60c2f4c1d95c"
-          title="Coffee Culture"
- 
-        />
+      <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+        {sizes.map((size) => (
+          <div
+            key={size}
+            onClick={() => handleClick(size)}
+            className="cursor-pointer shadow-lg hover:shadow-2xl transform hover:scale-101 transition-all duration-300 overflow-hidden"
+          >
+            {/* Top image */}
+            <div className="relative h-48 overflow-hidden">
+              <img
+                src={demoImage}
+                alt="Carpet Demo"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+            </div>
 
-        <ShopSizeCard
-          // image="https://images.unsplash.com/photo-1507525428034-b723cf961d3e"
-          title="Ocean Breeze"
-          description="Feel the salty air and the calming sound of waves."
-          tags={["Beach", "Relax"]}
-          ctaLabel="Book Now"
-        />
-
-        <ShopSizeCard
-          // image="https://images.unsplash.com/photo-1491553895911-0055eca6402d"
-          title="Urban Streets"
-       
-        />
-
-        <ShopSizeCard
-          // image="https://images.unsplash.com/photo-1542744173-8e7e53415bb0"
-          title="Tech Trends"
-   
-        />
-
-        <ShopSizeCard
-          // image="https://images.unsplash.com/photo-1556911220-e15b29be8c8f"
-          title="Culinary Journey"
-     
-        />
-
-        <ShopSizeCard
-          // image="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4"
-          title="Cozy Corners"
-         
-        />
-
-        <ShopSizeCard
-          // image="https://images.unsplash.com/photo-1506744038136-46273834b3fb"
-          title="Desert Vibes"
-        
-        />
-
-        <ShopSizeCard
-          // image="https://images.unsplash.com/photo-1600585154340-be6161a56a0c"
-          title="Modern Living"
-        
-        />
-
-        <ShopSizeCard
-          // image="https://images.unsplash.com/photo-1534791547704-9f47f6b4b6c5"
-          title="Street Food Finds"
-        
-        />
-
-        <ShopSizeCard
-          // image="https://images.unsplash.com/photo-1501004318641-b39e6451bec6"
-          title="Snowy Peaks"
-        
-        />
-
-        <ShopSizeCard
-          // image="https://images.unsplash.com/photo-1470770841072-f978cf4d019e"
-          title="Festival Lights"
-        
-        />
+            {/* Bottom info */}
+            <div className="p-4 flex flex-col items-center justify-center bg-white">
+              <span className="text-xl font-bold text-gray-800">{size}</span>
+              <p className="text-gray-700 text-xl mt-1">Rug Size</p>
+              <p className="text-lg font-semibold text-gray-900 mt-2">Starting from ₹2,500</p>
+            </div>
+          </div>
+        ))}
       </div>
-    </section>
-    // </div>
+    </div>
   );
-};
-
-export default ShopSize;
+}

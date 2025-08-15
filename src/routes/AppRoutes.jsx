@@ -9,6 +9,8 @@ import { Purchase } from "../pages/Purchase/Purchase";
 import { Services } from "../pages/Services/Services";
 import { CheckOut } from "../pages/Checkout/Checkout";
 import Blogs from "../pages/Blogs/Blogs";
+import Catalog from "../pages/Catalog/Catalog";
+import Login from "../pages/Login/Login";
 
 
 
@@ -18,7 +20,7 @@ function AppRoutes() {
       <MainLayout >
       <Routes>
         {/* Public Layout */}
-        <Route >
+        <Route>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/manufacturing" element={<Manufacturing />} />
@@ -28,6 +30,8 @@ function AppRoutes() {
           <Route path="/services" element={<Services />} />
           <Route path="/checkout" element={<CheckOut />} />
           <Route path="/blogs" element={<Blogs />} />
+          <Route path="/catalog" element={<Catalog/>}></Route>
+          <Route path="/login" element={<Login/>}></Route>
         </Route>
       </Routes>
       </MainLayout>

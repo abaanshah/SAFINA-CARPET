@@ -14,32 +14,41 @@ import "./Navbar.css";
 import logo from "../../assets/logo.jpg";
 import "@fontsource/jost/300.css";
 
-
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
-  const [activeDropdown, setActiveDropdown] = useState(null); // Which mega menu is open
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  const [user, setUser] = useState(null); // store logged-in user
+  const [profileOpen, setProfileOpen] = useState(false); // profile dropdown
 
   const iconSize = 24;
   const iconColor = "white";
 
-  // Hide navbar on scroll down, show on scroll up
   useEffect(() => {
     let lastScrollY = window.scrollY;
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY && currentScrollY > 50) {
-        setShowNavbar(false);
-      } else if (currentScrollY < lastScrollY) {
-        setShowNavbar(true);
-      }
+      setShowNavbar(currentScrollY < lastScrollY || currentScrollY < 50);
       lastScrollY = currentScrollY;
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData) setUser(JSON.parse(userData));
+  }, []);
+
   const toggleMenu = () => setMenuOpen((prev) => !prev);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
+    setProfileOpen(false);
+    window.location.reload(); // or navigate to home/login
+  };
 
   // Mega menu data
   const megaMenuData = {
@@ -55,7 +64,6 @@ const Navbar = () => {
     manufacturing: [
       { heading: "Products", links: ["Electronics", "Furniture", "Clothing"] },
       { heading: "Services", links: ["Consulting", "Support", "Training"] },
-
     ],
   };
 
@@ -63,7 +71,7 @@ const Navbar = () => {
     <header className={showNavbar ? "show" : "hide"}>
       <nav className="navbar">
         <div className="nav-left">
-          <a href="#" className="nav-icon">
+          <a href="http://localhost:8080/" className="nav-icon">
             <HiOutlineMapPin size={iconSize} color={iconColor} />
           </a>
           <a href="#" className="nav-appointment">
@@ -73,7 +81,9 @@ const Navbar = () => {
         </div>
 
         <div className="nav-center">
-          <img src={logo} alt="Logo" className="nav-logo" />
+          <a href="/">
+            <img src={logo} alt="Logo" className="nav-logo" />
+          </a>
         </div>
 
         <div className="nav-right large-screen">
@@ -86,26 +96,43 @@ const Navbar = () => {
           <a href="#" className="nav-icon">
             <HiOutlineBell size={iconSize} color={iconColor} />
           </a>
-          <a href="http://localhost:8080/" className="nav-icon">
-            <HiOutlineUser size={iconSize} color={iconColor} />
-          </a>
+
+          {/* Profile or Login */}
+          {user ? (
+            <div className="nav-icon relative" onClick={() => setProfileOpen((prev) => !prev)}>
+              <HiOutlineUser size={iconSize} color={iconColor} />
+              {profileOpen && (
+                <div className="absolute right-0 mt-2 bg-white text-black p-2 rounded shadow-md w-48">
+                  <p className="font-bold">{user.name}</p>
+                  <p className="text-sm">{user.email}</p>
+                  <button
+                    onClick={handleLogout}
+                    className="mt-2 bg-red-500 text-white w-full py-1 rounded"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <a href="/login" className="nav-icon">
+              <HiOutlineUser size={iconSize} color={iconColor} />
+            </a>
+          )}
+
           <a href="#" className="nav-icon">
             <HiOutlineShoppingCart size={iconSize} color={iconColor} />
           </a>
         </div>
 
         <button className="hamburger-btn small-screen" onClick={toggleMenu}>
-          {menuOpen ? (
-            <HiXMark size={28} color={iconColor} />
-          ) : (
-            <HiBars3 size={28} color={iconColor} />
-          )}
+          {menuOpen ? <HiXMark size={28} color={iconColor} /> : <HiBars3 size={28} color={iconColor} />}
         </button>
       </nav>
 
-      <div className="links large-screen jost-heading ">
+      {/* Links */}
+      <div className="links large-screen jost-heading">
         <a href="/about">ABOUT US</a>
-        <a href="/dashboard">DASHBOARD</a>
         <a
           href="#"
           onMouseEnter={() => setActiveDropdown("services")}
@@ -120,13 +147,13 @@ const Navbar = () => {
         >
           GUIDE
         </a>
-        <a href="/manufacturing"
-        //  href="#"
-         onMouseEnter={() => setActiveDropdown("manufacturing")}
-         onMouseLeave={() => setActiveDropdown(null)}
-       
-        
-        >MANUFACTURING</a>
+        <a
+          href="/manufacturing"
+          onMouseEnter={() => setActiveDropdown("manufacturing")}
+          onMouseLeave={() => setActiveDropdown(null)}
+        >
+          MANUFACTURING
+        </a>
         <a href="/purchase">PURCHASE</a>
         <a href="/checkout">CHECKOUT</a>
         <a href="/blogs">BLOGS</a>

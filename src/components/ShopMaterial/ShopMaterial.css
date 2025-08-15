@@ -58,7 +58,6 @@
   height:350px;
   right: 120px;
   bottom: -400px;
-  
   /* bottom: -440px; */
   object-fit: cover;
   border-radius: 12px;
@@ -77,13 +76,18 @@
   position: absolute;
   bottom: 15px;
   font-weight: normal;
- 
+  cursor: pointer;
   img{
     width: 10px;
     height: 10px;
-    margin-left: 10px;
-    
+    margin-left: 10px;    
   }
+  
+}
+.slider_card button:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  transform: scale(1.05);
+  transition: all 0.3s ease-in-out;
 }
 
 /* Animation keyframes
