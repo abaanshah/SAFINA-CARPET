@@ -98,28 +98,86 @@ const Navbar = () => {
           </a>
 
           {/* Profile or Login */}
-          {user ? (
-            <div className="nav-icon relative" onClick={() => setProfileOpen((prev) => !prev)}>
-              <HiOutlineUser size={iconSize} color={iconColor} />
-              {profileOpen && (
-                <div className="absolute right-0 mt-2 bg-white text-black p-2 rounded shadow-md w-48">
-                  <p className="font-bold">{user.name}</p>
-                  <p className="text-sm">{user.email}</p>
-                  <button
-                    onClick={handleLogout}
-                    className="mt-2 bg-red-500 text-white w-full py-1 rounded"
-                  >
-                    Logout
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <a href="/login" className="nav-icon">
-              <HiOutlineUser size={iconSize} color={iconColor} />
-            </a>
-          )}
+         {/* Profile or Login */}
+{user ? (
+  <div className="relative">
+    {/* Avatar Trigger */}
+    <div
+      className="cursor-pointer flex items-center gap-2 group"
+      onClick={() => setProfileOpen((prev) => !prev)}
+    >
+      <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-red-500 to-pink-500 p-[2px]">
+        <div className="w-full h-full rounded-full bg-white flex items-center justify-center text-lg font-bold text-gray-800">
+          {user.name?.charAt(0).toUpperCase()}
+        </div>
+      </div>
+    </div>
 
+    {/* Dropdown */}
+    {profileOpen && (
+      <div
+        className="absolute right-0 mt-3 w-72 bg-white/80 backdrop-blur-lg 
+                   shadow-2xl rounded-2xl overflow-hidden animate-scale-fade z-50"
+      >
+        {/* Header */}
+        <div className="flex items-center gap-3 p-4 border-b border-gray-200">
+          <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-red-500 to-pink-700 p-[2px]">
+            <div className="w-full h-full rounded-full bg-white flex items-center justify-center text-lg font-bold text-gray-800">
+              {user.name?.charAt(0).toUpperCase()}
+            </div>
+          </div>
+          <div>
+            <p className="font-semibold text-gray-900 text-base">{user.name}</p>
+            <p className="text-xs text-gray-600">{user.email}</p>
+          </div>
+        </div>
+
+        {/* Links */}
+        <ul className="p-4 space-y-3 text-sm font-medium text-gray-700">
+          <li>
+            <a href="/profile" className="block px-3 py-2 rounded-lg hover:bg-red-50 hover:text-red-600 transition">
+              👤 My Profile
+            </a>
+          </li>
+          <li>
+            <a href="/orders" className="block px-3 py-2 rounded-lg hover:bg-red-50 hover:text-red-600 transition">
+              📦 My Orders
+            </a>
+          </li>
+          <li>
+            <a href="/wishlist" className="block px-3 py-2 rounded-lg hover:bg-red-50 hover:text-red-600 transition">
+              ❤️ Wishlist
+            </a>
+          </li>
+          <li>
+            <a href="/settings" className="block px-3 py-2 rounded-lg hover:bg-red-50 hover:text-red-600 transition">
+              ⚙️ Settings
+            </a>
+          </li>
+        </ul>
+
+        {/* Logout */}
+        <div className="p-4 border-t border-gray-200">
+          <button
+            onClick={handleLogout}
+            className="w-full bg-gradient-to-r from-red-600 to-pink-700 
+                       text-white py-2 rounded-xl font-medium hover:opacity-90 transition"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+    )}
+  </div>
+) : (
+  <a
+    href="/login"
+    className="nav-icon flex items-center gap-2 hover:opacity-90 transition"
+  >
+    <HiOutlineUser size={iconSize} color={iconColor} />
+    <span className="hidden md:inline text-sm font-medium">Login</span>
+  </a>
+)}
           <a href="#" className="nav-icon">
             <HiOutlineShoppingCart size={iconSize} color={iconColor} />
           </a>

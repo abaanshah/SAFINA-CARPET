@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight, Star, Sparkles, Heart } from 'lucide-react';
-import logo from '../../assets/logo.jpg'; // Assuming you have a logo image
+import logo from '../../assets/logo.jpg';
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from '../../context/AuthContext';
 
 export default function Login() {
+  const { login, signup } = useContext(AuthContext);
   const navigate = useNavigate();  
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -14,37 +16,31 @@ export default function Login() {
   });
   const [isLoading, setIsLoading] = useState(false);
 
+  // ✅ Step 1: Redirect if already logged in
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/"); // Already logged in → send user to homepage or profile
+    }
+  }, [navigate]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-  
-    const url = isLogin
-      ? "http://localhost:5000/api/auth/login"
-      : "http://localhost:5000/api/auth/signup";
-  
+
     try {
-      const res = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-  
-      const data = await res.json();
-  
-      if (res.ok) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        navigate("/"); // Redirect after login/signup
+      if (isLogin) {
+        await login(formData.email, formData.password);
       } else {
-        alert(data.msg || "Something went wrong");
+        await signup(formData.name, formData.email, formData.password);
       }
+      navigate("/");
     } catch (err) {
-      alert("Server error: " + err.message);
+      alert("Error: " + err.message);
     } finally {
       setIsLoading(false);
     }
   };
-  
 
   const handleInputChange = (e) => {
     setFormData({
@@ -53,9 +49,8 @@ export default function Login() {
     });
   };
 
-  // Compact Safina Logo Component
-  
 
+  // your form JSX continues...  
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-100 py-4 px-4 flex items-center justify-center">
       <div className="w-full h-[90vh] max-w-6xl bg-white rounded-3xl shadow-2xl overflow-hidden">
