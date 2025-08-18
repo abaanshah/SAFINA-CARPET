@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Home from "../pages/Home/Home";
 import { AboutUs } from "../pages/AboutUs/AboutUs";
 import MainLayout from "../Layouts/MainLayout";
@@ -11,15 +11,13 @@ import { CheckOut } from "../pages/Checkout/Checkout";
 import Blogs from "../pages/Blogs/Blogs";
 import Catalog from "../pages/Catalog/Catalog";
 import Login from "../pages/Login/Login";
-
-
+import VerifyEmail from "../pages/Login/VerifyEmail";
 
 function AppRoutes() {
   return (
-    <Router>
-      <MainLayout >
+    <MainLayout>
       <Routes>
-        {/* Public Layout */}
+        {/* You can remove this extra wrapping <Route> if not needed */}
         <Route>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<AboutUs />} />
@@ -30,12 +28,12 @@ function AppRoutes() {
           <Route path="/services" element={<Services />} />
           <Route path="/checkout" element={<CheckOut />} />
           <Route path="/blogs" element={<Blogs />} />
-          <Route path="/catalog" element={<Catalog/>}></Route>
-          <Route path="/login" element={<Login/>}></Route>
+          <Route path="/catalog" element={<Catalog />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
         </Route>
       </Routes>
-      </MainLayout>
-    </Router>
+    </MainLayout>
   );
 }
 
