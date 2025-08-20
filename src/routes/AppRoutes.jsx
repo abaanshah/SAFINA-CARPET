@@ -12,6 +12,7 @@ import Blogs from "../pages/Blogs/Blogs";
 import Catalog from "../pages/Catalog/Catalog";
 import Login from "../pages/Login/Login";
 import VerifyEmail from "../pages/Login/VerifyEmail";
+import Wishlist from "../pages/Wishlist/Wishlist";
 
 function AppRoutes() {
   return (
@@ -31,6 +32,7 @@ function AppRoutes() {
           <Route path="/catalog" element={<Catalog />} />
           <Route path="/login" element={<Login />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/wishlist" element={<Wishlist />} />
         </Route>
       </Routes>
     </MainLayout>

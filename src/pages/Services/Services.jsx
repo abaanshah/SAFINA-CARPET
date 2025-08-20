@@ -6,7 +6,7 @@ import { ServicesSection } from "../../components/Services/ServicesSection";
 
 export const Services = () => {
   return (
-    <main className="bg-white flex flex-row justify-center w-full">
+    <main className="bg-white flex flex-row justify-center w-full ">
       <div className="bg-white overflow-hidden w-full max-w-[1440px] relative">
         {/* <HeaderSection /> */}
         <ServicesSection />

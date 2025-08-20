@@ -1,20 +1,20 @@
 // ===================================================================
 // FILE: src/pages/Catalog/Catalog.jsx (Updated)
-// -------------------------------------------------------------------
-// This is your original file, now connected to the CartContext.
 // ===================================================================
 import React, { useEffect, useState, useContext } from "react";
 import { Heart, Plus } from "lucide-react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
-// 1. Import the CartContext
 import { CartContext } from "../../context/CartContext";
+// 1. Import the new WishlistContext
+import { WishlistContext } from "../../context/WishlistContext";
 
 const Catalog = () => {
   const [products, setProducts] = useState([]);
   const location = useLocation();
-  // 2. Get the 'addToCart' function from the context
   const { addToCart } = useContext(CartContext);
+  // 2. Get wishlist functions and data from the context
+  const { addToWishlist, isItemInWishlist } = useContext(WishlistContext);
 
   const query = new URLSearchParams(location.search);
   const filters = {};
@@ -29,7 +29,6 @@ const Catalog = () => {
   useEffect(() => {
     const fetchRugs = async () => {
       try {
-        // Your backend logic is untouched, as requested
         const { data } = await axios.get("http://localhost:5000/api/sizes", {
           params: filters,
         });
@@ -56,15 +55,22 @@ const Catalog = () => {
           >
             <div className="relative">
               <img
-                src={product.imageUrl || "https://www.loomkart.com/cdn/shop/files/faux_silk_carpets_loomkart_0007_floral_faux_silk_carpet1.jpg?v=1753537724"}
+                src={`http://localhost:5000/${product.image}`}
                 alt={product.name}
-                className=" "
+                className="w-full h-64 object-cover"
+                onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/400x400/f8f8f8/333333?text=Image+Not+Found" }}
               />
               <div className="absolute top-2 right-2 flex flex-col gap-2">
-                <button className="bg-white p-2 rounded-full shadow hover:bg-gray-100 transition">
-                  <Heart size={18} className="text-gray-700" />
+                {/* 3. This button now adds/removes from wishlist and changes color */}
+                <button 
+                  onClick={() => addToWishlist(product)}
+                  className="bg-white p-2 rounded-full shadow hover:bg-gray-100 transition"
+                >
+                  <Heart 
+                    size={18} 
+                    className={`transition-colors ${isItemInWishlist(product._id) ? 'text-red-600 fill-current' : 'text-gray-700'}`} 
+                  />
                 </button>
-                {/* 3. This button now adds the specific product to the cart */}
                 <button 
                   onClick={() => addToCart(product)}
                   className="bg-black text-white p-2 rounded-full shadow hover:bg-gray-800 transition"
@@ -80,7 +86,7 @@ const Catalog = () => {
                 {product.size} • {product.color}
               </p>
               <p className="text-lg font-bold text-gray-800 mt-2">
-                ₹{product.price}
+                ₹{product.price.toLocaleString('en-IN')}
               </p>
             </div>
           </div>

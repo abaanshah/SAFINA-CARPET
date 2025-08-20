@@ -1,250 +1,196 @@
-// import { FooterSection } from "../components/layout/FooterSection";
-// import { HeaderSection } from "../components/layout/HeaderSection";
-import React, { useState, useEffect } from "react";
+// ===================================================================
+// FILE: src/pages/Purchase/Purchase.jsx (Redesigned with Frontend Data)
+// -------------------------------------------------------------------
+// This is the complete redesign of your product detail page. It uses
+// dummy data for now and is fully interactive.
+// ===================================================================
+import React, { useState, useEffect, useContext } from "react";
+import { Link } from "react-router-dom";
+import { Heart, ShoppingBag, Minus, Plus, ChevronDown } from "lucide-react";
+import { CartContext } from "../../context/CartContext";
+import { WishlistContext } from "../../context/WishlistContext";
 
-export const Purchase = () => {
-  const [selectedSize, setSelectedSize] = useState("5 X 7");
-  const [selectedColor, setSelectedColor] = useState("Rust");
-  const [quantity, setQuantity] = useState(1);
-  const [isMobile, setIsMobile] = useState(false);
+// --- Accordion Item Component ---
+const AccordionItem = ({ title, content, isOpen, onClick }) => (
+  <div className="border-b border-gray-200">
+    <button
+      className="flex justify-between items-center w-full py-4 text-left"
+      onClick={onClick}
+    >
+      <span className="text-lg font-semibold text-gray-800">{title}</span>
+      <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform duration-300 ${isOpen ? 'transform rotate-180' : ''}`} />
+    </button>
+    <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-screen pt-2 pb-4' : 'max-h-0'}`}>
+      <p className="text-gray-600 leading-relaxed">{content}</p>
+    </div>
+  </div>
+);
 
-  // Check screen size for responsive design
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
-    
-    return () => {
-      window.removeEventListener('resize', checkScreenSize);
-    };
-  }, []);
-
-  const sizes = [
-    { name: "5 X 7" },
-    { name: "6 X 9" },
-    { name: "9 X 12" }
-  ];
-  
-  const colors = [
-    { name: "Rust", icon: "https://c.animaapp.com/x4TEakH5/img/icon-1.svg" },
-    { name: "Green", icon: "https://c.animaapp.com/x4TEakH5/img/icon.svg" },
-  ];
-
-  const thumbnailImages = [
+// --- Dummy Product Data ---
+// This object simulates the data that will come from your backend.
+const dummyProduct = {
+  _id: 'dummy-product-123',
+  name: "Aaban Hand Knotted Rug",
+  category: "Hand Knotted",
+  price: 13999,
+  shortDescription: "A masterpiece of traditional Afghan craftsmanship, this hand-knotted rug brings timeless elegance and warmth to any living space. Made with high-quality wool for durability and comfort.",
+  description: "Experience the rich heritage of Turkmen tribal artistry with this exquisite Large Afghan rug. Each knot is tied by hand, creating a unique and durable piece that tells a story. The vibrant red hue is achieved through natural dyes, ensuring the colors remain brilliant for generations. Perfect as a centerpiece for your living room or dining area.",
+  images: [
+    "https://c.animaapp.com/x4TEakH5/img/firefly-carpets-and-rugs-at-home-premium-quality-handmade-craft-.png",
     "https://c.animaapp.com/x4TEakH5/img/firefly-carpets-and-rugs-at-home--premium-quality-handmade-craft@2x.png",
     "https://c.animaapp.com/x4TEakH5/img/rugcustom@2x.png",
     "https://c.animaapp.com/x4TEakH5/img/rugvisual@2x.png",
-    "https://c.animaapp.com/x4TEakH5/img/firefly-carpets-and-rugs-at-home-premium-quality-handmade-craft--3@2x.png",
-  ];
+  ],
+  availableSizes: ["5x7", "6x9", "8x10", "9x12"],
+  availableColors: ["Rust", "Green", "Navy"],
+  material: "Afghan Wool"
+};
 
-  const helpOptions = [
-    { label: "FAQs", underline: true },
-    { label: "Chatbot", underline: false },
-    { label: "Call us", underline: false },
-    { label: "Email", underline: false },
-    { label: "WhatsApp", underline: false },
-  ];
+export const Purchase = () => {
+  const { addToCart } = useContext(CartContext);
+  const { addToWishlist, isItemInWishlist } = useContext(WishlistContext);
 
-  const accordionItems = [
-    {
-      title: "Product Details",
-      content: "To cancel your order, please get in touch with our customer service team as soon as possible with your order number. Orders can only be canceled before they are processed and shipped.",
-    },
-    {
-      title: "Shipping and Returns",
-      content: "To cancel your order, please get in touch with our customer service team as soon as possible with your order number. Orders can only be canceled before they are processed and shipped.",
-    },
-    {
-      title: "Care instruction",
-      content: "To cancel your order, please get in touch with our customer service team as soon as possible with your order number. Orders can only be canceled before they are processed and shipped.",
-    },
-  ];
+  const [product] = useState(dummyProduct); // Using dummy data
+  const [selectedImage, setSelectedImage] = useState(dummyProduct.images[0]);
+  const [selectedSize, setSelectedSize] = useState(dummyProduct.availableSizes[0]);
+  const [selectedColor, setSelectedColor] = useState(dummyProduct.availableColors[0]);
+  const [quantity, setQuantity] = useState(1);
+  const [openAccordion, setOpenAccordion] = useState(0); // Default to first item open
 
-  const handleQuantityChange = (change) => {
-    setQuantity(Math.max(1, quantity + change));
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const handleQuantityChange = (amount) => {
+    setQuantity(prev => Math.max(1, prev + amount));
+  };
+  
+  const handleAddToCart = () => {
+    const itemToAdd = {
+      ...product,
+      image: product.images[0], // Use the main image for cart display
+      size: selectedSize,
+      color: selectedColor,
+      quantity,
+    };
+    addToCart(itemToAdd);
+  };
+  
+  const handleWishlistClick = () => {
+    addToWishlist(product);
   };
 
+  const toggleAccordion = (index) => {
+    setOpenAccordion(openAccordion === index ? null : index);
+  };
+  
+  const accordionItems = [
+    { title: "Product Details", content: product.description },
+    { title: "Shipping and Returns", content: "Free shipping across India. Easy 7-day return policy. Please check our returns page for more details." },
+    { title: "Care Instructions", content: "Professional cleaning recommended. Avoid direct sunlight. Rotate the rug every 6 months for even wear." },
+  ];
+
   return (
-    <div className="bg-white flex flex-row justify-center w-full">
-      <div className="bg-white w-full max-w-[1440px] relative">
-        <div className="relative w-full min-h-screen">
-          {/* Background gradients */}
-          <div className="absolute w-full h-[654px] top-0 left-0 bg-gradient-to-b from-gray-300 to-red-300" />
-          <div className="absolute w-full h-[654px] top-[654px] left-0 bg-gradient-to-t from-red-300 via-red-200 to-red-100" />
-
-          {/* Main product image - responsive */}
-          <img
-            className="absolute w-[90%] sm:w-[80%] md:w-[590px] h-auto md:h-[605px] top-[38px] left-[5%] sm:left-[15%] md:left-[173px] object-cover"
-            alt="Handmade carpet"
-            src="https://c.animaapp.com/x4TEakH5/img/firefly-carpets-and-rugs-at-home-premium-quality-handmade-craft-.png"
-          />
-
-          {/* Thumbnail images - hidden on mobile */}
-          <div className="hidden md:flex flex-col w-[85px] items-start gap-[19px] absolute top-[38px] left-[73px]">
-            {thumbnailImages.map((src, index) => (
+    <div className="bg-stone-50">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 mt-[12vh]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          
+          {/* Left Column: Image Gallery */}
+          <div className="flex flex-col md:flex-row-reverse gap-4">
+            <div className="flex-grow">
               <img
-                key={index}
-                className="relative self-stretch w-full h-[85px] object-cover"
-                alt={`Rug thumbnail ${index + 1}`}
-                src={src}
+                src={selectedImage}
+                alt={product.name}
+                className="w-full h-auto max-h-[600px] object-cover rounded-lg shadow-lg"
               />
-            ))}
+            </div>
+            <div className="flex md:flex-col gap-3 flex-wrap justify-center">
+              {product.images.map((img, index) => (
+                <button 
+                  key={index} 
+                  onClick={() => setSelectedImage(img)}
+                  className={`w-20 h-20 rounded-md overflow-hidden border-2 transition ${selectedImage === img ? 'border-red-800' : 'border-transparent hover:border-red-400'}`}
+                >
+                  <img
+                    src={img}
+                    alt={`Thumbnail ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Product details container - responsive */}
-          <div className="absolute w-[90%] sm:w-[80%] md:w-[569px] h-auto top-[650px] sm:top-[700px] md:top-[38px] left-[5%] sm:left-[10%] md:left-[799px] bg-red-50 rounded-lg p-6">
-            
-            <h2 className="text-2xl md:text-4xl font-serif text-black underline mb-2">
-              Aaban Hand Knotted
-            </h2>
-            
-            <div className="text-sm text-red-800 mb-4">Hand knotted</div>
-            
-            <p className="text-base text-black leading-relaxed mb-4">
-              Large Afghan rugs, Custom Size, High Quality Handmade Afghan large
-              Red Area rug, Turkmen Tribal Rug, Living room,Afghan rug, Living
-              room rug.
-            </p>
+          {/* Right Column: Product Details */}
+          <div>
+            <Link to="/catalog" className="text-sm text-gray-500 hover:text-red-800 transition">Back to Collection</Link>
+            <h1 className="text-4xl font-bold text-gray-900 mt-2" style={{fontFamily: 'Jost, sans-serif'}}>{product.name}</h1>
+            <p className="text-lg text-gray-500 capitalize mt-2">{product.material}</p>
+            <p className="text-3xl font-bold text-red-900 my-4">₹{product.price.toLocaleString('en-IN')}</p>
+            <p className="text-gray-600 leading-relaxed mb-6">{product.shortDescription}</p>
 
-            <div className="text-2xl text-red-800 font-bold mb-2">$1,399</div>
-            <p className="text-sm text-black mb-6">(inclusive all tax and duties)</p>
-
-            {/* Size selection */}
+            {/* Size Selector */}
             <div className="mb-6">
-              <label className="block text-base text-black mb-3">Size:</label>
+              <label className="block text-lg font-semibold text-gray-800 mb-3">Size: <span className="font-normal text-gray-600">{selectedSize} ft</span></label>
               <div className="flex flex-wrap gap-3">
-                {sizes.map((size) => (
+                {product.availableSizes.map((size) => (
                   <button
-                    key={size.name}
-                    onClick={() => setSelectedSize(size.name)}
-                    className={`px-4 py-2 border-2 border-black rounded ${
-                      selectedSize === size.name
-                        ? "bg-black text-white"
-                        : "bg-white text-black"
-                    }`}
+                    key={size}
+                    onClick={() => setSelectedSize(size)}
+                    className={`px-4 py-2 border rounded-lg transition ${selectedSize === size ? 'bg-red-800 text-white border-red-800' : 'bg-white text-gray-700 border-gray-300 hover:border-gray-500'}`}
                   >
-                    {size.name}
+                    {size}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Color selection */}
+            {/* Color Selector */}
             <div className="mb-6">
-              <label className="block text-base text-black mb-3">Color:</label>
-              <div className="flex gap-4">
-                {colors.map((color) => (
+              <label className="block text-lg font-semibold text-gray-800 mb-3">Color: <span className="font-normal text-gray-600">{selectedColor}</span></label>
+              <div className="flex flex-wrap gap-4">
+                {product.availableColors.map((color) => (
                   <button
-                    key={color.name}
-                    onClick={() => setSelectedColor(color.name)}
-                    className="flex items-center gap-2"
-                  >
-                    <img
-                      className="w-6 h-6"
-                      alt={`${color.name} color`}
-                      src={color.icon}
-                    />
-                    <span className="text-sm text-gray-700">{color.name}</span>
-                  </button>
+                    key={color}
+                    onClick={() => setSelectedColor(color)}
+                    className={`w-10 h-10 rounded-full border-2 transition transform hover:scale-110 ${selectedColor === color ? 'border-red-800 scale-110' : 'border-gray-300'}`}
+                    style={{ backgroundColor: color.toLowerCase() }}
+                    title={color}
+                  />
                 ))}
               </div>
             </div>
 
-            {/* Quantity selection */}
-            <div className="mb-6">
-              <label className="block text-base text-black mb-3">Quantity</label>
-              <div className="flex items-center border-2 border-black rounded w-fit px-3 py-2">
-                <button
-                  onClick={() => handleQuantityChange(-1)}
-                  className="px-2 text-black font-bold"
-                >
-                  -
-                </button>
-                <span className="px-4 text-black font-medium">{quantity}</span>
-                <button
-                  onClick={() => handleQuantityChange(1)}
-                  className="px-2 text-black font-bold"
-                >
-                  +
-                </button>
-              </div>
+            {/* Quantity & Actions */}
+            <div className="flex flex-col sm:flex-row gap-4 mb-6">
+               <div className="flex items-center border border-gray-300 rounded-lg">
+                  <button onClick={() => handleQuantityChange(-1)} className="p-3 text-gray-500 hover:text-gray-800 transition"><Minus /></button>
+                  <span className="px-6 text-lg font-semibold">{quantity}</span>
+                  <button onClick={() => handleQuantityChange(1)} className="p-3 text-gray-500 hover:text-gray-800 transition"><Plus /></button>
+               </div>
+               <button onClick={handleAddToCart} className="flex-grow flex items-center justify-center bg-red-800 text-white font-semibold py-3 px-6 rounded-lg hover:bg-red-900 transition">
+                 <ShoppingBag className="mr-2"/> Add to Cart
+               </button>
+               <button onClick={handleWishlistClick} className="p-3 border border-gray-300 rounded-lg text-gray-500 hover:text-red-600 hover:border-red-600 transition">
+                  <Heart className={`transition-colors ${isItemInWishlist(product._id) ? 'text-red-600 fill-current' : ''}`} />
+               </button>
             </div>
-
-            {/* Buttons */}
-            <div className="space-y-3 mb-6">
-              <button className="w-full bg-red-600 text-white py-3 rounded font-medium">
-                ADD TO CART
-              </button>
-              
-              <button className="w-full bg-green-500 text-white py-3 rounded font-medium flex items-center justify-center gap-2">
-                Order via WhatsApp
-                <img
-                  className="w-5 h-5"
-                  alt="WhatsApp"
-                  src="https://c.animaapp.com/x4TEakH5/img/vector-9.svg"
-                />
-              </button>
-            </div>
-
-            {/* Shipping info */}
-            <p className="text-xs text-black mb-4">
-              Free India Shipping & Easy Returns
-            </p>
-
-            {/* Help options */}
-            <div className="mb-6">
-              <p className="text-xs text-black mb-2">
-                <span className="font-bold">Need Help</span>? Try
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {helpOptions.map((option, index) => (
-                  <button
-                    key={index}
-                    className="px-3 py-1 border-2 border-black rounded text-xs"
-                  >
-                    <span className={option.underline ? "underline" : ""}>
-                      {option.label}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Accordion items */}
-            <div className="space-y-2">
+            
+            {/* Accordion for Details */}
+            <div className="mt-8">
               {accordionItems.map((item, index) => (
-                <details
+                <AccordionItem 
                   key={index}
-                  className="border-b-2 border-red-600"
-                >
-                  <summary className="flex justify-between items-center py-4 cursor-pointer bg-red-50">
-                    <span className="text-xl text-black">{item.title}</span>
-                    <span className="text-black">+</span>
-                  </summary>
-                  <div className="py-4 bg-red-50">
-                    <p className="text-base text-black leading-relaxed">
-                      {item.content}
-                    </p>
-                  </div>
-                </details>
+                  title={item.title}
+                  content={item.content}
+                  isOpen={openAccordion === index}
+                  onClick={() => toggleAccordion(index)}
+                />
               ))}
             </div>
 
-            {/* Additional info */}
-            <p className="text-xs text-black mt-6">
-              For more information, please review our{" "}
-              <a href="#" className="underline">Guide</a> sections and{" "}
-              <a href="#" className="underline">FAQ</a>.
-            </p>
           </div>
         </div>
-
-        {/* Header and Footer */}
-        {/* <HeaderSection /> */}
-        {/* <FooterSection /> */}
       </div>
     </div>
   );

@@ -1,3 +1,6 @@
+// ===================================================================
+// FILE: Navbar.jsx (Updated)
+// ===================================================================
 import React, { useState, useEffect, useContext } from "react";
 import {
   HiOutlineMapPin,
@@ -14,9 +17,16 @@ import "./Navbar.css";
 import logo from "../../assets/logo.jpg";
 import "@fontsource/jost/300.css";
 import { AuthContext } from "../../context/AuthContext";
+import { CartContext } from "../../context/CartContext";
+// 1. Import the new WishlistContext
+import { WishlistContext } from "../../context/WishlistContext";
 
-const Navbar = ({ onCartClick }) => {
-  const { user, logout } = useContext(AuthContext); // <-- context for reactive user
+const Navbar = () => {
+  const { user, logout } = useContext(AuthContext);
+  const { openCart, cartCount } = useContext(CartContext);
+  // 2. Get wishlist data from the context
+  const { wishlistCount } = useContext(WishlistContext);
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -38,7 +48,7 @@ const Navbar = ({ onCartClick }) => {
   const toggleMenu = () => setMenuOpen((prev) => !prev);
 
   const handleLogout = () => {
-    logout(); // <-- logout from AuthContext
+    logout();
     setProfileOpen(false);
   };
 
@@ -81,14 +91,19 @@ const Navbar = ({ onCartClick }) => {
           <a href="#" className="nav-icon">
             <HiOutlineMagnifyingGlass size={iconSize} color={iconColor} />
           </a>
-          <a href="#" className="nav-icon">
+          {/* 3. This is now a link to the wishlist page and shows the count */}
+          <a href="/wishlist" className="nav-icon relative">
             <HiOutlineHeart size={iconSize} color={iconColor} />
+            {wishlistCount > 0 && (
+              <span className="absolute -top-1 -right-2 bg-red-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {wishlistCount}
+              </span>
+            )}
           </a>
           <a href="#" className="nav-icon">
             <HiOutlineBell size={iconSize} color={iconColor} />
           </a>
 
-          {/* Profile / Login */}
           {user ? (
             <div className="relative">
               <div
@@ -101,7 +116,6 @@ const Navbar = ({ onCartClick }) => {
                   </div>
                 </div>
               </div>
-
               {profileOpen && (
                 <div className="absolute right-0 mt-3 w-72 bg-white/80 backdrop-blur-lg shadow-2xl rounded-2xl overflow-hidden animate-scale-fade z-50">
                   <div className="flex items-center gap-3 p-4 border-b border-gray-200">
@@ -115,30 +129,12 @@ const Navbar = ({ onCartClick }) => {
                       <p className="text-xs text-gray-600">{user.email}</p>
                     </div>
                   </div>
-
                   <ul className="p-4 space-y-3 text-sm font-medium text-gray-700">
-                    <li>
-                      <a href="/profile" className="block px-3 py-2 rounded-lg hover:bg-red-50 hover:text-red-600 transition">
-                        👤 My Profile
-                      </a>
-                    </li>
-                    <li>
-                      <a href="/orders" className="block px-3 py-2 rounded-lg hover:bg-red-50 hover:text-red-600 transition">
-                        📦 My Orders
-                      </a>
-                    </li>
-                    <li>
-                      <a href="/wishlist" className="block px-3 py-2 rounded-lg hover:bg-red-50 hover:text-red-600 transition">
-                        ❤️ Wishlist
-                      </a>
-                    </li>
-                    <li>
-                      <a href="/settings" className="block px-3 py-2 rounded-lg hover:bg-red-50 hover:text-red-600 transition">
-                        ⚙️ Settings
-                      </a>
-                    </li>
+                    <li><a href="/profile" className="block px-3 py-2 rounded-lg hover:bg-red-50 hover:text-red-600 transition">👤 My Profile</a></li>
+                    <li><a href="/orders" className="block px-3 py-2 rounded-lg hover:bg-red-50 hover:text-red-600 transition">📦 My Orders</a></li>
+                    <li><a href="/wishlist" className="block px-3 py-2 rounded-lg hover:bg-red-50 hover:text-red-600 transition">❤️ Wishlist</a></li>
+                    <li><a href="/settings" className="block px-3 py-2 rounded-lg hover:bg-red-50 hover:text-red-600 transition">⚙️ Settings</a></li>
                   </ul>
-
                   <div className="p-4 border-t border-gray-200">
                     <button
                       onClick={handleLogout}
@@ -157,9 +153,13 @@ const Navbar = ({ onCartClick }) => {
             </a>
           )}
 
-          {/* Cart button */}
-          <button className="nav-icon" onClick={onCartClick}>
+          <button className="nav-icon relative" onClick={openCart}>
             <HiOutlineShoppingCart size={iconSize} color={iconColor} />
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-2 bg-red-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {cartCount}
+              </span>
+            )}
           </button>
         </div>
 
@@ -168,18 +168,11 @@ const Navbar = ({ onCartClick }) => {
         </button>
       </nav>
 
-      {/* Links */}
       <div className="links large-screen jost-heading">
         <a href="/about">ABOUT US</a>
-        <a href="#" onMouseEnter={() => setActiveDropdown("services")} onMouseLeave={() => setActiveDropdown(null)}>
-          SERVICES
-        </a>
-        <a href="#" onMouseEnter={() => setActiveDropdown("guide")} onMouseLeave={() => setActiveDropdown(null)}>
-          GUIDE
-        </a>
-        <a href="/manufacturing" onMouseEnter={() => setActiveDropdown("manufacturing")} onMouseLeave={() => setActiveDropdown(null)}>
-          MANUFACTURING
-        </a>
+        <a href="#" onMouseEnter={() => setActiveDropdown("services")} onMouseLeave={() => setActiveDropdown(null)}>SERVICES</a>
+        <a href="#" onMouseEnter={() => setActiveDropdown("guide")} onMouseLeave={() => setActiveDropdown(null)}>GUIDE</a>
+        <a href="/manufacturing" onMouseEnter={() => setActiveDropdown("manufacturing")} onMouseLeave={() => setActiveDropdown(null)}>MANUFACTURING</a>
         <a href="/purchase">PURCHASE</a>
         <a href="/checkout">CHECKOUT</a>
         <a href="/blogs">BLOGS</a>
@@ -203,5 +196,4 @@ const Navbar = ({ onCartClick }) => {
     </header>
   );
 };
-
 export default Navbar;
