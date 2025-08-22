@@ -9,7 +9,7 @@ import ShopMaterial from '../../components/ShopMaterial/ShopMaterial';
 import ShopRoom from '../../components/ShopRoom/ShopRoom';
 import ShopDesign from '../../components/ShopDesign/ShopDesign';
 import Story from '../../components/Story/Story';
-import Faq from '../Faqs/Faqs';
+// import Faq from '../Faqs/Faqs';
 
 const Home = () => {
   return (
@@ -23,7 +23,7 @@ const Home = () => {
      <ShopRoom/>
      <ShopDesign/>
      <Story/>
-     <Faq/>
+     {/* <Faq/> */}
 
 
     </div>
