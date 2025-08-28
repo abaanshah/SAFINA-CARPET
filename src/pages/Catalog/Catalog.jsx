@@ -1,18 +1,20 @@
 // ===================================================================
-// FILE: src/pages/Catalog/Catalog.jsx (Updated)
+// FILE: src/pages/Catalog/Catalog.jsx (Updated with Login Alert)
 // ===================================================================
 import React, { useEffect, useState, useContext } from "react";
 import { Heart, Plus } from "lucide-react";
 import axios from "axios";
-import { useLocation, Link } from "react-router-dom"; 
+import { useLocation, Link } from "react-router-dom";
 import { CartContext } from "../../context/CartContext";
 import { WishlistContext } from "../../context/WishlistContext";
+import { AuthContext } from "../../context/AuthContext"; // --- 1. IMPORT AuthContext ---
 
 const Catalog = () => {
   const [products, setProducts] = useState([]);
   const location = useLocation();
   const { addToCart } = useContext(CartContext);
-  const { addToWishlist, isItemInWishlist } = useContext(WishlistContext);
+  const { addToWishlist, removeFromWishlist, isItemInWishlist } = useContext(WishlistContext);
+  const { user } = useContext(AuthContext); // --- 2. GET the user object ---
 
   const query = new URLSearchParams(location.search);
   const filters = {};
@@ -20,6 +22,22 @@ const Catalog = () => {
     filters[key] = value;
   }
   
+  // --- 3. CREATE a new handler for the wishlist button ---
+  const handleWishlistToggle = (productId) => {
+    // First, check if the user is logged in
+    if (!user) {
+      alert("You must be logged in to add items to your wishlist.");
+      return; // Stop the function here
+    }
+    
+    // If they are logged in, proceed with the normal toggle logic
+    if (isItemInWishlist(productId)) {
+      removeFromWishlist(productId);
+    } else {
+      addToWishlist(productId);
+    }
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.search]);
@@ -68,12 +86,13 @@ const Catalog = () => {
             </Link>
             <div className="absolute top-2 right-2 flex flex-col gap-2">
               <button 
-                onClick={() => addToWishlist(product)}
+                // --- 4. UPDATE the onClick to use the new handler ---
+                onClick={() => handleWishlistToggle(product._id)}
                 className="bg-white p-2 rounded-full shadow hover:bg-gray-100 transition"
               >
                 <Heart 
                   size={18} 
-                  className={`transition-colors ${isItemInWishlist(product._id) ? 'text-red-600 fill-current' : 'text-gray-700'}`} 
+                  className={`transition-colors ${isItemInWishlist(product._id) ? 'text-red-600 fill-red-600' : 'text-gray-700'}`} 
                 />
               </button>
               <button 

@@ -1,10 +1,4 @@
-// ===================================================================
 // FILE: src/context/AuthContext.jsx
-// -------------------------------------------------------------------
-// This version fixes the logout button by adding the 'logout' function
-// back into the context's value.
-// ===================================================================
-
 import React, { createContext, useState, useMemo, useEffect } from "react";
 
 export const AuthContext = createContext(null);
@@ -67,7 +61,7 @@ export function AuthProvider({ children }) {
       setIsLoading(false);
     }
   };
-  
+
   const sendVerificationEmail = async (email) => {
     setIsLoading(true);
     try {
@@ -88,15 +82,18 @@ export function AuthProvider({ children }) {
     window.location.href = "/login"; // Redirect to login page after logout
   };
 
-  const value = useMemo(() => ({
-    user,
-    token,
-    isLoading,
-    login,
-    signup,
-    sendVerificationEmail,
-    logout // The logout function is now correctly provided to your app
-  }), [user, token, isLoading]);
+  const value = useMemo(
+    () => ({
+      user,
+      token,
+      isLoading,
+      login,
+      signup,
+      sendVerificationEmail,
+      logout, // The logout function is now correctly provided to your app
+    }),
+    [user, token, isLoading]
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
