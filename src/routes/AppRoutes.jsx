@@ -17,7 +17,7 @@ import VerifyEmail from "../pages/Login/VerifyEmail";
 import Wishlist from "../pages/Wishlist/Wishlist";
 import Faqs from "../pages/Faqs/Faqs";
 import Checkout from "../pages/Checkout/Checkout";
-
+import Cart from "../pages/Cart/Cart";
 function AppRoutes() {
   return (
     <MainLayout>
@@ -36,6 +36,7 @@ function AppRoutes() {
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/faqs" element={<Faqs />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
     </MainLayout>
   );
