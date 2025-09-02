@@ -16,6 +16,12 @@ export const CartProvider = ({ children }) => {
 
   const API_URL = "http://localhost:5000/api/cart";
 
+  const clearCart = () => {
+    setCartItems([]);
+  };
+
+
+
   const toastOptions = {
     duration: 4000,
     style: {
@@ -149,6 +155,7 @@ export const CartProvider = ({ children }) => {
       value={{
         cartItems,
         isCartOpen,
+        clearCart,
         isLoading,
         addToCart,
         updateQuantity,

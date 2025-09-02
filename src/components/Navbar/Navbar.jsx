@@ -20,6 +20,7 @@ import "@fontsource/jost/300.css";
 import { AuthContext } from "../../context/AuthContext";
 import { CartContext } from "../../context/CartContext";
 import { WishlistContext } from "../../context/WishlistContext";
+import { Clipboard, ClipboardCheck, ClipboardEdit, ClipboardMinus, ListCheck, ListCheckIcon, ListOrdered, ListOrderedIcon, LucideTrainTrack, TrainTrack } from "lucide-react";
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
@@ -99,8 +100,8 @@ const Navbar = () => {
               </span>
             )}
           </Link>
-          <a href="#" className="nav-icon">
-            <HiOutlineBell size={iconSize} color={iconColor} />
+          <a href="/orders" className="nav-icon">
+            <ClipboardMinus size={iconSize} color={iconColor} />
           </a>
 
           {user ? (

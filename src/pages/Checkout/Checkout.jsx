@@ -1,147 +1,148 @@
-// ===================================================================
-// FILE: src/pages/Checkout/Checkout.jsx (Corrected)
-// -------------------------------------------------------------------
-// This version now connects to your CartContext to display the
-// real items from the user's cart.
-// ===================================================================
-import React, { useContext, useState, useEffect } from 'react';
-// 1. Import the CartContext
-import { CartContext } from '../../context/CartContext'; // Adjust path if needed
-import { Lock } from 'lucide-react';
+// FILE: src/pages/CheckoutPage.jsx (Updated and Corrected)
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { AuthContext } from '../../context/AuthContext';
+import { CartContext } from '../../context/CartContext';
+import toast from 'react-hot-toast';
 
+// Renamed component to follow conventions
 const CheckOut = () => {
-  // 2. Get the real cart data from the context
-  const { cartItems, subtotal, cartCount } = useContext(CartContext);
-  
-  // State for the shipping form
-  const [shippingDetails, setShippingDetails] = useState({
-    email: '',
-    firstName: '',
-    lastName: '',
-    address: '',
-    city: '',
-    pincode: '',
-    phone: '',
-  });
+  const navigate = useNavigate();
+  const { token } = useContext(AuthContext);
+  // Get all needed functions and state from CartContext
+  const { cartItems, subtotal, clearCart } = useContext(CartContext);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [postalCode, setPostalCode] = useState('');
+  const [country, setCountry] = useState('');
+  const [errors, setErrors] = useState({}); // For form validation
+  const [isProcessing, setIsProcessing] = useState(false); // To disable button on submit
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setShippingDetails(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e) => {
+  const placeOrderHandler = async (e) => {
     e.preventDefault();
-    // In the next step, this function will send the shippingDetails and cartItems
-    // to the backend to create an order and initiate payment.
-    console.log("Placing order with details:", shippingDetails);
-    alert("(Placeholder) Proceeding to payment gateway...");
-  };
+    
+    // --- Frontend Validation Logic ---
+    const newErrors = {};
+    if (!address) newErrors.address = "Address is required.";
+    if (!city) newErrors.city = "City is required.";
+    if (!postalCode || !/^\d{6}$/.test(postalCode)) newErrors.postalCode = "Valid 6-digit postal code is required.";
+    if (!country) newErrors.country = "Country is required.";
+    setErrors(newErrors);
 
-  const shipping = subtotal > 500 ? 0 : 99; // Your shipping logic
-  const total = subtotal + shipping;
+    if (Object.keys(newErrors).length > 0) {
+      toast.error("Please correct the errors in the form.");
+      return;
+    }
+    // --- End Validation ---
+
+    setIsProcessing(true); // Disable the button
+
+    try {
+      const shippingAddress = { address, city, postalCode, country };
+      
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await axios.post(
+        'http://localhost:5000/api/orders',
+        { shippingAddress, paymentMethod: 'Stripe' },
+        config
+      );
+
+      toast.success('Order placed successfully!');
+      clearCart(); // --- Call clearCart on success ---
+      navigate(`/order/${data._id}`); // We will create a page for this URL
+
+    } catch (err) {
+      console.error('Error placing order:', err);
+      toast.error(err.response?.data?.message || 'Failed to place order.');
+      setIsProcessing(false); // Re-enable button on failure
+    }
+  };
 
   return (
-    <div className="bg-stone-50 min-h-screen">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 mt-[12vh]">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-red-900 tracking-tight" style={{fontFamily: 'Jost, sans-serif'}}>
-            Checkout
-          </h1>
-          <p className="mt-2 text-lg text-gray-600">Complete your purchase</p>
-        </div>
-
-        {cartItems.length === 0 ? (
-          <div className="text-center h-[40vh] flex flex-col justify-center items-center">
-             <h2 className="text-2xl font-semibold text-gray-800">Your cart is empty.</h2>
-             <p className="text-gray-500 mt-2">There's nothing to check out yet.</p>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 lg:gap-12">
-            {/* Left Column: Shipping Details */}
-            <div className="bg-white p-8 rounded-lg shadow-md border border-gray-200">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-6">Shipping Information</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {/* First Name */}
-                <div className="sm:col-span-1">
-                  <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">First Name</label>
-                  <input type="text" name="firstName" id="firstName" required onChange={handleInputChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-800 focus:border-red-800" />
-                </div>
-                {/* Last Name */}
-                <div className="sm:col-span-1">
-                  <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">Last Name</label>
-                  <input type="text" name="lastName" id="lastName" required onChange={handleInputChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-800 focus:border-red-800" />
-                </div>
-                {/* Email */}
-                <div className="sm:col-span-2">
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address</label>
-                  <input type="email" name="email" id="email" required onChange={handleInputChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-800 focus:border-red-800" />
-                </div>
-                {/* Address */}
-                <div className="sm:col-span-2">
-                  <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address</label>
-                  <input type="text" name="address" id="address" required onChange={handleInputChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-800 focus:border-red-800" />
-                </div>
-                {/* City */}
-                <div className="sm:col-span-1">
-                  <label htmlFor="city" className="block text-sm font-medium text-gray-700">City</label>
-                  <input type="text" name="city" id="city" required onChange={handleInputChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-800 focus:border-red-800" />
-                </div>
-                {/* Pincode */}
-                <div className="sm:col-span-1">
-                  <label htmlFor="pincode" className="block text-sm font-medium text-gray-700">Pincode</label>
-                  <input type="text" name="pincode" id="pincode" required onChange={handleInputChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-800 focus:border-red-800" />
-                </div>
-                 {/* Phone */}
-                 <div className="sm:col-span-2">
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone</label>
-                  <input type="tel" name="phone" id="phone" required onChange={handleInputChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-800 focus:border-red-800" />
-                </div>
+    <div className="container mx-auto mt-[15vh] mb-[10vh] p-4">
+      <h1 className="text-4xl font-bold text-center mb-8">Checkout</h1>
+      <form onSubmit={placeOrderHandler}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+          
+          {/* Left Side: Shipping Form */}
+          <div>
+            <h2 className="text-2xl font-semibold mb-4 border-b pb-2">Shipping Address</h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-lg font-medium text-gray-700">Address</label>
+                <input
+                  type="text" placeholder="123 Main St" value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 ${errors.address ? 'border-red-500' : 'border-gray-300'}`}
+                />
+                {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
+              </div>
+              <div>
+                <label className="block text-lg font-medium text-gray-700">City</label>
+                <input
+                  type="text" placeholder="New Delhi" value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 ${errors.city ? 'border-red-500' : 'border-gray-300'}`}
+                />
+                {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
+              </div>
+              <div>
+                <label className="block text-lg font-medium text-gray-700">Postal Code</label>
+                <input
+                  type="text" placeholder="110001" value={postalCode}
+                  onChange={(e) => setPostalCode(e.target.value)}
+                  className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 ${errors.postalCode ? 'border-red-500' : 'border-gray-300'}`}
+                />
+                {errors.postalCode && <p className="text-red-500 text-sm mt-1">{errors.postalCode}</p>}
+              </div>
+              <div>
+                <label className="block text-lg font-medium text-gray-700">Country</label>
+                <input
+                  type="text" placeholder="India" value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 ${errors.country ? 'border-red-500' : 'border-gray-300'}`}
+                />
+                {errors.country && <p className="text-red-500 text-sm mt-1">{errors.country}</p>}
               </div>
             </div>
+          </div>
 
-            {/* Right Column: Order Summary */}
-            <div className="bg-white p-8 rounded-lg shadow-md border border-gray-200 mt-8 lg:mt-0">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-6">Order Summary ({cartCount} {cartCount > 1 ? 'items' : 'item'})</h2>
-              <div className="space-y-4 max-h-64 overflow-y-auto pr-2">
+          {/* Right Side: Order Summary */}
+          <div>
+            <div className="bg-white shadow-md rounded-lg p-6 sticky top-24">
+              <h2 className="text-2xl font-semibold border-b pb-4">Order Summary</h2>
+              <div className="space-y-3 mt-4">
                 {cartItems.map(item => (
-                  <div key={item._id} className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <img src={`http://localhost:5000/${item.image}`} alt={item.name} className="w-16 h-16 rounded-md object-cover mr-4 border" onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/64x64/f8f8f8/333333?text=Rug" }} />
-                      <div>
-                        <p className="font-semibold text-gray-800">{item.name}</p>
-                        <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
-                      </div>
-                    </div>
-                    <p className="font-semibold text-gray-900">₹{(item.price * item.quantity).toLocaleString('en-IN')}</p>
+                  <div key={item._id} className="flex justify-between items-center text-sm">
+                    <span>{item.name} (x{item.quantity})</span>
+                    <span className="font-medium">₹{(item.price * item.quantity).toLocaleString('en-IN')}</span>
                   </div>
                 ))}
               </div>
-              <div className="border-t border-gray-200 mt-6 pt-6 space-y-2">
-                <div className="flex justify-between text-gray-600">
-                  <span>Subtotal</span>
-                  <span>₹{subtotal.toLocaleString('en-IN')}</span>
-                </div>
-                <div className="flex justify-between text-gray-600">
-                  <span>Shipping</span>
-                  <span>{shipping === 0 ? 'Free' : `₹${shipping}`}</span>
-                </div>
-                <div className="flex justify-between text-xl font-bold text-gray-900 mt-2 pt-2 border-t border-gray-300">
-                  <span>Total</span>
-                  <span className="text-red-900">₹{total.toLocaleString('en-IN')}</span>
-                </div>
+              <div className="flex justify-between items-center border-t pt-4 mt-4">
+                <span className="text-xl font-bold">Total</span>
+                <span className="text-2xl font-extrabold text-red-800">₹{subtotal.toLocaleString('en-IN')}</span>
               </div>
-              <button type="submit" className="w-full mt-8 bg-red-800 text-white font-bold py-3 px-4 rounded-lg hover:bg-red-900 transition-colors text-lg flex items-center justify-center">
-                <Lock className="w-5 h-5 mr-2" />
-                Place Order
+              
+              <button
+                type="submit"
+                disabled={isProcessing} // Disable button when processing
+                className="w-full bg-red-800 text-white font-bold py-3 mt-6 rounded-lg hover:bg-red-900 transition text-lg uppercase tracking-wider disabled:bg-gray-400 disabled:cursor-not-allowed"
+              >
+                {isProcessing ? 'Processing...' : 'Place Order'}
               </button>
             </div>
-          </form>
-        )}
-      </div>
+          </div>
+        </div>
+      </form>
     </div>
   );
 };

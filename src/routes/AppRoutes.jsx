@@ -18,6 +18,8 @@ import Wishlist from "../pages/Wishlist/Wishlist";
 import Faqs from "../pages/Faqs/Faqs";
 import Checkout from "../pages/Checkout/Checkout";
 import Cart from "../pages/Cart/Cart";
+import Orders from "../pages/Orders/Order";
+import OrderConfirmation from "../pages/Orders/OrderConfirmation";
 function AppRoutes() {
   return (
     <MainLayout>
@@ -37,6 +39,8 @@ function AppRoutes() {
         <Route path="/faqs" element={<Faqs />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/orders" element={<Orders />} />
+        <Route path="/order/:orderId" element={<OrderConfirmation />} />
       </Routes>
     </MainLayout>
   );
