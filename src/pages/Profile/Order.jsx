@@ -92,7 +92,7 @@ const MyOrdersPage = () => {
   }
 
   return (
-    <div className="container mx-auto mt-[15vh] mb-[10vh] p-4 min-h-screen">
+    <div className="container mx-auto  mb-[10vh] p-4 min-h-screen">
       <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center" style={{ fontFamily: "Jost, sans-serif" }}>My Orders</h1>
       
       {orders.length === 0 ? (

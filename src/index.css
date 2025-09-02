@@ -1,11 +1,24 @@
-/* @tailwind base;
-@tailwind components;
-@tailwind utilities; */
+/* ========================================================== */
+/* IMPORTS                             */
+/* ========================================================== */
+
+/* Use @import for CSS files. This is the corrected font import. */
+@import "@fontsource/jost/200.css";
+@import "@fontsource/jost/300.css";
+@import "@fontsource/caveat";
+@import "@fontsource/crimson-text";
+
+/* Import Tailwind's base, components, and utilities */
 @import "tailwindcss";
+
+
+/* ========================================================== */
+/* BODY & CUSTOM CLASSES               */
+/* ========================================================== */
 
 body {
   font-family: 'Jost', sans-serif;
-  font-weight: 300; /* Light default */
+  font-weight: 300;
 }
 
 .caveat-heading {
@@ -18,3 +31,38 @@ body {
 .crimson-heading {
   font-family: 'Crimson Text', serif;
 }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+
+
+
+
+
+/* ========================================================== */
+/* FINAL, ULTIMATE OVERRIDE FOR INVISIBLE LINK-BUTTONS      */
+/* ========================================================== */
+
+/* This rule targets ANY link that has ANY class attribute on it.
+   It is more powerful than a simple 'a' selector and will
+   reset the link to behave like normal text, allowing
+   Tailwind classes to take full control. */
+/* a[class] {
+  color: inherit !important;
+  background-color: transparent !important;
+  text-decoration: none !important;
+} */
+
+/* This rule is EVEN MORE POWERFUL. It says:
+   ANY element, ANYWHERE, that has a class containing "bg-"
+   (like bg-red-800), MUST use the background color defined
+   by that class. The double !important ensures it wins. */
+/* [class*="bg-"] {
+  background-color: revert !important;
+} */

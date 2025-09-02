@@ -8,7 +8,7 @@ import { CartProvider } from "./context/CartContext";
 import { WishlistProvider } from "./context/WishlistContext";
 import { Toaster } from 'react-hot-toast';
 import './index.css';
-import "@fontsource/jost/200.css";
+// import "@fontsource/jost/200.css";
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
