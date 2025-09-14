@@ -26,7 +26,11 @@ import Orders from "../pages/Profile/Order";
 import OrderConfirmation from "../pages/Profile/OrderConfirmation"; 
 import Addresses from "../pages/Profile/Addresses"; 
 import Settings from "../pages/Profile/Settings";   
+
+//--- Admin Panel ---
+
 function AppRoutes() {
+
   return (
     <MainLayout>
       <Routes>
