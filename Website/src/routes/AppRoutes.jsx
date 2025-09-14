@@ -21,16 +21,13 @@ import Cart from "../pages/Cart/Cart";
 
 // --- Profile ---
 import ProfileLayout from "../pages/Profile/ProfileLayout";
-import ProfileDetail from "../pages/Profile/ProfileDetails"; 
-import Orders from "../pages/Profile/Order";            
-import OrderConfirmation from "../pages/Profile/OrderConfirmation"; 
-import Addresses from "../pages/Profile/Addresses"; 
-import Settings from "../pages/Profile/Settings";   
-
-
+import ProfileDetail from "../pages/Profile/ProfileDetails";
+import Orders from "../pages/Profile/Order";
+import OrderConfirmation from "../pages/Profile/OrderConfirmation";
+import Addresses from "../pages/Profile/Addresses";
+import Settings from "../pages/Profile/Settings";
 
 function AppRoutes() {
-
   return (
     <MainLayout>
       <Routes>
@@ -58,13 +55,19 @@ function AppRoutes() {
 
         {/* Nested structure for the entire profile section */}
         <Route path="/profile" element={<ProfileLayout />}>
-          <Route index element={<ProfileDetail />} />   {/* Shows at /profile */}
-          <Route path="orders" element={<Orders />} />    {/* Shows at /profile/orders */}
-          <Route path="addresses" element={<Addresses />} /> {/* Shows at /profile/addresses */}
-          <Route path="settings" element={<Settings />} />   {/* Shows at /profile/settings */}
+          <Route index element={<ProfileDetail />} /> {/* Shows at /profile */}
+          <Route path="orders" element={<Orders />} />{" "}
+          {/* Shows at /profile/orders */}
+          <Route path="addresses" element={<Addresses />} />{" "}
+          {/* Shows at /profile/addresses */}
+          <Route path="settings" element={<Settings />} />{" "}
+          {/* Shows at /profile/settings */}
         </Route>
         {/* Redirect for any old links pointing to /orders */}
-        <Route path="/orders" element={<Navigate to="/profile/orders" replace />} />
+        <Route
+          path="/orders"
+          element={<Navigate to="/profile/orders" replace />}
+        />
       </Routes>
     </MainLayout>
   );
