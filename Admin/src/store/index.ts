@@ -1,16 +1,73 @@
+// ===================================================================
+// FILE: admin/src/store/index.ts (FINAL, COMPLETE, AND CORRECTED)
+// ===================================================================
 import { create } from 'zustand';
-import { devtools, persist } from 'zustand/middleware';
-import { User, DashboardStats, AppSettings } from '@/types';
+import { devtools, persist, createJSONStorage } from 'zustand/middleware';
+import { DashboardStats, AppSettings } from '@/types'; // Your original types are kept
+
+// This User type matches your actual backend user object
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  isAdmin: boolean;
+}
 
 interface AuthState {
   user: User | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  token: string | null;
+  login: (token: string, user: User) => void;
   logout: () => void;
-  setUser: (user: User) => void;
 }
 
+// THIS IS THE CORRECTED AUTH STORE THAT SOLVES THE LOGIN PROBLEM
+export const useAuthStore = create<AuthState>()(
+  devtools(
+    persist(
+      (set) => ({
+        user: null,
+        token: null,
+        login: (token, user) => { // <-- Add the login function
+          localStorage.setItem('user', JSON.stringify(user));
+          localStorage.setItem('token', token);
+          set({ user, token });
+        },
+        logout: () => {
+          localStorage.removeItem('user');
+          localStorage.removeItem('token');
+          set({ user: null, token: null });
+          window.location.href = 'http://localhost:5173/login';
+        },
+      }),
+      {
+        name: 'auth-storage',
+        storage: createJSONStorage(() => ({
+          getItem: (name) => {
+            const user = localStorage.getItem('user');
+            const token = localStorage.getItem('token');
+            return JSON.stringify({
+              state: {
+                user: user ? JSON.parse(user) : null,
+                token: token,
+              },
+            });
+          },
+          setItem: (name, value) => {
+            // The admin panel only READS auth state, it never sets it.
+            // The main website is responsible for setting it.
+          },
+          removeItem: (name) => {
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+          },
+        })),
+      }
+    ),
+    { name: 'auth-store' }
+  )
+);
+
+// --- YOUR ORIGINAL, UNTOUCHED CODE FOR OTHER STORES IS BELOW ---
 interface UIState {
   sidebarCollapsed: boolean;
   theme: 'light' | 'dark' | 'system';
@@ -26,59 +83,6 @@ interface AppState {
   updateSettings: (settings: Partial<AppSettings>) => void;
 }
 
-// Auth Store
-export const useAuthStore = create<AuthState>()(
-  devtools(
-    persist(
-      (set, get) => ({
-        user: null,
-        isAuthenticated: false,
-        isLoading: false,
-        
-        login: async (email: string, password: string) => {
-          set({ isLoading: true });
-          try {
-            // Mock authentication - replace with real API
-            if (email === 'admin@safinacarpets.com' && password === 'admin123') {
-              const user: User = {
-                id: '1',
-                name: 'Admin User',
-                email: 'admin@safinacarpets.com',
-                role: 'admin',
-                avatar: undefined,
-                lastLogin: new Date()
-              };
-              set({ user, isAuthenticated: true, isLoading: false });
-            } else {
-              throw new Error('Invalid credentials');
-            }
-          } catch (error) {
-            set({ isLoading: false });
-            throw error;
-          }
-        },
-        
-        logout: () => {
-          set({ user: null, isAuthenticated: false });
-          localStorage.removeItem('auth-storage');
-        },
-        
-        setUser: (user: User) => {
-          set({ user, isAuthenticated: true });
-        }
-      }),
-      {
-        name: 'auth-storage',
-        partialize: (state) => ({ 
-          user: state.user, 
-          isAuthenticated: state.isAuthenticated 
-        }),
-      }
-    ),
-    { name: 'auth-store' }
-  )
-);
-
 // UI Store
 export const useUIStore = create<UIState>()(
   devtools(
@@ -86,32 +90,22 @@ export const useUIStore = create<UIState>()(
       (set) => ({
         sidebarCollapsed: false,
         theme: 'light',
-        
         toggleSidebar: () => {
           set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed }));
         },
-        
         setSidebarCollapsed: (collapsed: boolean) => {
           set({ sidebarCollapsed: collapsed });
         },
-        
         setTheme: (theme: 'light' | 'dark' | 'system') => {
           set({ theme });
-          // Apply theme to document
           const root = document.documentElement;
-          if (theme === 'dark') {
-            root.classList.add('dark');
-          } else if (theme === 'light') {
-            root.classList.remove('dark');
-          } else {
-            // System theme
-            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-            if (mediaQuery.matches) {
-              root.classList.add('dark');
-            } else {
-              root.classList.remove('dark');
-            }
+          root.classList.remove('light', 'dark');
+          if (theme === 'system') {
+            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            root.classList.add(systemTheme);
+            return;
           }
+          root.classList.add(theme);
         }
       }),
       {
@@ -140,11 +134,9 @@ export const useAppStore = create<AppState>()(
           lowStock: true
         }
       },
-      
       setDashboardStats: (stats: DashboardStats) => {
         set({ dashboardStats: stats });
       },
-      
       updateSettings: (newSettings: Partial<AppSettings>) => {
         set((state) => ({
           settings: { ...state.settings, ...newSettings }

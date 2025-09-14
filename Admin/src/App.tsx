@@ -16,6 +16,7 @@ import MailInbox from "./pages/MailInbox";
 import Chat from "./pages/Chat";
 import MeetingSchedule from "./pages/MeetingSchedule";
 import CustomerFavorites from "./pages/CustomerFavorites";
+import AuthCallback from "./pages/AuthCallback";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
+          <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/" element={
             <ProtectedRoute>
               <AppLayout />
