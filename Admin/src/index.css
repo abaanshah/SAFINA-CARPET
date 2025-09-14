@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* SAFINA CARPETS - Warm, premium carpet company theme */
+    --background: 30 30% 98%;
+    --foreground: 20 14% 12%;
+
+    --card: 30 30% 98%;
+    --card-foreground: 20 14% 12%;
+
+    --popover: 30 30% 98%;
+    --popover-foreground: 20 14% 12%;
+
+    /* Rich burgundy primary - carpet elegance */
+    --primary: 345 65% 25%;
+    --primary-foreground: 30 30% 98%;
+    --primary-glow: 345 65% 35%;
+
+    /* Warm beige secondary */
+    --secondary: 35 25% 90%;
+    --secondary-foreground: 20 14% 12%;
+
+    --muted: 35 20% 94%;
+    --muted-foreground: 20 14% 45%;
+
+    /* Golden accent for premium feel */
+    --accent: 42 75% 65%;
+    --accent-foreground: 20 14% 12%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 30 30% 98%;
+
+    --border: 35 15% 88%;
+    --input: 35 15% 92%;
+    --ring: 345 65% 25%;
+
+    --radius: 0.75rem;
+
+    /* Premium gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-warm: linear-gradient(135deg, hsl(42 75% 65%), hsl(35 60% 75%));
+    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(35 20% 96%));
+
+    /* Elegant shadows */
+    --shadow-elegant: 0 10px 30px -10px hsl(var(--primary) / 0.15);
+    --shadow-warm: 0 4px 20px -4px hsl(42 75% 65% / 0.2);
+
+    /* Sidebar theme */
+    --sidebar-background: 345 65% 25%;
+    --sidebar-foreground: 30 30% 98%;
+    --sidebar-primary: 345 65% 35%;
+    --sidebar-primary-foreground: 30 30% 98%;
+    --sidebar-accent: 345 45% 30%;
+    --sidebar-accent-foreground: 30 30% 98%;
+    --sidebar-border: 345 45% 20%;
+    --sidebar-ring: 42 75% 65%;
+
+    /* Smooth transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark {
+    /* Dark mode - premium carpet company feel */
+    --background: 20 14% 8%;
+    --foreground: 30 30% 95%;
+
+    --card: 20 14% 10%;
+    --card-foreground: 30 30% 95%;
+
+    --popover: 20 14% 10%;
+    --popover-foreground: 30 30% 95%;
+
+    --primary: 345 65% 45%;
+    --primary-foreground: 30 30% 95%;
+    --primary-glow: 345 65% 55%;
+
+    --secondary: 20 10% 18%;
+    --secondary-foreground: 30 30% 95%;
+
+    --muted: 20 10% 15%;
+    --muted-foreground: 30 15% 65%;
+
+    --accent: 42 75% 55%;
+    --accent-foreground: 20 14% 8%;
+
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 30 30% 95%;
+
+    --border: 20 10% 18%;
+    --input: 20 10% 15%;
+    --ring: 345 65% 45%;
+
+    /* Sidebar theme for dark mode */
+    --sidebar-background: 20 14% 6%;
+    --sidebar-foreground: 30 30% 95%;
+    --sidebar-primary: 345 65% 45%;
+    --sidebar-primary-foreground: 30 30% 95%;
+    --sidebar-accent: 20 10% 12%;
+    --sidebar-accent-foreground: 30 30% 95%;
+    --sidebar-border: 20 10% 8%;
+    --sidebar-ring: 42 75% 55%;
+
+    /* Dark mode gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-warm: linear-gradient(135deg, hsl(42 65% 45%), hsl(35 50% 55%));
+    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(20 10% 12%));
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
