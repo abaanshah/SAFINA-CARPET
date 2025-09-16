@@ -57,6 +57,8 @@ export const loginUser = async ({ email, password }) => {
     await sendVerificationEmail(user);
     throw new Error('Please verify your email. A new link has been sent.');
   }
+  user.lastLogin = Date.now(); // Set the current date and time
+  await user.save(); 
 
   const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1d' });
   
@@ -70,7 +72,8 @@ export const loginUser = async ({ email, password }) => {
       email: user.email, 
       name: user.name, 
       emailVerified: user.emailVerified,
-      isAdmin: user.isAdmin 
+      isAdmin: user.isAdmin,
+      lastLogin: user.lastLogin
     } 
   };
 };

@@ -1,4 +1,6 @@
-// FILE: website/src/context/AuthContext.jsx (Corrected)
+// ===================================================================
+// FILE: website/src/context/AuthContext.jsx (FINAL, with Tab Sync)
+// ===================================================================
 import React, { createContext, useState, useMemo, useEffect } from "react";
 
 export const AuthContext = createContext(null);
@@ -10,19 +12,44 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
+  // This single function is now our source of truth for loading state from localStorage
+  const syncAuthStateFromStorage = () => {
     try {
       const storedToken = localStorage.getItem("token");
-      const storedUser = JSON.parse(localStorage.getItem("user"));
+      const storedUser = localStorage.getItem("user");
+      
       if (storedToken && storedUser) {
         setToken(storedToken);
-        setUser(storedUser);
+        setUser(JSON.parse(storedUser));
+      } else {
+        // If items are missing, ensure React state is also cleared
+        setToken(null);
+        setUser(null);
       }
     } catch (e) {
+      console.error("Failed to parse auth data from storage", e);
       localStorage.clear();
+      setToken(null);
+      setUser(null);
     }
+  };
+
+  // Effect 1: Load the initial state when the app first mounts
+  useEffect(() => {
+    syncAuthStateFromStorage();
     setIsLoading(false);
   }, []);
+
+  // Effect 2: Listen for storage changes from OTHER browser tabs to stay in sync
+  useEffect(() => {
+    // The 'storage' event is the browser's built-in alarm for cross-tab changes
+    window.addEventListener('storage', syncAuthStateFromStorage);
+
+    // Cleanup function to remove the listener when the component is no longer on screen
+    return () => {
+      window.removeEventListener('storage', syncAuthStateFromStorage);
+    };
+  }, []); // The empty array ensures this listener is set up only once
 
   const fetchAPI = async (url, body, method = "POST") => {
     const res = await fetch(`${API_BASE}${url}`, {
@@ -30,12 +57,11 @@ export function AuthProvider({ children }) {
       headers: { "Content-Type": "application/json" },
       body: body ? JSON.stringify(body) : undefined,
     });
-    // We will check for valid JSON response here for better error handling
     if (!res.ok) {
         const errorData = await res.json();
         throw new Error(errorData.message || "An error occurred");
     }
-    return res.json(); // Only parse JSON if the response is ok
+    return res.json();
   };
 
   const login = async (email, password) => {
@@ -43,23 +69,20 @@ export function AuthProvider({ children }) {
     try {
       const data = await fetchAPI("/api/auth/login", { email, password });
       
-        // --- THIS IS THE NEW, MORE DETAILED LOGGING ---
-        console.log("Full response from backend:", data);
-        console.log("The 'user' object from the backend is:", data.user);
-        console.log("Is the user an admin? -->", data.user?.isAdmin); // This is the final question
+      // This is the only place we now WRITE to localStorage
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
+      
+      // Update the state for the current tab
       setToken(data.token);
       setUser(data.user);
 
-      // In website/src/context/AuthContext.jsx
-if (data.user && data.user.isAdmin) {
-  // We now redirect to a special callback page on the admin panel
-  // and pass the token in the URL.
-  window.location.href = `http://localhost:8080/auth/callback?token=${data.token}`;
-} else {
-  window.location.href = "/";
-}
+      // Your "URL Token" redirect logic for the admin panel
+      if (data.user && data.user.isAdmin) {
+        window.location.href = `http://localhost:8080/auth/callback?token=${data.token}`;
+      } else {
+        window.location.href = "/";
+      }
     } catch (err) {
       setIsLoading(false);
       throw err;
@@ -89,6 +112,7 @@ if (data.user && data.user.isAdmin) {
   };
 
   const logout = () => {
+    // This will clear localStorage, and the 'storage' event will notify other tabs
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setToken(null);

@@ -1,3 +1,6 @@
+// ===================================================================
+// FILE: admin/src/components/layout/AppSidebar.tsx (100% Complete)
+// ===================================================================
 import { NavLink } from "react-router-dom";
 import { useUIStore } from "@/store";
 import { cn } from "@/lib/utils";
@@ -38,42 +41,42 @@ import { useAuthStore } from "@/store";
 const navigationItems = [
   {
     title: "Overview",
-    items: [{ title: "Dashboard", url: "/", icon: LayoutDashboard }],
+    items: [{ title: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboard }],
   },
   {
     title: "Catalog",
     items: [
-      { title: "Products", url: "/products", icon: Package },
-      { title: "Categories", url: "/categories", icon: Folder },
+      { title: "Products", url: "/admin/products", icon: Package },
+      { title: "Categories", url: "/admin/categories", icon: Folder },
     ],
   },
   {
     title: "Sales",
     items: [
-      { title: "Orders", url: "/orders", icon: ShoppingCart },
-      { title: "Customers", url: "/customers", icon: Users },
-      { title: "Custom Requests", url: "/custom-requests", icon: FileText },
-      { title: "Customer Favorites", url: "/customer-favorites", icon: Heart },
+      { title: "Orders", url: "/admin/orders", icon: ShoppingCart },
+      { title: "Customers", url: "/admin/customers", icon: Users },
+      { title: "Custom Requests", url: "/admin/custom-requests", icon: FileText },
+      { title: "Customer Favorites", url: "/admin/customer-favorites", icon: Heart },
     ],
   },
   {
     title: "Communication",
     items: [
-      { title: "Mail Inbox", url: "/mail-inbox", icon: Mail },
-      { title: "Chat", url: "/chat", icon: MessageCircle },
-      { title: "Messages", url: "/messages", icon: MessageSquare },
-      { title: "International", url: "/international", icon: Globe },
+      { title: "Mail Inbox", url: "/admin/mail-inbox", icon: Mail },
+      { title: "Chat", url: "/admin/chat", icon: MessageCircle },
+      { title: "Messages", url: "/admin/messages", icon: MessageSquare },
+      { title: "International", url: "/admin/international", icon: Globe },
     ],
   },
   {
     title: "Schedule",
     items: [
-      { title: "Meeting Schedule", url: "/meeting-schedule", icon: Calendar },
+      { title: "Meeting Schedule", url: "/admin/meeting-schedule", icon: Calendar },
     ],
   },
   {
     title: "System",
-    items: [{ title: "Settings", url: "/settings", icon: Settings }],
+    items: [{ title: "Settings", url: "/admin/settings", icon: Settings }],
   },
 ];
 
@@ -82,6 +85,8 @@ export function AppSidebar() {
   const { user } = useAuthStore();
   const collapsed = !sidebarOpen;
 
+  // I have updated the URLs in your navigationItems to include the /admin prefix
+  // to match the router setup.
   const getNavClass = ({ isActive }: { isActive: boolean }) =>
     cn(
       "w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors",
@@ -92,7 +97,13 @@ export function AppSidebar() {
   return (
     <Sidebar className={cn(collapsed ? "w-16" : "w-64")} collapsible="icon">
       <SidebarHeader className="p-4 border-b border-sidebar-border">
-        <div className="flex items-center space-x-3">
+        {/* --- THIS IS THE ONLY CHANGE FROM YOUR ORIGINAL FILE --- */}
+        <a 
+          href="http://localhost:5173" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="flex items-center space-x-3"
+        >
           <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center text-white font-bold text-sm">
             SC
           </div>
@@ -104,7 +115,8 @@ export function AppSidebar() {
               <p className="text-xs text-sidebar-foreground/70">CARPETS</p>
             </div>
           )}
-        </div>
+        </a>
+        {/* ---------------------------------------------------- */}
       </SidebarHeader>
 
       <SidebarContent className="py-4">
@@ -151,7 +163,7 @@ export function AppSidebar() {
                 {user?.name || "User"}
               </p>
               <p className="text-xs text-sidebar-foreground/60 truncate">
-                {user?.role || "Admin"}
+                {user?.isAdmin ? "Admin" : "User"}
               </p>
             </div>
           )}

@@ -10,7 +10,12 @@ const RugSchema = new mongoose.Schema({
   imageUrl: { type: String, required: true },       // main image
   images: { type: [String], default: [] },          // extra images for gallery
   shortDescription: { type: String, default: "" },  // short description
-  description: { type: String, default: "" }       // full description
+  description: { type: String, default: "" },       // full description
+  countInStock: {
+    type: Number,
+    required: true,
+    default: 0
+},
 });
 
 export default mongoose.model("Rug", RugSchema);
