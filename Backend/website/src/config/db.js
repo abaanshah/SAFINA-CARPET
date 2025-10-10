@@ -1,4 +1,3 @@
-// src/config/db.js
 import mongoose from "mongoose";
 
 /**
@@ -8,11 +7,9 @@ import mongoose from "mongoose";
 const ConnectDB = async () => {
   try {
     // Attempt to connect to the database using the URI from environment variables
-    await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log("✅ MongoDB Connected");
+    // The options object has been removed as it's no longer necessary.
+    const conn = await mongoose.connect(process.env.MONGO_URI);
+    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     // Log any connection errors and exit the process with a failure code
     console.error("❌ MongoDB Connection Error:", error);
@@ -21,3 +18,4 @@ const ConnectDB = async () => {
 };
 
 export default ConnectDB;
+

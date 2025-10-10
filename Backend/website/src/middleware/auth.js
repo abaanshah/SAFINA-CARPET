@@ -1,27 +1,40 @@
-// FILE: backend/src/middleware/auth.js (Corrected)
 import jwt from "jsonwebtoken";
 import User from "../models/user.js";
+import config from '../config/index.js'; // 1. Import from our new config file
 
-const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
+const JWT_SECRET = config.JWT_SECRET; // 2. Get the secret from the config object
 
 export const protect = async (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).json({ msg: "No token provided" });
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ msg: "Not authorized, no token" });
+  }
 
   try {
+    const token = authHeader.split(" ")[1];
+    
+    // 3. This verification will now work correctly
     const decoded = jwt.verify(token, JWT_SECRET);
 
-    // Fetch full user from DB, but without their password for security
     const user = await User.findById(decoded.id || decoded._id).select("-password");
-    if (!user) return res.status(401).json({ msg: "User not found" });
+    if (!user) {
+      return res.status(401).json({ msg: "Not authorized, user not found" });
+    }
 
-    // --- THIS IS THE FIX ---
-    // Instead of just attaching the ID, we attach the entire user object.
-    // This makes the user's name, email, and isAdmin status available to the next functions.
     req.user = user; 
-
     next();
   } catch (err) {
-    res.status(401).json({ msg: "Token is invalid" });
+    console.error("Token verification error:", err.message);
+    return res.status(401).json({ msg: "Token is not valid" });
   }
 };
+
+// Also include the admin middleware for completeness
+export const admin = (req, res, next) => {
+    if (req.user && req.user.isAdmin) {
+        next();
+    } else {
+        res.status(403).json({ message: 'Not authorized as an admin' });
+    }
+};
+

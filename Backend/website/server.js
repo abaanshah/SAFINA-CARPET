@@ -1,15 +1,15 @@
+// 1. We only need to import the app and the PORT from our new config
 import app from "./src/app.js";
-import dotenv from "dotenv";
+import config from "./src/config/index.js";
 import connectDB from "./src/config/db.js";
 
+const PORT = config.PORT;
 
-dotenv.config();
-const PORT = process.env.PORT || 5000;
-
-// connect DB
+// Connect DB
 connectDB();
 
-// start server
+// Start server
 app.listen(PORT, () => {
-  console.log(`✅ Server running at http://localhost:${PORT}`);
+  console.log(`✅ Server running in ${config.NODE_ENV} mode at http://localhost:${PORT}`);
 });
+
