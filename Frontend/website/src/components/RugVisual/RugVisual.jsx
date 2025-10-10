@@ -17,7 +17,7 @@ const VisualizerContainer = ({ onClose }) => {
           &times;
         </button>
         <iframe
-          src="http://localhost:8080"
+          src="http://localhost:8090"
           title="Rug Visualizer"
           className='w-full h-full border-none'
         ></iframe>

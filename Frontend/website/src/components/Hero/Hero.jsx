@@ -37,7 +37,7 @@ const Hero = () => {
       <div className="hero-container">
         <h1>WELCOME TO SAFINA CARPET</h1>
         <h2>HANDMADE & MACHINEMADE RUGS</h2>
-        <button>SHOP NOW</button>
+        <button> <a href="/catalog">SHOP NOW</a> </button>
       </div>
       <Chatbot />
       {isVisible && (

@@ -27,7 +27,7 @@ const VisualizerContainer = ({ onClose, rugImageUrl }) => {
     };
   }, []);
 
-  const visualizerUrl = `http://localhost:8080?rugUrl=${encodeURIComponent(
+  const visualizerUrl = `http://localhost:8090?rugUrl=${encodeURIComponent(
     rugImageUrl
   )}`;
 
