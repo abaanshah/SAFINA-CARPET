@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useContext } from 'react';
-import { useDropzone } from 'react-dropzone'; // FIX: Corrected import from 'react-dropzone'
+import { useDropzone } from 'react-dropzone';
 import axios, { AxiosError } from 'axios';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,14 +20,34 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { mockCategories } from '@/data/mockData';
 import { Upload, X, Loader2, Image as ImageIcon, Video, FileText } from 'lucide-react';
 import { AuthContext } from '../context/authContext';
+
+// --- Predefined options for dropdowns to ensure data consistency ---
+const categoryOptions = ["Persian", "Modern", "Traditional", "Vintage", "Bohemian"];
+const materialOptions = ["Wool", "Silk", "Cotton", "Jute", "Synthetic"];
+const shapeOptions = ["Rectangular", "Round", "Runner", "Square", "Oval"];
+const patternOptions = ["Geometric", "Floral", "Abstract", "Oriental", "Solid"];
+const typeOptions = ["Hand-Knotted", "Hand-Tufted", "Machine-Made", "Flatweave"];
 
 interface AddProductProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onProductAdded: (newProduct: any) => void;
+}
+
+// --- FIX: Defined a type for the errors state object ---
+interface FormErrors {
+    [key: string]: string | undefined;
+    title?: string;
+    sku?: string;
+    description?: string;
+    priceInr?: string;
+    priceUsd?: string;
+    quantity?: string;
+    category?: string;
+    material?: string;
+    pattern?: string;
 }
 
 const SectionCard = ({ title, children }: { title: string; children: React.ReactNode; }) => (
@@ -47,30 +67,47 @@ export function AddProduct({ open, onOpenChange, onProductAdded }: AddProductPro
   const auth = useContext(AuthContext);
   const token = auth?.token;
 
-  const [formData, setFormData] = useState({
-    title: "",
-    sku: "",
-    description: "",
-    personalization: "",
-    instructionForBuyers: "",
-    priceInr: "",
-    priceUsd: "",
-    quantity: "",
-    category: "",
-    material: "",
-    primaryColor: "",
-    secondaryColor: "",
-    width: "",
-    length: "",
-    diameter: "",
-    pattern: "",
-    shape: "",
-    type: "",
-    pileHeight: "",
-    room: "",
-  });
+  const initialFormState = {
+    title: "", sku: "", description: "", personalization: "", instructionForBuyers: "",
+    priceInr: "", priceUsd: "", quantity: "0", category: "", material: "",
+    primaryColor: "", secondaryColor: "", width: "", length: "", diameter: "",
+    pattern: "", shape: "", type: "", pileHeight: "", room: "",
+  };
+  
+  const [formData, setFormData] = useState(initialFormState);
   const [files, setFiles] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // --- FIX: Applied the FormErrors type to the state ---
+  const [errors, setErrors] = useState<FormErrors>({});
+
+  // --- Improved validation logic ---
+  const validate = (): boolean => {
+    const newErrors: FormErrors = {};
+    const requiredFields = {
+        title: "Title is required.",
+        sku: "SKU is required.",
+        description: "Description is required.",
+        priceInr: "Price (INR) is required.",
+        priceUsd: "Price (USD) is required.",
+        quantity: "Quantity is required.",
+        category: "Category is required.",
+        material: "Material is required.",
+        pattern: "Please select a design for the pattern field.",
+    };
+
+    for (const field in requiredFields) {
+        if (!formData[field]) {
+            newErrors[field] = requiredFields[field];
+        }
+    }
+
+    if (Number(formData.priceInr) < 0) newErrors.priceInr = "Price cannot be negative.";
+    if (Number(formData.priceUsd) < 0) newErrors.priceUsd = "Price cannot be negative.";
+    if (Number(formData.quantity) < 0) newErrors.quantity = "Quantity cannot be negative.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFiles((prev) => [...prev, ...acceptedFiles]);
@@ -84,58 +121,63 @@ export function AddProduct({ open, onOpenChange, onProductAdded }: AddProductPro
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    // Clear error for the field being typed in
+    if (errors[name]) {
+        setErrors(prev => ({ ...prev, [name]: undefined }));
+    }
   };
 
   const handleSelectChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+        setErrors(prev => ({ ...prev, [name]: undefined }));
+    }
   };
 
   const removeFile = (index: number) => {
     setFiles((prev) => prev.filter((_, i) => i !== index));
   };
-
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validate()) {
+        alert("Please fix the errors before submitting.");
+        return;
+    }
     if (!token) {
-      alert("Authentication error: No token found. Please ensure you are logged in.");
+      alert("Authentication error: No token found.");
       return;
     }
     setIsSubmitting(true);
 
-    // --- FIX: This is the correct way to send text and files together ---
     const submissionData = new FormData();
-
-    // 1. Append all text data from the form state
     Object.entries(formData).forEach(([key, value]) => {
       submissionData.append(key, value);
     });
-
-    // 2. Append all selected files
     files.forEach((file) => {
-      // The key 'media' must match what the backend's uploadMiddleware expects
       submissionData.append("media", file);
     });
 
     try {
-      // 3. Configure headers for a file upload
       const config = {
         headers: {
-          'Content-Type': 'multipart/form-data', // This is crucial for FormData
+          'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,
         },
       };
-
-      // 4. Send the complete FormData object
       const { data } = await axios.post('/api/rugs', submissionData, config);
       
       alert("Product added successfully!");
       onProductAdded(data); 
       onOpenChange(false);
+      setFormData(initialFormState);
+      setFiles([]);
+      setErrors({});
 
     } catch (error) {
-      let errorMessage = "Failed to add product. Please check the browser console for details.";
+      let errorMessage = "Failed to add product.";
       if (error instanceof AxiosError && error.response) {
-        errorMessage = error.response.data.message || `Request failed with status ${error.response.status}`;
+        errorMessage = error.response.data.message || errorMessage;
       }
       console.error("Failed to add product:", error);
       alert(`Error: ${errorMessage}`);
@@ -147,16 +189,26 @@ export function AddProduct({ open, onOpenChange, onProductAdded }: AddProductPro
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Add a New Rug</DialogTitle>
-        </DialogHeader>
+        <DialogHeader><DialogTitle>Add a New Rug</DialogTitle></DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6 py-4">
             <SectionCard title="Basic Information">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div><Label htmlFor="title">Title</Label><Input id="title" name="title" value={formData.title} onChange={handleInputChange} required className="mt-1" /></div>
-                    <div><Label htmlFor="sku">SKU Code</Label><Input id="sku" name="sku" value={formData.sku} onChange={handleInputChange} required className="mt-1" placeholder="e.g., SK-MOD-001" /></div>
+                    <div>
+                        <Label htmlFor="title">Title</Label>
+                        <Input id="title" name="title" value={formData.title} onChange={handleInputChange} className={`mt-1 ${errors.title ? 'border-red-500' : ''}`} />
+                        {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title}</p>}
+                    </div>
+                    <div>
+                        <Label htmlFor="sku">SKU Code</Label>
+                        <Input id="sku" name="sku" value={formData.sku} onChange={handleInputChange} className={`mt-1 ${errors.sku ? 'border-red-500' : ''}`} placeholder="e.g., SK-MOD-001" />
+                        {errors.sku && <p className="text-red-500 text-xs mt-1">{errors.sku}</p>}
+                    </div>
                 </div>
-                <div><Label htmlFor="description">Description</Label><Textarea id="description" name="description" value={formData.description} onChange={handleInputChange} className="mt-1" rows={4} required /></div>
+                <div>
+                    <Label htmlFor="description">Description</Label>
+                    <Textarea id="description" name="description" value={formData.description} onChange={handleInputChange} className={`mt-1 ${errors.description ? 'border-red-500' : ''}`} rows={4} />
+                    {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description}</p>}
+                </div>
             </SectionCard>
 
             <SectionCard title="Pics & Videos">
@@ -170,8 +222,8 @@ export function AddProduct({ open, onOpenChange, onProductAdded }: AddProductPro
                         {files.map((file, index) => (
                             <div key={index} className="flex items-center justify-between p-2 bg-muted/50 rounded-lg">
                                 <div className="flex items-center gap-3">
-                                  {getFileIcon(file.type)}
-                                  <span className="text-sm font-medium truncate">{file.name}</span>
+                                    {getFileIcon(file.type)}
+                                    <span className="text-sm font-medium truncate">{file.name}</span>
                                 </div>
                                 <button type="button" onClick={() => removeFile(index)} className="p-1 text-destructive hover:bg-destructive/10 rounded-full"><X className="w-4 h-4" /></button>
                             </div>
@@ -179,31 +231,31 @@ export function AddProduct({ open, onOpenChange, onProductAdded }: AddProductPro
                     </div>
                 )}
             </SectionCard>
-          
+
             <SectionCard title="Customization">
                 <div><Label htmlFor="personalization">Personalization Instructions for Buyer</Label><Textarea id="personalization" name="personalization" value={formData.personalization} onChange={handleInputChange} placeholder="e.g., Enter the name you'd like embroidered." className="mt-1" rows={2}/></div>
                 <div><Label htmlFor="instructionForBuyers">Additional Instructions for Buyers</Label><Textarea id="instructionForBuyers" name="instructionForBuyers" value={formData.instructionForBuyers} onChange={handleInputChange} placeholder="e.g., Gift wrapping available upon request." className="mt-1" rows={2}/></div>
             </SectionCard>
-            
+
             <SectionCard title="Pricing & Inventory">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div><Label htmlFor="priceInr">Pricing (India - ₹)</Label><Input id="priceInr" name="priceInr" type="number" value={formData.priceInr} onChange={handleInputChange} required className="mt-1" /></div>
-                    <div><Label htmlFor="priceUsd">Pricing (Elsewhere - $)</Label><Input id="priceUsd" name="priceUsd" type="number" value={formData.priceUsd} onChange={handleInputChange} required className="mt-1" /></div>
-                    <div><Label htmlFor="quantity">Quantity</Label><Input id="quantity" name="quantity" type="number" value={formData.quantity} onChange={handleInputChange} required className="mt-1" /></div>
+                    <div><Label htmlFor="priceInr">Pricing (India - ₹)</Label><Input id="priceInr" name="priceInr" type="number" min="0" value={formData.priceInr} onChange={handleInputChange} className={`mt-1 ${errors.priceInr ? 'border-red-500' : ''}`} />{errors.priceInr && <p className="text-red-500 text-xs mt-1">{errors.priceInr}</p>}</div>
+                    <div><Label htmlFor="priceUsd">Pricing (Elsewhere - $)</Label><Input id="priceUsd" name="priceUsd" type="number" min="0" value={formData.priceUsd} onChange={handleInputChange} className={`mt-1 ${errors.priceUsd ? 'border-red-500' : ''}`} />{errors.priceUsd && <p className="text-red-500 text-xs mt-1">{errors.priceUsd}</p>}</div>
+                    <div><Label htmlFor="quantity">Quantity</Label><Input id="quantity" name="quantity" type="number" min="0" value={formData.quantity} onChange={handleInputChange} className={`mt-1 ${errors.quantity ? 'border-red-500' : ''}`} />{errors.quantity && <p className="text-red-500 text-xs mt-1">{errors.quantity}</p>}</div>
                 </div>
             </SectionCard>
 
             <SectionCard title="Details & Specifications">
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    <div><Label>Category</Label><Select name="category" onValueChange={(v) => handleSelectChange("category", v)}><SelectTrigger className="mt-1"><SelectValue placeholder="Select..." /></SelectTrigger><SelectContent>{mockCategories.map((c) => (<SelectItem key={c.id} value={c.name}>{c.name}</SelectItem>))}</SelectContent></Select></div>
-                    <div><Label htmlFor="material">Material</Label><Input id="material" name="material" value={formData.material} onChange={handleInputChange} className="mt-1"/></div>
+                    <div><Label>Category</Label><Select name="category" onValueChange={(v) => handleSelectChange("category", v)}><SelectTrigger className={`mt-1 ${errors.category ? 'border-red-500' : ''}`}><SelectValue placeholder="Select..." /></SelectTrigger><SelectContent>{categoryOptions.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent></Select>{errors.category && <p className="text-red-500 text-xs mt-1">{errors.category}</p>}</div>
+                    <div><Label>Material</Label><Select name="material" onValueChange={(v) => handleSelectChange("material", v)}><SelectTrigger className={`mt-1 ${errors.material ? 'border-red-500' : ''}`}><SelectValue placeholder="Select..." /></SelectTrigger><SelectContent>{materialOptions.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent></Select>{errors.material && <p className="text-red-500 text-xs mt-1">{errors.material}</p>}</div>
                     <div><Label htmlFor="primaryColor">Primary Color</Label><Input id="primaryColor" name="primaryColor" value={formData.primaryColor} onChange={handleInputChange} className="mt-1"/></div>
                     <div><Label htmlFor="secondaryColor">Secondary Color</Label><Input id="secondaryColor" name="secondaryColor" value={formData.secondaryColor} onChange={handleInputChange} className="mt-1"/></div>
-                    <div><Label htmlFor="pattern">Pattern</Label><Input id="pattern" name="pattern" value={formData.pattern} onChange={handleInputChange} className="mt-1"/></div>
-                    <div><Label>Shape</Label><Select name="shape" onValueChange={(v) => handleSelectChange("shape", v)}><SelectTrigger className="mt-1"><SelectValue placeholder="Select..." /></SelectTrigger><SelectContent><SelectItem value="rectangular">Rectangular</SelectItem><SelectItem value="round">Round</SelectItem><SelectItem value="runner">Runner</SelectItem></SelectContent></Select></div>
-                    <div><Label htmlFor="type">Type</Label><Input id="type" name="type" value={formData.type} placeholder="e.g., Hand-Knotted" onChange={handleInputChange} className="mt-1"/></div>
-                    <div><Label htmlFor="pileHeight">Pile Height</Label><Input id="pileHeight" name="pileHeight" value={formData.pileHeight} placeholder="e.g., 0.5 inch" onChange={handleInputChange} className="mt-1"/></div>
-                    <div><Label htmlFor="room">Recommended Room(s)</Label><Input id="room" name="room" value={formData.room} placeholder="Living Room, Bedroom" onChange={handleInputChange} className="mt-1"/></div>
+                    <div><Label>Pattern</Label><Select name="pattern" onValueChange={(v) => handleSelectChange("pattern", v)}><SelectTrigger className={`mt-1 ${errors.pattern ? 'border-red-500' : ''}`}><SelectValue placeholder="Select..." /></SelectTrigger><SelectContent>{patternOptions.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent></Select>{errors.pattern && <p className="text-red-500 text-xs mt-1">{errors.pattern}</p>}</div>
+                    <div><Label>Shape</Label><Select name="shape" onValueChange={(v) => handleSelectChange("shape", v)}><SelectTrigger className="mt-1"><SelectValue placeholder="Select..." /></SelectTrigger><SelectContent>{shapeOptions.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent></Select></div>
+                    <div><Label>Type</Label><Select name="type" onValueChange={(v) => handleSelectChange("type", v)}><SelectTrigger className="mt-1"><SelectValue placeholder="Select..." /></SelectTrigger><SelectContent>{typeOptions.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent></Select></div>
+                    <div><Label htmlFor="pileHeight">Pile Height</Label><Input id="pileHeight" name="pileHeight" value={formData.pileHeight} onChange={handleInputChange} placeholder="e.g., 0.5 inch" className="mt-1"/></div>
+                    <div><Label htmlFor="room">Recommended Room(s)</Label><Input id="room" name="room" value={formData.room} onChange={handleInputChange} placeholder="Living Room, Bedroom" className="mt-1"/></div>
                 </div>
                 <div className="grid grid-cols-3 gap-4">
                     <div><Label htmlFor="width">Width (ft)</Label><Input id="width" name="width" type="number" value={formData.width} onChange={handleInputChange} className="mt-1"/></div>

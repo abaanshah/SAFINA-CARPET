@@ -2,10 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, UploadCloud, Image as ImageIcon, Sparkles, CheckCircle2, Download, Clock } from "lucide-react";
-
-// Assuming this is the correct path to your custom form component
-import RugDimensionsForm from "@/components/RugDimensionsForm"; 
+import { Loader2, UploadCloud, Image as ImageIcon, Sparkles, CheckCircle2, Download, Search, Lightbulb } from "lucide-react";
 
 // --- Direct imports for images ---
 import sampleRoom1 from "@/assets/sample-room-1.jpg";
@@ -32,6 +29,15 @@ const CardHeader = ({ icon, title, step }) => (
   </div>
 );
 
+// --- Fun facts for the interactive loading screen ---
+const funFacts = [
+  "A single Persian rug can have over 1 million hand-tied knots.",
+  "Natural dyes from plants and insects give traditional rugs their vibrant, lasting colors.",
+  "Some intricate rug patterns can take a skilled weaver several years to complete.",
+  "The art of rug making is a tradition passed down through generations, often over thousands of years.",
+  "No two handcrafted rugs are ever exactly alike, making each one a unique piece of art."
+];
+
 const RugVisualizer = () => {
   // --- CORE LOGIC & STATE ---
   const [roomImage, setRoomImage] = useState(null);
@@ -40,16 +46,10 @@ const RugVisualizer = () => {
   const [rugImage, setRugImage] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [width, setWidth] = useState("8");
-  const [length, setLength] = useState("10");
-  
-  // --- FIX #2: Explicitly typed the state to satisfy the form component's props ---
-  const [unit, setUnit] = useState < "ft" | "cm" > ("ft");
-  
-  const [alignmentHint, setAlignmentHint] = useState("");
-  
-  // --- NEW: State for the loading timer ---
-  const [countdown, setCountdown] = useState(40);
+  const [factIndex, setFactIndex] = useState(0);
+
+  // --- ADDED BACK: State for the dynamic countdown timer ---
+  const [countdown, setCountdown] = useState(30);
 
   const [searchParams] = useSearchParams();
   const rugUrlFromQuery = searchParams.get('rugUrl');
@@ -72,24 +72,33 @@ const RugVisualizer = () => {
     }
   }, [rugUrlFromQuery]);
   
-  // --- NEW: useEffect to handle the countdown timer ---
+  // --- UPDATED: useEffect now handles both countdown and fun facts ---
   useEffect(() => {
-    let timerInterval;
+    let factInterval;
+    let countdownInterval;
     if (isLoading) {
+      // Fun fact rotation
+      factInterval = setInterval(() => {
+        setFactIndex(prev => (prev + 1) % funFacts.length);
+      }, 5000);
+      
+      // Countdown timer
       setCountdown(30); // Reset timer
-      timerInterval = setInterval(() => {
+      countdownInterval = setInterval(() => {
         setCountdown(prev => {
           if (prev <= 1) {
-            clearInterval(timerInterval);
+            clearInterval(countdownInterval);
             return 0;
           }
           return prev - 1;
         });
       }, 1000);
     }
-    
-    // Cleanup function to clear interval if component unmounts or isLoading changes
-    return () => clearInterval(timerInterval);
+    // Cleanup function to clear intervals
+    return () => {
+      clearInterval(factInterval);
+      clearInterval(countdownInterval);
+    };
   }, [isLoading]);
 
 
@@ -130,11 +139,11 @@ const RugVisualizer = () => {
     document.body.removeChild(link);
   };
   
-  const canSubmit = !!(roomImage && rugImage && width && length);
+  const canSubmit = !!(roomImage && rugImage);
 
   const handleSubmit = async () => {
     if (!canSubmit) {
-      toast.error("Please complete all steps before visualizing.");
+      toast.error("Please select both a room and a rug image.");
       return;
     }
     setIsLoading(true);
@@ -143,13 +152,7 @@ const RugVisualizer = () => {
       const formData = new FormData();
       formData.append("room_image", roomImage);
       formData.append("rug_image", rugImage);
-      const widthInFt = unit === "cm" ? parseFloat(width) / 30.48 : parseFloat(width);
-      const lengthInFt = unit === "cm" ? parseFloat(length) / 30.48 : parseFloat(length);
-      formData.append("rug_width_ft", widthInFt.toString());
-      formData.append("rug_length_ft", lengthInFt.toString());
-      if (alignmentHint.trim()) {
-        formData.append("alignment_hint", alignmentHint);
-      }
+
       const response = await fetch("http://127.0.0.1:8000/place-rug/", { method: "POST", body: formData });
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -164,6 +167,12 @@ const RugVisualizer = () => {
       toast.error(error instanceof Error ? error.message : "An unknown error occurred.");
     } finally {
       setIsLoading(false);
+    }
+  };
+  
+  const browseOurRugs = () => {
+    if (window.top) {
+        window.top.location.href = '/catalog';
     }
   };
 
@@ -187,21 +196,17 @@ const RugVisualizer = () => {
                   <p className="font-semibold text-green-800">Rug selected from our store!</p>
                   <img src={URL.createObjectURL(rugImage)} alt="Selected Rug" className="mt-2 w-24 h-24 object-cover mx-auto rounded-md"/>
                 </div>
-              ) : ( <ImageUploader onImageSelect={handleRugImageSelect} /> )}
+              ) : ( 
+                <div className="space-y-4">
+                    <ImageUploader onImageSelect={handleRugImageSelect} label="Upload Your Own Rug" />
+                    <div className="text-center text-sm font-semibold text-gray-500">- OR -</div>
+                    <button onClick={browseOurRugs} className="w-full flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-100 transition font-semibold">
+                        <Search size={16} />
+                        Browse Our Collection
+                    </button>
+                </div>
+              )}
             </Card>
-            <RugDimensionsForm
-              width={width}
-              length={length}
-              unit={unit}
-              alignmentHint={alignmentHint}
-              onWidthChange={setWidth}
-              onLengthChange={setLength}
-              onUnitChange={setUnit}
-              onAlignmentHintChange={setAlignmentHint}
-              onSubmit={handleSubmit}
-              isLoading={isLoading}
-              canSubmit={canSubmit}
-            />
           </motion.div>
 
           <motion.div className="lg:col-span-8 lg:sticky lg:top-8" initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.4, duration: 0.6 }}>
@@ -214,22 +219,55 @@ const RugVisualizer = () => {
                   <motion.img key="final-preview" src={previewImage} alt="Rug Visualization" className="absolute inset-0 w-full h-full object-contain z-10" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} />
                 )}
               </AnimatePresence>
+              
               {isLoading && (
-                <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-20 flex flex-col items-center justify-center text-center p-4">
+                <div className="absolute inset-0 bg-white/90 backdrop-blur-md z-20 flex flex-col items-center justify-center text-center p-4">
                   <Loader2 size={48} className="animate-spin text-[#5c0b0a]" />
-                  <p className="mt-4 text-gray-700 font-semibold">Placing your rug, please wait...</p>
-                  <div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
-                    <Clock size={16} />
-                    <span>This can take up to {countdown} seconds</span>
+                  <p className="mt-6 text-gray-800 font-semibold text-lg">Our AI is rendering your space...</p>
+                  <p className="text-sm text-gray-500">
+                    This can take a moment. Time remaining: <span className="font-bold">{countdown}s</span>
+                  </p>
+                  <div className="mt-8 text-center w-full max-w-sm">
+                      <div className="flex items-center justify-center gap-2 text-sm font-bold text-[#5c0b0a] mb-2">
+                        <Lightbulb size={16} />
+                        <span>Did you know?</span>
+                      </div>
+                      <AnimatePresence mode="wait">
+                          <motion.p
+                              key={factIndex}
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -10 }}
+                              transition={{ duration: 0.5 }}
+                              className="text-gray-600 text-sm italic"
+                          >
+                              {funFacts[factIndex]}
+                          </motion.p>
+                      </AnimatePresence>
                   </div>
                 </div>
               )}
+
               {!roomImagePreview && !isLoading && <div className="text-center text-gray-500 p-8"><ImageIcon size={64} className="mx-auto mb-4 opacity-40"/><h3 className="text-xl font-medium">Your visualization will appear here</h3><p className="mt-2">Start by selecting a room in Step 1.</p></div>}
               {previewImage && !isLoading && (
                 <motion.button onClick={handleDownload} className="absolute bottom-4 right-4 z-20 bg-[#5c0b0a] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#4a0908] transition-all shadow-lg flex items-center gap-2" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} >
                   <Download size={18} /> Download
                 </motion.button>
               )}
+            </div>
+            
+            <div className="mt-6 flex justify-center">
+              <motion.button
+                onClick={handleSubmit}
+                disabled={!canSubmit || isLoading}
+                className="w-auto bg-gradient-to-r from-red-700 to-red-900 text-white font-bold py-4 px-10 rounded-lg text-lg transition-all duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-105"
+                initial={{ opacity: 0, y: 20 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                transition={{ delay: 0.6 }}
+              >
+                {isLoading ? <Loader2 className="mr-2 animate-spin" /> : <Sparkles className="mr-2" />}
+                {isLoading ? "Generating..." : "Visualize Now"}
+              </motion.button>
             </div>
           </motion.div>
         </div>
@@ -238,8 +276,8 @@ const RugVisualizer = () => {
   );
 };
 
-// --- Helper Components Fully Defined ---
-const ImageUploader = ({ onImageSelect }) => {
+// --- Helper Components ---
+const ImageUploader = ({ onImageSelect, label = "Upload Photo" }) => {
   const [preview, setPreview] = useState(null);
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -254,7 +292,7 @@ const ImageUploader = ({ onImageSelect }) => {
         {preview ? ( <img src={preview} alt="Preview" className="w-24 h-24 object-cover rounded-md" /> ) : (
           <>
             <UploadCloud className="w-10 h-10 text-gray-400 mb-2 group-hover:text-[#5c0b0a]" />
-            <span className="font-semibold text-[#5c0b0a]">Upload Photo</span>
+            <span className="font-semibold text-[#5c0b0a]">{label}</span>
           </>
         )}
         <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
@@ -291,3 +329,4 @@ const SampleRoomGallery = ({ onRoomSelect, selectedRoomName }) => (
 );
 
 export default RugVisualizer;
+

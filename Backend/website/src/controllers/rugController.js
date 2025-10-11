@@ -33,23 +33,42 @@ export const getRugById = async (req, res) => {
   }
 };
 
-// --- ADDED: Controller function to handle creating a new rug ---
-/**
- * Controller for creating a new rug.
- * It receives text data from req.body, files from req.files (via uploadMiddleware),
- * and the user's ID from req.user (via protect middleware).
- */
+// Controller function to handle creating a new rug
 export const createRug = async (req, res) => {
+  try {
+    const newRug = await rugService.createRug(req.body, req.files, req.user._id);
+    res.status(201).json(newRug);
+  } catch (error) {
+    console.error("Error in createRug controller:", error);
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// --- NEW: Controller function to update a rug ---
+export const updateRug = async (req, res) => {
   try {
-    // We pass all the necessary parts to the service layer to handle the logic
-    const newRug = await rugService.createRug(req.body, req.files, req.user._id);
-    
-    // Respond with a 201 (Created) status and the new rug data
-    res.status(201).json(newRug);
+    const updatedRug = await rugService.updateRug(req.params.id, req.body);
+    if (!updatedRug) {
+      return res.status(404).json({ message: "Rug not found" });
+    }
+    res.json(updatedRug);
   } catch (error) {
-    console.error("Error in createRug controller:", error);
-    // Send a 400 (Bad Request) for validation or upload errors
+    console.error("Error updating rug:", error.message);
     res.status(400).json({ message: error.message });
+  }
+};
+
+// --- NEW: Controller function to delete a rug ---
+export const deleteRug = async (req, res) => {
+  try {
+    const result = await rugService.deleteRug(req.params.id);
+    if (!result) {
+      return res.status(404).json({ message: "Rug not found" });
+    }
+    res.json({ message: "Rug deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting rug:", error.message);
+    res.status(500).json({ message: "Server error while deleting rug" });
   }
 };
 

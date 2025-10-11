@@ -1,18 +1,22 @@
 import express from "express";
-import { createRug, getRugs, getRugById } from "../controllers/rugController.js";
-import { protect} from "../middleware/auth.js";
-import {admin} from "../middleware/adminMiddleware.js";
+// 1. Import the new updateRug and deleteRug controller functions
+import { createRug, getRugs, getRugById, updateRug, deleteRug } from "../controllers/rugController.js";
+import { protect } from "../middleware/auth.js";
+import { admin } from "../middleware/adminMiddleware.js";
 import { uploadMiddleware } from "../middleware/uploadMiddleware.js";
 
 const router = express.Router();
 
-// Public routes
-router.route("/").get(getRugs);
-router.route("/:id").get(getRugById);
+// --- Routes for the collection of rugs ---
+router.route("/")
+  .get(getRugs) // GET /api/rugs - Fetches all rugs (Public)
+  .post(protect, admin, uploadMiddleware, createRug); // POST /api/rugs - Creates a new rug (Admin Only)
 
-// Admin-only route
-router.route("/").post(protect, admin, uploadMiddleware, createRug);
+// --- Routes for a specific rug by ID ---
+router.route("/:id")
+  .get(getRugById) // GET /api/rugs/:id - Fetches a single rug (Public)
+  .put(protect, admin, updateRug) // 2. Added PUT route for updating a rug (Admin Only)
+  .delete(protect, admin, deleteRug); // 3. Added DELETE route for deleting a rug (Admin Only)
 
-// --- THE FIX IS HERE ---
-// This line tells other files that the 'router' is the main, default thing being exported.
 export default router;
+

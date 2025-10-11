@@ -23,21 +23,13 @@ export const getRugById = async (rugId) => {
   return rug;
 };
 
-// --- UPDATED: The createRug function is now compatible with your specific RugSchema ---
-
+// Your existing createRug function
 const generateSizeString = (shape, width, length) => {
-    if (shape === 'round' && width) return `${width} ft Round`; // Assuming width is used for diameter of round rugs
+    if (shape === 'round' && width) return `${width} ft Round`;
     if (width && length) return `${width}x${length} ft`;
     return 'Standard';
 };
 
-/**
- * Creates a new rug by mapping form data to the existing RugSchema.
- * @param {object} productData - The raw text data from the form.
- * @param {Array<File>} files - The array of image files from the form.
- * @param {string} userId - The ID of the authenticated admin creating the product.
- * @returns {Promise<Document>} The newly created rug document.
- */
 export const createRug = async (productData, files, userId) => { 
   const imageUrls = [];
   if (files && files.length > 0) {
@@ -56,7 +48,6 @@ export const createRug = async (productData, files, userId) => {
     }
   }
 
-  // Destructure all relevant fields from the form data
   const { 
       title, 
       description, 
@@ -69,10 +60,9 @@ export const createRug = async (productData, files, userId) => {
       length, 
       shape, 
       pattern,
-      diameter // Note: diameter is used if shape is round
+      diameter
   } = productData;
   
-  // Create a combined color string for the 'color' field
   let combinedColor = primaryColor || '';
   if (primaryColor && secondaryColor) { 
       combinedColor = `${primaryColor} / ${secondaryColor}`; 
@@ -80,7 +70,6 @@ export const createRug = async (productData, files, userId) => {
       combinedColor = secondaryColor;
   }
 
-  // Use diameter for width if the shape is round
   const effectiveWidth = shape === 'round' ? diameter : width;
 
   const rug = new Rug({
@@ -102,5 +91,32 @@ export const createRug = async (productData, files, userId) => {
   return createdRug;
 };
 
-// NOTE: The incorrect 'export default router;' line has been removed from the end of this file.
+// --- NEW: Service function to update a rug ---
+export const updateRug = async (id, updateData) => {
+  const rug = await Rug.findById(id);
+  if (!rug) {
+    return null; // The controller will handle sending a 404 response
+  }
+  
+  // Update all fields provided in the request body
+  // This is flexible and works with your Edit Product form
+  Object.assign(rug, updateData);
+  
+  // Save the updated document
+  await rug.save();
+  return rug;
+};
+
+// --- NEW: Service function to delete a rug ---
+export const deleteRug = async (id) => {
+  const rug = await Rug.findById(id);
+  if (!rug) {
+    return null; // The controller will handle sending a 404 response
+  }
+  
+  // Use the deleteOne method on the document instance to remove it
+  await rug.deleteOne();
+  
+  return { success: true }; // Return a success confirmation
+};
 
