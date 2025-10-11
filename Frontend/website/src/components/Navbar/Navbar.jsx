@@ -2,7 +2,7 @@
 // FILE: Navbar.jsx (Final Version with Hover Menu)
 // ===================================================================
 import React, { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion"; // We only need these
 import {
   HiOutlineMapPin,
@@ -26,13 +26,18 @@ const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
   const { cartCount } = useContext(CartContext);
   const { wishlistCount } = useContext(WishlistContext);
+  const location = useLocation();
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [profileOpen, setProfileOpen] = useState(false); // This will be controlled by hover
+  const [showAnnouncement, setShowAnnouncement] = useState(true);
   const iconSize = 24;
   const iconColor = "white";
+
+  // Check if current page is home page
+  const isHomePage = location.pathname === "/";
 
   // Animation settings for the dropdown
   const dropdownVariants = {
@@ -41,6 +46,12 @@ const Navbar = () => {
   };
 
   useEffect(() => {
+    // Only apply scroll-based motion on home page
+    if (!isHomePage) {
+      setShowNavbar(true); // Always show navbar on non-home pages
+      return;
+    }
+
     let lastScrollY = window.scrollY;
     const handleScroll = () => {
       setShowNavbar(window.scrollY < lastScrollY || window.scrollY < 50);
@@ -48,18 +59,35 @@ const Navbar = () => {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isHomePage]);
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
   const handleLogout = () => {
     logout();
     setProfileOpen(false);
   };
+  const closeAnnouncement = () => {
+    setShowAnnouncement(false);
+  };
   
   const megaMenuData = { /* ... your mega menu data ... */ };
 
   return (
-    <header className={showNavbar ? "show" : "hide"}>
+    <header className={isHomePage ? (showNavbar ? "show" : "hide") : "static"}>
+      {/* Announcement Banner */}
+      {showAnnouncement && (
+        <div className="announcement-banner">
+          <div className="announcement-content">
+            <span className="announcement-text">
+              🎉 40% OFF on Christmas Collection - Limited Time Offer! 🎉
+            </span>
+            <button className="announcement-close" onClick={closeAnnouncement}>
+              x
+            </button>
+          </div>
+        </div>
+      )}
+      
       <nav className="navbar">
         {/* Nav Left & Center are unchanged */}
         <div className="nav-left">
@@ -155,6 +183,8 @@ const Navbar = () => {
         <Link to="/purchase">PURCHASE</Link>
         <Link to="/checkout">CHECKOUT</Link>
         <Link to="/blogs">BLOGS</Link>
+        <Link to="/checkout">CHECKOUT</Link>
+        <a href="#" onMouseEnter={() => setActiveDropdown("guide")} onMouseLeave={() => setActiveDropdown(null)}>SHOP</a>
         <Link to="/faqs">FAQS</Link>
       </div>
       {activeDropdown && (

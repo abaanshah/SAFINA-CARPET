@@ -1,8 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&display=swap');
 .hero{
   height: 100vh;
   width: 100%;
   position: relative;
-  top: -10px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,21 +13,22 @@
   left: 0;
   height: 100vh;
   width: 100vw;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.1);
   z-index: -20;
 }
 video{
   height: 100vh;
   width: 100vw;
   position: absolute;
-  /* top: -4%; */
+  top: 0;
+  left: 0;
   /* z-index: -20; */
   object-fit: cover;
   mix-blend-mode:color;
 }
 .hero-container{
-  height: 300px;
-  width: 650px;
+  height: 248px;
+  width: 635px;
   position: relative;
   border: 1px solid rgba(117, 113, 113, 0.3);
   background: rgba(32, 26, 26, 0.3); 
@@ -44,14 +45,27 @@ video{
 
 .hero-container h1{
   color: rgba(255, 255, 255, 0.968);
-  border-bottom: 2px solid white;
-  font-size: 40px;
+  border-bottom: none;
+  font-family: 'Cinzel', serif;
+  font-size: 36px;
+  font-weight: 100;
   text-align: center;
   padding-bottom: 10px;
 }
+.hero-container h1::after {
+  content: '';
+  position: absolute;
+  bottom: 160px; /* Adjust based on your padding-bottom */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%; /* Control the width here - 60% of the text width */
+  height: 1px; /* Control the thickness here */
+  background-color: white;
+}
 .hero-container h2{
   color: rgba(255, 255, 255, 0.881);
-  font-size: 25px;
+  font-size: 20px;
+  font-family: 'Cinzel', serif;
   margin-top: 10px;
   text-align: center;
 }

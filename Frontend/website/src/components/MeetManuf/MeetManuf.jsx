@@ -7,7 +7,7 @@ import "@fontsource/caveat";
 
 const MeetManuf = () => {
   return (
-    <div className="bg-[#FFF5F5] py-16 px-8 ">
+    <div className="bg-[#FFF5F5] py-10 px-8 ">
       {/* Header */}
       <div className="text-center mb-12 text-5xl">
         <h2 className="caveat-heading text-[#9f1d20] ">

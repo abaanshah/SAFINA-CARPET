@@ -13,6 +13,64 @@ header {
   /* transition: transform 0.5s ease; */
   transition: transform 0.4s ease, opacity 0.4s ease;
 }
+
+/* Static navbar for non-home pages */
+header.static {
+  transform: translateY(0) !important;
+  opacity: 1 !important;
+}
+
+/* Announcement Banner */
+.announcement-banner {
+  background-color: #E5E5E5; /* Grey color */
+  color: rgb(0, 0, 0);
+  padding: 8px 0;
+  text-align: center;
+  position: relative;
+  z-index: 101;
+}
+
+.announcement-content {
+  max-width: 90vw;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 0 20px;
+}
+
+.announcement-text {
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.announcement-close {
+  position: absolute;
+  right: 20px;
+  background: none;
+  border: none;
+  color: rgb(0, 0, 0);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.announcement-close:hover {
+  opacity: 0.7;
+}
+
+/* Hide announcement banner when closed */
+.announcement-banner.hidden {
+  display: none;
+}
 header.hide {
   transform: translateY(-100%);
   opacity: 0;
@@ -159,7 +217,7 @@ header.show {
   flex-wrap: wrap;
   justify-content: center; /* center horizontally */
   gap: 12px;
-  padding: 0.8rem 0 1.2rem;
+  padding: 0.8rem 0 0.3rem;
   /* make sure links background transparent or same as header */
   background-color: transparent;
   position: relative;
@@ -170,10 +228,11 @@ header.show {
 .links a {
   color: #e7e3e3;
   font-weight: 300;
-  font-size: 1.2rem;
+  font-size: 0.9rem;
+  font-family: 'jost', sans-serif;
   text-decoration: none;
-  padding: 0.5rem 1rem;
-  border-radius: 12px;
+  padding: 0.5rem 1.5rem;
+  border-radius: 10px;
   transition: background-color 0.3s ease;
 }
 

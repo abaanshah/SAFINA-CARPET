@@ -30,10 +30,10 @@ const Manufacturing = () => {
         <section className="w-full bg-[url(https://c.animaapp.com/7kq845Cv/img/rectangle-25.svg)] bg-cover bg-center py-16 relative">
           <div className="container mx-auto px-4">
             <div className="mt-64">
-              <p className="text-white text-xs font-normal mb-2">
+              {/* <p className="text-white text-xs font-normal mb-2">
                 Welcome to Safina Carpets, a name synonymous with timeless
                 artistry and Mughal heritage.
-              </p>
+              </p> */}
               <p className="text-white text-xs font-normal">
                 As manufacturers and wholesalers of premium handmade carpets, we
                 bring the beauty of centuries-old craftsmanship to the modern
