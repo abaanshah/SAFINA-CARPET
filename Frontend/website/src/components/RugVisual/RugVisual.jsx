@@ -51,7 +51,7 @@ const RugVisual = () => {
         <div className='absolute inset-0 bg-gradient-to-r from-black/60 to-black/0 z-[1] pointer-events-none'></div>
 
         {/* Text Section */}
-        <div className='absolute top-1/2 left-[12%] md:left-[12%] -translate-y-1/2 text-white max-w-[80%] md:max-w-[30%] z-[2] text-center md:text-left'>
+        <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white max-w-[80%] md:max-w-[30%] z-[2] text-center md:text-left md:left-[12%] md:translate-x-0'>
           <h1 className="text-4xl md:text-7xl font-extrabold mb-6 md:mb-12 leading-none">
             RUG <br />
             VISUALIZATION
