@@ -29,11 +29,12 @@ video{
 .hero-container{
   height: 248px;
   width: 635px;
+  max-width: 90vw;
   position: relative;
   border: 1px solid rgba(117, 113, 113, 0.3);
   background: rgba(32, 26, 26, 0.3); 
-  backdrop-filter: blur(1px);          
   -webkit-backdrop-filter: blur(1px);
+  backdrop-filter: blur(1px);
   /* border-radius: 16px; */
   /* box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25); */
   text-align: center;
@@ -41,27 +42,24 @@ video{
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .hero-container h1{
   color: rgba(255, 255, 255, 0.968);
-  border-bottom: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.881);
   font-family: 'Cinzel', serif;
   font-size: 36px;
   font-weight: 100;
   text-align: center;
   padding-bottom: 10px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.hero-container h1::after {
-  content: '';
-  position: absolute;
-  bottom: 160px; /* Adjust based on your padding-bottom */
-  left: 50%;
-  transform: translateX(-50%);
-  width: 70%; /* Control the width here - 60% of the text width */
-  height: 1px; /* Control the thickness here */
-  background-color: white;
-}
+
 .hero-container h2{
   color: rgba(255, 255, 255, 0.881);
   font-size: 20px;
@@ -79,4 +77,96 @@ video{
   color: rgba(255, 255, 255, 0.89);
   display: block;
   margin: 20px auto;
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+  .hero-container {
+    width: 95vw;
+    max-width: 95vw;
+    height: auto;
+    min-height: 200px;
+    padding: 15px;
+  }
+
+  .hero-container h1 {
+    font-size: 24px;
+    white-space: normal;
+    line-height: 1.3;
+    word-break: keep-all;
+    overflow: visible;
+    text-overflow: unset;
+  }
+
+  .hero-container h2 {
+    font-size: 16px;
+    line-height: 1.3;
+  }
+
+  .hero-container button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  .hero-container h1::after {
+    bottom: -12px;
+    width: 60%;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-container {
+    width: 98vw;
+    max-width: 98vw;
+    padding: 10px;
+  }
+
+  .hero-container h1 {
+    font-size: 20px;
+    line-height: 1.2;
+  }
+
+  .hero-container h2 {
+    font-size: 14px;
+  }
+
+  .hero-container button {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .hero-container h1::after {
+    bottom: -10px;
+    width: 50%;
+  }
+}
+
+/* iPhone 13 specific hero fixes */
+@media (max-width: 430px) {
+  .hero-container {
+    width: 95vw;
+    max-width: 95vw;
+    padding: 8px;
+  }
+
+  .hero-container h1 {
+    font-size: 18px;
+    line-height: 1.2;
+  }
+
+  .hero-container h2 {
+    font-size: 13px;
+    margin-top: 8px;
+  }
+
+  .hero-container h1::after {
+    bottom: -8px;
+    width: 45%;
+  }
+
+  .hero-container button {
+    font-size: 11px;
+    padding: 5px 10px;
+    margin: 15px auto;
+  }
 }

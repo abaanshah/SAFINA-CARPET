@@ -35,7 +35,7 @@ function MainLayout({ children }) {
         <Navbar onCartClick={() => setIsCartOpen(true)} />
       )}
 
-      <main className={`flex-grow ${!noNavFooter && showNavbar ? "pt-[120px]" : ""}`}>
+      <main className={`flex-grow ${!noNavFooter && showNavbar ? "pt-[90px] md:pt-[120px]" : ""}`}>
         {children}
       </main>
 

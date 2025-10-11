@@ -88,6 +88,7 @@ header.show {
   width: 100%;
   margin: 0 auto;
   height: 90px;
+  min-height: 90px;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -122,6 +123,37 @@ header.show {
 
 .nav-left .nav-appointment p {
   margin: 0;
+}
+
+/* Mobile Left Side - Appointment Icon Only */
+.nav-left-mobile {
+  display: none;
+  align-items: center;
+}
+
+
+.nav-appointment-mobile {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  opacity: 0.8;
+  color: #ddd;
+  text-decoration: none;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.nav-appointment-mobile:hover {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Mobile Right Side Icons */
+.nav-right-mobile {
+  display: none;
+  align-items: center;
+  gap: 15px;
 }
 
 /* Center logo */
@@ -245,6 +277,11 @@ header.show {
   display: flex;
 }
 
+/* Small screen elements - hidden by default */
+.small-screen {
+  display: none;
+}
+
 /* Hamburger button */
 .hamburger-btn {
   background: none;
@@ -262,9 +299,24 @@ header.show {
     display: none;
   }
 
-  /* Show hamburger */
+  /* Show hamburger and mobile elements */
   .small-screen {
     display: block;
+  }
+
+  /* Show mobile left section */
+  .nav-left-mobile {
+    display: flex !important;
+  }
+
+  /* Show mobile right section */
+  .nav-right-mobile {
+    display: flex;
+  }
+
+  /* Hide desktop left section */
+  .nav-left {
+    display: none;
   }
 
   /* Center logo smaller */
@@ -272,36 +324,204 @@ header.show {
     flex: 1;
     display: flex;
     justify-content: center;
-  }
-
-  /* Left section shrinks */
-  .nav-left {
-    min-width: auto;
-    gap: 15px;
+    order: 2;
   }
 
   /* Hide links by default */
   .links {
-    display: flex;
-    flex-direction: column;
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    padding: 0 20px;
+    display: none;
   }
 
-  /* Show links when menu is open */
-  .links.show {
-    max-height: 500px; /* enough to show all links */
-    opacity: 1;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    transition: max-height 0.4s ease, opacity 0.4s ease, padding 0.4s ease;
+  /* Adjust navbar layout for mobile */
+  .navbar {
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px;
   }
 
-  .links a {
-    padding: 0.8rem 0;
-    font-size: 1.1rem;
+  /* Hamburger button positioning */
+  .hamburger-btn {
+    display: block;
+    order: 1;
+  }
+
+  /* Mobile appointment icon positioning */
+  .nav-left-mobile {
+    order: 2;
+  }
+
+  /* Mobile right icons positioning */
+  .nav-right-mobile {
+    order: 3;
+  }
+
+  /* Ensure proper spacing */
+  .nav-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    flex: none;
+    z-index: 1;
+  }
+
+  /* Prevent overlapping on smaller screens */
+  .nav-right-mobile {
+    z-index: 2;
+    position: relative;
+  }
+
+  .nav-left-mobile {
+    z-index: 2;
+    position: relative;
+  }
+
+  .hamburger-btn {
+    z-index: 2;
+    position: relative;
+  }
+}
+
+/* iPad and large tablet screens */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .navbar {
+    padding: 0 15px;
+    justify-content: space-between;
+  }
+
+  .nav-center {
+    max-width: 180px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .nav-logo {
+    height: 85px;
+    width: auto;
+  }
+
+  .nav-right-mobile {
+    gap: 15px;
+    margin-left: auto;
+  }
+
+  .nav-left-mobile {
+    margin-right: auto;
+  }
+
+  .nav-icon {
+    padding: 6px;
+  }
+
+  .hamburger-btn {
+    margin-right: 10px;
+  }
+}
+
+/* Tablet and medium mobile screens */
+@media (max-width: 768px) and (min-width: 431px) {
+  .navbar {
+    padding: 0 10px;
+    justify-content: space-between;
+  }
+
+  .nav-center {
+    max-width: 150px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .nav-logo {
+    height: 80px;
+    width: auto;
+  }
+
+  .nav-right-mobile {
+    gap: 12px;
+    margin-left: auto;
+  }
+
+  .nav-left-mobile {
+    margin-right: auto;
+  }
+
+  .nav-icon {
+    padding: 4px;
+  }
+
+  .hamburger-btn {
+    margin-right: 8px;
+  }
+}
+
+/* iPhone 13 specific fixes */
+@media (max-width: 430px) {
+  .navbar {
+    padding: 0 5px;
+    justify-content: space-between;
+    height: 95px;
+    min-height: 95px;
+  }
+
+  .nav-center {
+    max-width: 140px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .nav-logo {
+    height: 85px;
+    width: auto;
+  }
+
+  .nav-right-mobile {
+    gap: 8px;
+    margin-left: auto;
+  }
+
+  .nav-left-mobile {
+    margin-right: auto;
+  }
+
+  .nav-icon {
+    padding: 2px;
+  }
+
+  .hamburger-btn {
+    margin-right: 5px;
+  }
+}
+
+/* Extra small screens (iPhone 13 and smaller) */
+@media (max-width: 390px) {
+  .navbar {
+    padding: 0 2px;
+  }
+
+  .nav-center {
+    max-width: 120px;
+  }
+
+  .nav-logo {
+    height: 75px;
+  }
+
+  .nav-right-mobile {
+    gap: 6px;
+  }
+
+  .nav-left-mobile {
+    margin-right: 0;
+  }
+
+  .nav-appointment-mobile {
+    padding: 4px;
+  }
+
+  .hamburger-btn {
+    margin-right: 2px;
   }
 }
 @keyframes scale-fade {
@@ -317,5 +537,174 @@ header.show {
 
 .animate-scale-fade {
   animation: scale-fade 0.25s ease-out;
+}
+
+/* Mobile Slide Menu */
+.mobile-slide-menu {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 280px;
+  height: 100vh;
+  background: linear-gradient(135deg, #860a0c 0%, #a60f11 100%);
+  z-index: 1000;
+  transition: left 0.3s ease-in-out;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.mobile-slide-menu.open {
+  left: 0;
+}
+
+.mobile-menu-content {
+  padding: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding-bottom: 30px;
+}
+
+.mobile-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.mobile-menu-header h3 {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.mobile-menu-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.mobile-menu-close:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.mobile-menu-links {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.mobile-menu-links a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 400;
+  padding: 12px 15px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+}
+
+.mobile-menu-links a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-left-color: white;
+  transform: translateX(5px);
+}
+
+.mobile-menu-user {
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.mobile-user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.mobile-user-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+}
+
+.mobile-user-details {
+  text-align: center;
+}
+
+.mobile-user-name {
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 5px 0;
+}
+
+.mobile-user-email {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.mobile-logout-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.mobile-logout-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.mobile-login-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+  text-decoration: none;
+  font-size: 1.1rem;
+  padding: 12px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  transition: all 0.2s ease;
+}
+
+.mobile-login-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Mobile Menu Overlay */
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
 }
 

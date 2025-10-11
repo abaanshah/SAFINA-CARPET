@@ -79,7 +79,7 @@ const Navbar = () => {
         <div className="announcement-banner">
           <div className="announcement-content">
             <span className="announcement-text">
-              🎉 40% OFF on Christmas Collection - Limited Time Offer! 🎉
+              🎉 40% OFF on Christmas Collection 🎉
             </span>
             <button className="announcement-close" onClick={closeAnnouncement}>
               x
@@ -89,15 +89,43 @@ const Navbar = () => {
       )}
       
       <nav className="navbar">
-        {/* Nav Left & Center are unchanged */}
-        <div className="nav-left">
+        {/* Mobile Hamburger Menu Button - Left Side */}
+        <button className="hamburger-btn small-screen" onClick={toggleMenu}>
+          {menuOpen ? <HiXMark size={28} color={iconColor} /> : <HiBars3 size={28} color={iconColor} />}
+        </button>
+
+        {/* Nav Left - Desktop Only */}
+        <div className="nav-left large-screen">
             <a href="http://localhost:8080/" className="nav-icon"><HiOutlineMapPin size={iconSize} color={iconColor} /></a>
             <a href="#" className="nav-appointment">
                 <HiOutlineCalendar size={iconSize} color={iconColor} /><p>BOOK AN APPOINTMENT</p>
             </a>
         </div>
+
+        {/* Mobile Appointment Icon Only */}
+        <div className="nav-left-mobile small-screen">
+            <a href="#" className="nav-appointment-mobile">
+                <HiOutlineCalendar size={iconSize} color={iconColor} />
+            </a>
+        </div>
+
         <div className="nav-center">
             <Link to="/"><img src={logo} alt="Logo" className="nav-logo" /></Link>
+        </div>
+
+        {/* Mobile Right Icons */}
+        <div className="nav-right-mobile small-screen">
+          <Link to="/wishlist" className="nav-icon relative">
+            <HiOutlineHeart size={iconSize} color={iconColor} />
+            {wishlistCount > 0 && <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{wishlistCount}</span>}
+          </Link>
+          <Link to="/" className="nav-icon">
+            <Bell size={iconSize} color={iconColor} />
+          </Link>
+          <Link to="/cart" className="nav-icon relative">
+            <HiOutlineShoppingCart size={iconSize} color={iconColor} />
+            {cartCount > 0 && <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{cartCount}</span>}
+          </Link>
         </div>
 
         <div className="nav-right large-screen">
@@ -168,10 +196,6 @@ const Navbar = () => {
             {cartCount > 0 && <span className="absolute -top-1 -right-2 ...">{cartCount}</span>}
           </Link>
         </div>
-
-        <button className="hamburger-btn small-screen" onClick={toggleMenu}>
-          {menuOpen ? <HiXMark size={28} color={iconColor} /> : <HiBars3 size={28} color={iconColor} />}
-        </button>
       </nav>
 
       {/* Your links and mega menu code is restored and correct */}
@@ -192,6 +216,55 @@ const Navbar = () => {
             {/* ... your mega menu content ... */}
         </div>
       )}
+
+      {/* Mobile Slide Menu */}
+      <div className={`mobile-slide-menu ${menuOpen ? 'open' : ''}`}>
+        <div className="mobile-menu-content">
+          <div className="mobile-menu-header">
+            <h3>Menu</h3>
+            <button className="mobile-menu-close" onClick={toggleMenu}>
+              <HiXMark size={24} color="white" />
+            </button>
+          </div>
+          
+          <div className="mobile-menu-links">
+            <Link to="/about" onClick={toggleMenu}>ABOUT US</Link>
+            <a href="#" onClick={toggleMenu}>SERVICES</a>
+            <a href="#" onClick={toggleMenu}>GUIDE</a>
+            <Link to="/manufacturing" onClick={toggleMenu}>MANUFACTURING</Link>
+            <Link to="/purchase" onClick={toggleMenu}>PURCHASE</Link>
+            <Link to="/checkout" onClick={toggleMenu}>CHECKOUT</Link>
+            <Link to="/blogs" onClick={toggleMenu}>BLOGS</Link>
+            <a href="#" onClick={toggleMenu}>SHOP</a>
+            <Link to="/faqs" onClick={toggleMenu}>FAQS</Link>
+          </div>
+
+          <div className="mobile-menu-user">
+            {user ? (
+              <div className="mobile-user-info">
+                <div className="mobile-user-avatar">
+                  {user.name?.charAt(0).toUpperCase()}
+                </div>
+                <div className="mobile-user-details">
+                  <p className="mobile-user-name">{user.name}</p>
+                  <p className="mobile-user-email">{user.email}</p>
+                </div>
+                <button onClick={handleLogout} className="mobile-logout-btn">
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <Link to="/login" onClick={toggleMenu} className="mobile-login-btn">
+                <HiOutlineUser size={20} />
+                Login
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      {menuOpen && <div className="mobile-menu-overlay" onClick={toggleMenu}></div>}
     </header>
   );
 };
