@@ -18,6 +18,11 @@ import Wishlist from "../pages/Wishlist/Wishlist";
 import Faqs from "../pages/Faqs/Faqs";
 import Checkout from "../pages/Checkout/Checkout";
 import Cart from "../pages/Cart/Cart";
+import TermsConditions from "../pages/TermsConditions/TermsConditions";
+import ReturnRefundPolicy from "../pages/ReturnRefundPolicy/ReturnRefundPolicy";
+import ShippingPolicy from "../pages/ShippingPolicy/ShippingPolicy";
+import PrivacyPolicy from "../pages/PrivacyPolicy/PrivacyPolicy";
+import Shop from "../pages/Shop/Shop";
 
 // --- Profile ---
 import ProfileLayout from "../pages/Profile/ProfileLayout";
@@ -47,6 +52,11 @@ function AppRoutes() {
         <Route path="/faqs" element={<Faqs />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/terms-conditions" element={<TermsConditions />} />
+        <Route path="/return-refund-policy" element={<ReturnRefundPolicy />} />
+        <Route path="/shipping-policy" element={<ShippingPolicy />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/shop" element={<Shop />} />
 
         {/* --- 2. ADD THE NEW ROUTES --- */}
 

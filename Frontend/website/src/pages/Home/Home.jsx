@@ -21,7 +21,7 @@ const Home = () => {
      <ShopSize/>
      <ShopMaterial/>
      <ShopRoom/>
-     <ShopDesign/>
+     {/* <ShopDesign/> */}
      <Story/>
      {/* <Faq/> */}
 

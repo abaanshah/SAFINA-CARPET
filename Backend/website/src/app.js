@@ -20,6 +20,7 @@ import materialRoute from "./routes/materialRoute.js";
 import rugRoutes from "./routes/rugRoute.js";
 import authRoutes from "./routes/authRoute.js";
 import cartRoute from "./routes/cartRoute.js";
+import appointmentRoute from "./routes/appointmentRoute.js";
 
 // Middleware
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
@@ -55,6 +56,7 @@ app.use(
     app.use("/api/cart", cartRoute);
     app.use("/api/wishlist", wishlistRoute);
     app.use('/api/orders', orderRoute); // <-- Add this
+    app.use('/api/appointments', appointmentRoute);
 
 // Root route
 app.get("/", (req, res) => {

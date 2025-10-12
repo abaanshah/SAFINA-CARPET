@@ -329,8 +329,10 @@ const RoomCard = ({ card, isFirstCard = false }) => (
           : `border-b-2 [border-bottom-style:solid] border-${card.borderColor || "m-3refprimaryprimary-20"}`
       } shadow-[0px_4px_4px_#00000040] relative w-[388px] h-[390px] z-[1]`}
     >
-      <div
-        className={`relative ${card.imageSize.width} ${card.imageSize.height} ${card.imageSize.top} ${card.imageSize.left} bg-[url(${card.image})] bg-cover bg-[50%_50%]`}
+      <img
+        src={card.image}
+        alt={card.title}
+        className={`absolute ${card.imageSize.width} ${card.imageSize.height} ${card.imageSize.top} ${card.imageSize.left} object-cover`}
       />
     </div>
     <div className="flex-col px-[35px] py-0 self-stretch w-full flex-[0_0_auto] z-0 flex items-start relative">
@@ -391,7 +393,11 @@ const HallwaySection = () => (
         <div className="max-w-[834.81px] w-[834.81px] gap-20 flex-[0_0_auto] bg-m-3refprimaryprimary-95 flex items-start relative">
           <div className="flex-col w-[545.96px] pt-0 pb-0.5 px-0 flex items-start relative">
             <div className="flex max-w-[544.29px] w-[544.29px] items-start justify-center pt-0 pb-[2.67px] px-0 relative flex-[0_0_auto]">
-              <div className="relative flex-1 max-w-[544.29px] grow h-[308.65px] bg-[url(https://c.animaapp.com/jwLiGKJa/img/hallway.png)] bg-cover bg-[50%_50%]" />
+              <img
+                src={hallwaySection.content.image}
+                alt="Hallway rug styling"
+                className="relative flex-1 max-w-[544.29px] grow h-[308.65px] object-cover"
+              />
             </div>
           </div>
           <div className="flex-col w-[208.7px] gap-[8.01px] pt-0 pb-[2.67px] px-0 flex items-start relative">
@@ -410,7 +416,12 @@ const HallwaySection = () => (
                 {hallwaySection.content.description2}
               </p>
             </div>
-            <div className="relative w-[138.78px] h-[12.69px] bg-[url(https://c.animaapp.com/jwLiGKJa/img/link@2x.png)] bg-cover bg-[50%_50%]">
+            <div className="relative w-[138.78px] h-[12.69px]">
+              <img
+                src={hallwaySection.content.linkImage}
+                alt="Link arrow"
+                className="absolute w-[138.78px] h-[12.69px] object-cover"
+              />
               <a
                 href="#"
                 className="absolute w-[104px] h-4 -top-0.5 left-0 [font-family:'Montserrat',Helvetica] font-medium text-[#90101c] text-[10.7px] tracking-[0] leading-[16.0px] whitespace-nowrap"
