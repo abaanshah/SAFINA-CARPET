@@ -14,7 +14,7 @@ const ReturnRefundPolicy = () => {
         
         <div className="prose prose-lg max-w-none">
             <p className="text-gray-600 mb-6">
-              <strong>Last Updated:</strong> January 2025
+              <strong>Last Updated:</strong> November 2025
             </p>
 
             <section className="mb-8">
@@ -27,25 +27,30 @@ const ReturnRefundPolicy = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4">2. Return Eligibility</h2>
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">2. Return & Exchange Policy</h2>
               <div className="space-y-4">
                 <div>
                   <h3 className="text-lg font-medium text-gray-800 mb-2">Eligible Items</h3>
                   <ul className="list-disc list-inside text-gray-700 mb-4 space-y-2">
-                    <li>Machine-made rugs and carpets in original condition</li>
-                    <li>Items with original tags and packaging intact</li>
-                    <li>Products returned within 30 days of delivery</li>
-                    <li>Items that have not been used, washed, or altered</li>
+                    <li>Customers may request a return or exchange within 14 days of receiving their order.</li>
+                    <li>Returns and exchanges are only applicable to non-custom and non-personalized rugs.</li>
+                    <li>Customers must share an image of the packed product to initiate the return request.</li>
+                    <li>All returns are subject to a quality inspection before approval.</li>
+                    <li>Exchanges will only be processed after the returned product passes Quality Control & Check.</li>
+                    <li>Customers may exchange for another product of equal or higher value (paying the difference).Exchanges for lower-value &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;items will not be eligible for partial refunds.</li>
+                    <li>Exchanges for lower-value items will not be eligible for partial refunds.</li>
+
+
                   </ul>
                 </div>
                 <div>
                   <h3 className="text-lg font-medium text-gray-800 mb-2">Non-Eligible Items</h3>
                   <ul className="list-disc list-inside text-gray-700 mb-4 space-y-2">
                     <li>Custom-made or personalized rugs and carpets</li>
-                    <li>Handcrafted items (due to their unique nature)</li>
+                    {/* <li>Handcrafted items (due to their unique nature)</li> */}
                     <li>Items damaged by customer use or negligence</li>
                     <li>Products returned after 30 days from delivery</li>
-                    <li>Items without original packaging or tags</li>
+                    {/* <li>Items without original packaging or tags</li> */}
                     <li>Rugs that have been cut, trimmed, or altered in any way</li>
                   </ul>
                 </div>
@@ -56,27 +61,27 @@ const ReturnRefundPolicy = () => {
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">3. Return Process</h2>
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-lg font-medium text-gray-800 mb-2">Step 1: Contact Us</h3>
+                  <h3 className="text-lg font-medium text-gray-800 mb-2">Step 1: Fill out the Return Form</h3>
                   <p className="text-gray-700 leading-relaxed mb-2">
-                    Before returning any item, please contact our customer service team:
+                    Before returning any item, You will need to fill out the Return Form available on our website:
                   </p>
                   <ul className="list-disc list-inside text-gray-700 mb-4 space-y-1">
-                    <li>Email: safinacarpets@yahoo.com</li>
-                    <li>Phone: +91 9953662052</li>
-                    <li>Business Hours: Monday-Saturday, 10AM-7PM (IST)</li>
+                    <li>Details: Please provide as much information as possible about the item, including its condition, any damage, and any &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;special instructions with images.</li>
+                    <li>Submission: Submit the return form.</li>
+                    <li>Approval: Returns will be approved within 24 hours after Submission. We will notify you via email once your return request &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;has been processed.</li>
                   </ul>
                 </div>
                 <div>
                   <h3 className="text-lg font-medium text-gray-800 mb-2">Step 2: Return Authorization</h3>
                   <p className="text-gray-700 leading-relaxed">
                     Our team will provide you with a Return Merchandise Authorization (RMA) number 
-                    and detailed return instructions. Returns without RMA numbers will not be accepted.
+                    and detailed return instructions after approval. Returns without RMA numbers will not be accepted.
                   </p>
                 </div>
                 <div>
                   <h3 className="text-lg font-medium text-gray-800 mb-2">Step 3: Package and Ship</h3>
                   <ul className="list-disc list-inside text-gray-700 mb-4 space-y-1">
-                    <li>Pack the item securely in its original packaging</li>
+                    <li>Pack the item securely.</li>
                     <li>Include all original tags, labels, and accessories</li>
                     <li>Attach the RMA number clearly on the package</li>
                     <li>Use a trackable shipping method</li>
@@ -86,7 +91,33 @@ const ReturnRefundPolicy = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4">4. Return Shipping</h2>
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">4. Payment Policy & Accepted Payment Methods</h2>
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-lg font-medium text-gray-800 mb-2">Safina Carpets accepts payments via:</h3>
+                  <ul className="list-disc list-inside text-gray-700 mb-4 space-y-2">
+                    <li>Major Credit/Debit Cards (Visa, MasterCard, American Express, Rupay)</li>
+                    <li>UPI & Wallet Payments (Google Pay, Paytm, PhonePe)</li>
+                    <li>PayPal & Stripe (for international orders)</li>
+                    <li>Bank Wire Transfer (for bulk and B2B orders)</li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="text-lg font-medium text-gray-800 mb-2">Additional Payment Terms:</h3>
+                  <ul className="list-disc list-inside text-gray-700 mb-4 space-y-2">
+                    <li>Customers opting for installment payments (EMI, Klarna, Afterpay) will be subject to the terms of the respective provider.</li>
+                    <li>Payments must be settled in full before dispatch, except for approved corporate accounts, where payment terms may &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;be discussed.</li>
+                    <li>If the payment was made via UPI, Wallet Payments (Google Pay, Paytm, PhonePe), or Bank Transfer, customers must provide &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;their bank details for refunds.</li>
+                    {/* <li>Bank Wire Transfer (for bulk and B2B orders)</li> */}
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            
+
+            <section className="mb-8">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">4. Return Shipping & International Orders</h2>
               <div className="space-y-4">
                 <div>
                   <h3 className="text-lg font-medium text-gray-800 mb-2">Shipping Costs</h3>
@@ -94,6 +125,8 @@ const ReturnRefundPolicy = () => {
                     <li>Customer is responsible for return shipping costs unless the item was defective or incorrectly shipped</li>
                     <li>We recommend using insured shipping for valuable items</li>
                     <li>Safina Carpets is not responsible for items lost or damaged during return shipping</li>
+                    <li>International refunds may take 7-21 business days, depending on banking institutions and exchange rates.</li>
+                    <li>Refunds for international orders will be issued in the original currency, but any foreign transaction fees charged by the &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bank are the responsibility of the customer.</li>
                   </ul>
                 </div>
                 <div>
@@ -111,14 +144,6 @@ const ReturnRefundPolicy = () => {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">5. Refund Process</h2>
               <div className="space-y-4">
-                <div>
-                  <h3 className="text-lg font-medium text-gray-800 mb-2">Processing Time</h3>
-                  <ul className="list-disc list-inside text-gray-700 mb-4 space-y-2">
-                    <li>Returns are processed within 5-10 business days after receipt</li>
-                    <li>Inspection of returned items may take 2-3 business days</li>
-                    <li>Refunds are issued within 5-7 business days after approval</li>
-                  </ul>
-                </div>
                 <div>
                   <h3 className="text-lg font-medium text-gray-800 mb-2">Refund Method</h3>
                   <p className="text-gray-700 leading-relaxed mb-2">
@@ -142,15 +167,61 @@ const ReturnRefundPolicy = () => {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4">6. Exchanges</h2>
-              <p className="text-gray-700 leading-relaxed mb-4">
-                We currently do not offer direct exchanges. If you need a different size, color, or style:
-              </p>
-              <ul className="list-disc list-inside text-gray-700 mb-4 space-y-2">
-                <li>Return the original item following our return process</li>
-                <li>Place a new order for the desired item</li>
-                <li>Contact us to coordinate timing if needed</li>
-              </ul>
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">5. Chargeback & Fraud Protection</h2>
+              <div className="space-y-4">
+                <div>
+                  <ul className="list-disc list-inside text-gray-700 mb-4 space-y-1">
+                    <li>All transactions are verified via secure payment gateways to prevent fraudulent activities.</li>
+                    <li>Customers initiating unauthorized chargebacks may be permanently banned from purchasing at Safina Carpets.</li>
+                    <li>Bank transfers: 7-10 business days</li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="text-lg font-medium text-gray-800 mb-2">If fraud is suspected, Safina Carpets reserves the right to:</h3>
+                  <ul className="list-disc list-inside text-gray-700 mb-4 space-y-2">
+                    <li>Hold shipments until payment verification is completed.</li>
+                    <li>Request additional identification (in case of high-value transactions).</li>
+                    <li>Report fraudulent transactions to relevant authorities.</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            <section className="mb-8">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">4. Import Duties,Taxes,Digital Invoicing & GST Compliance</h2>
+              <div className="space-y-4">
+                <div>
+                  <ul className="list-disc list-inside text-gray-700 mb-4 space-y-2">
+                    <li>Safina Carpets will cover any applicable import duties, customs fees, and taxes for international customers.</li>
+                    <li>Safina Carpets provides a GST-compliant invoice for all domestic orders.</li>
+                    <li>Digital invoices will be sent via email upon product shipment.</li>
+                    <li>No hidden fees or additional charges apply.</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+             <section className="mb-8">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">5. . Warranty & Care Policy</h2>
+              <div className="space-y-4">
+                <div>
+                  <ul className="list-disc list-inside text-gray-700 mb-4 space-y-1">
+                    <li>Handmade rugs are covered under a limited warranty of up to 24 months against manufacturing defects.</li>
+                    <li>Customers should refer to Safina Carpets' Care & Maintenance Guide for best cleaning practices.</li>
+                    {/* <li>Bank transfers: 7-10 business days</li> */}
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="text-lg font-medium text-gray-800 mb-2">Warranty coverage does not include:</h3>
+                  <ul className="list-disc list-inside text-gray-700 mb-4 space-y-2">
+                    <li>Normal wear and tear</li>
+                    <li>Shedding or sprouting</li>
+                    <li>Color fading due to sun exposure</li>
+                    <li>Excessive moisture damage</li>
+                    <li>Damage due to heavy furniture</li>
+                  </ul>
+                </div>
+              </div>
             </section>
 
             <section className="mb-8">
@@ -168,36 +239,7 @@ const ReturnRefundPolicy = () => {
                     <li>Do not attempt to repair the item</li>
                   </ul>
                 </div>
-                <div>
-                  <h3 className="text-lg font-medium text-gray-800 mb-2">Our Response</h3>
-                  <ul className="list-disc list-inside text-gray-700 mb-4 space-y-2">
-                    <li>We will arrange free return shipping</li>
-                    <li>Full refund or replacement at your choice</li>
-                    <li>Expedited processing for defective items</li>
-                  </ul>
-                </div>
               </div>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4">8. International Returns</h2>
-              <p className="text-gray-700 leading-relaxed mb-4">
-                For international customers:
-              </p>
-              <ul className="list-disc list-inside text-gray-700 mb-4 space-y-2">
-                <li>Same 30-day return policy applies</li>
-                <li>Customer responsible for return shipping costs and customs duties</li>
-                <li>Items must clear customs inspection</li>
-                <li>Additional processing time may be required</li>
-              </ul>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4">9. Restocking Fees</h2>
-              <p className="text-gray-700 leading-relaxed mb-4">
-                Safina Carpets does not charge restocking fees for standard returns that meet our return policy criteria. 
-                However, items returned in unsellable condition may be subject to a restocking fee of up to 25% of the purchase price.
-              </p>
             </section>
 
             <section className="mb-8">
@@ -210,6 +252,20 @@ const ReturnRefundPolicy = () => {
                     <li>Contact us immediately at safinacarpets@yahoo.com</li>
                     <li>Full refund for cancelled orders</li>
                     <li>Custom orders cannot be cancelled once production begins</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            <section className="mb-8">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">10. Liability Disclaimer</h2>
+              <div className="space-y-4">
+                <div>
+                  <ul className="list-disc list-inside text-gray-700 mb-4 space-y-2">
+                    <li>Once an order has been shipped, Safina Carpets' responsibility for the product extends until it has been successfully &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delivered to the customer.</li>
+                    <li>Customers are responsible for inspecting their product upon arrival and filing claims with Safina Carpets if damage occurs &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in transit. Safina Carpets will assist in the claims process as per applicable laws.</li>
+                    <li>Safina Carpets reserves the right to deny refunds or exchanges if a product is found to be used, soiled, altered, or &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;damaged by the customer.</li>
+                    <li>In cases of suspected fraudulent claims, Safina Carpets may request additional proof before approving a return.</li>
                   </ul>
                 </div>
               </div>
