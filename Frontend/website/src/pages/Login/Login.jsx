@@ -298,13 +298,13 @@ const Login = () => {
                 <h2 className="text-3xl font-bold text-gray-800 mb-2">
                   {isLoginView ? "Welcome Back!" : "Create an Account"}
                 </h2>
-                <p className="text-gray-600 mb-8">
+                <p className="text-gray-600 mb-4">
                   {isLoginView
                     ? "Log in to continue your journey."
                     : "Sign up to discover exquisite designs."}
                 </p>
 
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form onSubmit={handleSubmit} className="space-y-3">
                   {!isLoginView && (
                     <motion.div
                       initial={{ height: 0, opacity: 0 }}
@@ -417,7 +417,7 @@ const Login = () => {
                   </div>
                 </div>
 
-                <div className="mt-6 text-center text-sm">
+                <div className="mt-3 text-center text-sm">
                   <p className="text-gray-600">
                     {isLoginView
                       ? "Don't have an account?"

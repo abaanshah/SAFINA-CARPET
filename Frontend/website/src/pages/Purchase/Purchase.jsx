@@ -30,6 +30,7 @@ const VisualizerContainer = ({ onClose, rugImageUrl }) => {
   const visualizerUrl = `http://localhost:8090?rugUrl=${encodeURIComponent(
     rugImageUrl
   )}`;
+  
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[1000] animate-fadeInOverlay">
@@ -223,8 +224,8 @@ export const Purchase = () => {
 
   return (
     <>
-      <div className="bg-white">
-        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+      <div className="bg-white pt-[130px]">
+        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8  ">
           <motion.div
             className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start"
             initial="hidden"
@@ -235,51 +236,57 @@ export const Purchase = () => {
             }}
           >
             {/* --- Left Column: Image Gallery --- */}
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, x: -20 },
-                visible: { opacity: 1, x: 0 },
-              }}
-              className="lg:sticky top-24 self-start"
-            >
-              <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
-                {isOutOfStock && (
-                  <div className="absolute top-4 left-4 bg-gray-800 text-white text-xs font-bold uppercase tracking-wider py-1.5 px-3 rounded-md z-10">
-                    Out of Stock
-                  </div>
-                )}
-                <AnimatePresence>
-                  <motion.img
-                    key={selectedImage}
-                    src={selectedImage}
-                    alt={product.name}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.3 }}
-                    className="w-full h-full object-cover"
-                  />
-                </AnimatePresence>
-              </div>
-              <div className="flex gap-3 mt-4">
-                {images.map((img, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedImage(img)}
-                    className={`w-20 h-20 rounded-md overflow-hidden border-2 transition-all duration-200 ${
-                      selectedImage === img
-                        ? "border-[#5c0b0a] ring-2 ring-offset-2 ring-[#5c0b0a]"
-                        : "border-gray-200 hover:border-gray-400"
-                    }`}
-                  >
-                    <img
-                      src={img}
-                      alt={`Thumbnail ${index + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                  </button>
-                ))}
-              </div>
-            </motion.div>
+           {/* --- Left Column: Image Gallery --- */}
+<motion.div
+  variants={{
+    hidden: { opacity: 0, x: -20 },
+    visible: { opacity: 1, x: 0 },
+  }}
+  className="lg:sticky top-24 self-start flex gap-4 items-start"
+>
+  {/* Thumbnails - Vertical */}
+  <div className="flex flex-col gap-3 max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent">
+    {images.map((img, index) => (
+      <button
+        key={index}
+        onClick={() => setSelectedImage(img)}
+        className={`w-20 h-20 rounded-md overflow-hidden border-2 transition-all duration-200 ${
+          selectedImage === img
+            ? "border-[#5c0b0a] ring-2 ring-offset-2 ring-[#5c0b0a]"
+            : "border-gray-200 hover:border-gray-400"
+        }`}
+      >
+        <img
+          src={img}
+          alt={`Thumbnail ${index + 1}`}
+          className="w-full h-full object-cover"
+        />
+      </button>
+    ))}
+  </div>
+
+  {/* Main Image with Magnify Effect */}
+  <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden border border-gray-200 flex-1 group cursor-zoom-in">
+    {isOutOfStock && (
+      <div className="absolute top-4 left-4 bg-gray-800 text-white text-xs font-bold uppercase tracking-wider py-1.5 px-3 rounded-md z-10">
+        Out of Stock
+      </div>
+    )}
+
+    <AnimatePresence>
+      <motion.img
+        key={selectedImage}
+        src={selectedImage}
+        alt={product.name}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+        className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-125 group-hover:cursor-zoom-in"
+      />
+    </AnimatePresence>
+  </div>
+</motion.div>
+
 
             {/* --- Right Column: Product Details --- */}
             <motion.div

@@ -1,6 +1,3 @@
-// ===================================================================
-// FILE: backend/src/controllers/cartController.js (Simplified & Robust Logic)
-// ===================================================================
 import Cart from "../models/cart.js";
 import Rug from "../models/rug.js";
 
@@ -12,11 +9,15 @@ const getUserIdFromRequest = (req) => {
   return userId;
 };
 
-// @desc    Get the user's cart
+// @desc    Get the user's cart
 export const getCart = async (req, res, next) => {
   try {
     const userId = getUserIdFromRequest(req);
-    let cart = await Cart.findOne({ user: userId }).populate("products.productId");
+    // FIX: Made the populate call more explicit for robustness
+    let cart = await Cart.findOne({ user: userId }).populate({
+      path: "products.productId",
+      model: "Rug", // Explicitly tell Mongoose to use the "Rug" model
+    });
     if (!cart) {
       cart = await Cart.create({ user: userId, products: [] });
     }
@@ -26,62 +27,72 @@ export const getCart = async (req, res, next) => {
   }
 };
 
-// @desc    Add an item to the cart
+// @desc    Add an item to the cart
 export const addToCart = async (req, res, next) => {
-  try {
-    const userId = getUserIdFromRequest(req);
-    const { productId, quantity: qtyToAdd } = req.body;
+  try {
+    const userId = getUserIdFromRequest(req);
+    const { productId, quantity: qtyToAdd } = req.body;
 
-    const [cart, product] = await Promise.all([
-      Cart.findOne({ user: userId }),
-      Rug.findById(productId)
-    ]);
+    const [cart, product] = await Promise.all([
+      Cart.findOne({ user: userId }),
+      Rug.findById(productId)
+    ]);
 
-    if (!product) {
-      res.status(404);
-      throw new Error("Product not found");
-    }
+    if (!product) {
+      res.status(404);
+      throw new Error("Product not found");
+    }
 
-    let userCart = cart;
-    if (!userCart) {
-      // This is a new cart. Check stock for the new item.
-      if (product.countInStock < qtyToAdd) {
-        res.status(400);
-        throw new Error("Not enough items in stock.");
-      }
-      userCart = new Cart({ user: userId, products: [{ productId, quantity: qtyToAdd }] });
-    } else {
-      // Cart already exists. Check if the item is already in the cart.
-      const existingItem = userCart.products.find(p => p.productId.toString() === productId);
+    let userCart = cart;
+    if (!userCart) {
+      if (product.countInStock < qtyToAdd) {
+        res.status(400);
+        throw new Error("Not enough items in stock.");
+      }
+      userCart = new Cart({ user: userId, products: [{ productId, quantity: qtyToAdd }] });
+    } else {
+      const existingItem = userCart.products.find(p => p.productId.toString() === productId);
+      if (existingItem) {
+        const newTotalQuantity = existingItem.quantity + qtyToAdd;
+        if (product.countInStock < newTotalQuantity) {
+          res.status(400);
+          throw new Error("Not enough items in stock.");
+        }
+        existingItem.quantity = newTotalQuantity;
+      } else {
+        if (product.countInStock < qtyToAdd) {
+          res.status(400);
+          throw new Error("Not enough items in stock.");
+        }
+        userCart.products.push({ productId, quantity: qtyToAdd });
+      }
+    }
+    
+    await userCart.save();
 
-      if (existingItem) {
-        // Item is already in cart. Check if adding more exceeds stock.
-        const newTotalQuantity = existingItem.quantity + qtyToAdd;
-        if (product.countInStock < newTotalQuantity) {
-          res.status(400);
-          throw new Error("Not enough items in stock.");
-        }
-        existingItem.quantity = newTotalQuantity;
-      } else {
-        // Item is new to the cart. Check stock for the new item.
-        if (product.countInStock < qtyToAdd) {
-          res.status(400);
-          throw new Error("Not enough items in stock.");
-        }
-        userCart.products.push({ productId, quantity: qtyToAdd });
-      }
+    // --- THIS IS THE FIX ---
+    // Instead of doing another complex populate call which can fail for admins,
+    // we will manually build the correct response. This is more efficient and robust.
+    const finalCart = userCart.toObject(); // Convert Mongoose doc to a plain object
+    
+    // Find the item we just added/updated
+    const updatedItemIndex = finalCart.products.findIndex(p => p.productId.toString() === productId);
+    if (updatedItemIndex > -1) {
+        // Replace the simple productId with the full product details we already fetched
+        finalCart.products[updatedItemIndex].productId = product.toObject();
     }
     
-    await userCart.save();
-    const populatedCart = await userCart.populate('products.productId');
-    res.status(200).json(populatedCart);
+    // Now, populate the rest of the items that might have been in the cart before
+    const populatedCart = await Cart.populate(finalCart, { path: "products.productId", model: "Rug" });
+    
+    res.status(200).json(populatedCart);
 
-  } catch (error) {
-    next(error);
-  }
+  } catch (error) {
+    next(error);
+  }
 };
 
-// @desc    Update an item's quantity in the cart
+// @desc    Update an item's quantity in the cart
 export const updateCartItem = async (req, res, next) => {
   try {
     const userId = getUserIdFromRequest(req);
@@ -112,7 +123,11 @@ export const updateCartItem = async (req, res, next) => {
     if (itemToUpdate) {
       itemToUpdate.quantity = quantity;
       await cart.save();
-      const populatedCart = await cart.populate('products.productId');
+      // FIX: Made the populate call more explicit for robustness
+      const populatedCart = await cart.populate({
+        path: "products.productId",
+        model: "Rug",
+      });
       return res.status(200).json(populatedCart);
     } else {
       res.status(404);
@@ -123,7 +138,7 @@ export const updateCartItem = async (req, res, next) => {
   }
 };
 
-// @desc    Remove an item from the cart
+// @desc    Remove an item from the cart
 export const removeFromCart = async (req, res, next) => {
   try {
     const userId = getUserIdFromRequest(req);
@@ -135,9 +150,14 @@ export const removeFromCart = async (req, res, next) => {
     }
     cart.products = cart.products.filter(p => p.productId.toString() !== productId);
     await cart.save();
-    const populatedCart = await cart.populate('products.productId');
+    // FIX: Made the populate call more explicit for robustness
+    const populatedCart = await cart.populate({
+      path: "products.productId",
+      model: "Rug",
+    });
     res.status(200).json(populatedCart);
   } catch (error) {
     next(error);
   }
 };
+
