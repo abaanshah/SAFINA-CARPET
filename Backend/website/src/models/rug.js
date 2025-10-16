@@ -10,7 +10,7 @@ const RugSchema = new mongoose.Schema({
   name: { type: String, required: true },
   size: { type: String, required: true },
   color: { type: String, required: true },
-  design: { type: String, required: true },
+  // design: { type: String, required: true },
   material: { type: String, required: true },
   price: { type: Number, required: true },
   imageUrl: { type: String, required: true },      // main image
@@ -20,7 +20,7 @@ const RugSchema = new mongoose.Schema({
   countInStock: {
     type: Number,
     required: true,
-    default: 0
+    default: 1
   },
 }, {
   timestamps: true // Automatically adds createdAt and updatedAt fields
