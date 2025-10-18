@@ -1,4 +1,3 @@
-// FILE: src/models/order.js
 import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema(
@@ -17,7 +16,7 @@ const orderSchema = new mongoose.Schema(
         product: {
           type: mongoose.Schema.Types.ObjectId,
           required: true,
-          ref: "Rug", // Or "Product", whatever your product model is named
+          ref: "Rug",
         },
       },
     ],
@@ -27,31 +26,24 @@ const orderSchema = new mongoose.Schema(
       postalCode: { type: String, required: true },
       country: { type: String, required: true },
     },
+    
+    // --- NEW: Detailed Shipping & Tracking Information ---
+    shippingInfo: {
+      courierName: { type: String },
+      trackingNumber: { type: String },
+      shippingDate: { type: Date },
+    },
+
     paymentMethod: {
       type: String,
       required: true,
-      default: "Stripe", // Or your preferred default
+      default: "Stripe",
     },
     paymentResult: {
       id: { type: String },
       status: { type: String },
       update_time: { type: String },
       email_address: { type: String },
-    },
-    itemsPrice: {
-      type: Number,
-      required: true,
-      default: 0.0,
-    },
-    taxPrice: {
-      type: Number,
-      required: true,
-      default: 0.0,
-    },
-    shippingPrice: {
-      type: Number,
-      required: true,
-      default: 0.0,
     },
     totalPrice: {
       type: Number,
@@ -66,6 +58,15 @@ const orderSchema = new mongoose.Schema(
     paidAt: {
       type: Date,
     },
+    
+    // --- NEW: Granular Order Status ---
+    orderStatus: {
+        type: String,
+        required: true,
+        enum: ['Order Placed', 'Processing', 'Shipped', 'Out for Delivery', 'Delivered', 'Cancelled'],
+        default: 'Order Placed',
+    },
+    
     isDelivered: {
       type: Boolean,
       required: true,
@@ -80,4 +81,7 @@ const orderSchema = new mongoose.Schema(
   }
 );
 
-export default mongoose.model("Order", orderSchema);
+const Order = mongoose.model("Order", orderSchema);
+
+export default Order;
+

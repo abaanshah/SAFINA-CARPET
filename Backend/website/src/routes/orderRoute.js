@@ -1,19 +1,33 @@
-// FILE: src/routes/orderRoutes.js
-
 import express from 'express';
 import { protect } from '../middleware/auth.js';
-import { createOrder, getMyOrders } from '../controllers/orderController.js';
+import { admin } from '../middleware/adminMiddleware.js'; 
+
+// --- UPDATED: Import the correct controller functions ---
+import { 
+    createOrder, 
+    getMyOrders,
+    getOrders,
+    updateOrderStatus // Changed from updateOrderToDelivered
+} from '../controllers/orderController.js';
 
 const router = express.Router();
 
-// All routes in this file will be protected and require a valid token
-router.use(protect);
+// --- USER-SPECIFIC ROUTES ---
+// These routes are protected, but accessible by any logged-in user.
+router.route('/myorders').get(protect, getMyOrders);
+router.route('/').post(protect, createOrder);
 
-// Route to get the logged-in user's orders
-router.route('/myorders').get(getMyOrders);
 
-// Route to create a new order
-router.route('/').post(createOrder);
+// --- ADMIN-ONLY ROUTES ---
+// These routes require the user to be both logged in (protect) AND an admin (admin).
+
+// GET /api/orders - Get all orders (no change)
+router.route('/').get(protect, admin, getOrders); 
+
+// --- UPDATED: This route is now more flexible ---
+// PUT /api/orders/:id/status - Updates the order's status to any valid state
+router.route('/:id/status').put(protect, admin, updateOrderStatus);
 
 
 export default router;
+
