@@ -47,8 +47,6 @@ const RugVisualizer = () => {
   const [previewImage, setPreviewImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [factIndex, setFactIndex] = useState(0);
-
-  // --- ADDED BACK: State for the dynamic countdown timer ---
   const [countdown, setCountdown] = useState(30);
 
   const [searchParams] = useSearchParams();
@@ -72,29 +70,18 @@ const RugVisualizer = () => {
     }
   }, [rugUrlFromQuery]);
   
-  // --- UPDATED: useEffect now handles both countdown and fun facts ---
   useEffect(() => {
     let factInterval;
     let countdownInterval;
     if (isLoading) {
-      // Fun fact rotation
       factInterval = setInterval(() => {
         setFactIndex(prev => (prev + 1) % funFacts.length);
       }, 5000);
-      
-      // Countdown timer
-      setCountdown(30); // Reset timer
+      setCountdown(30);
       countdownInterval = setInterval(() => {
-        setCountdown(prev => {
-          if (prev <= 1) {
-            clearInterval(countdownInterval);
-            return 0;
-          }
-          return prev - 1;
-        });
+        setCountdown(prev => (prev > 0 ? prev - 1 : 0));
       }, 1000);
     }
-    // Cleanup function to clear intervals
     return () => {
       clearInterval(factInterval);
       clearInterval(countdownInterval);
@@ -170,9 +157,11 @@ const RugVisualizer = () => {
     }
   };
   
+  // --- THIS IS THE FIX ---
+  // The function now uses the full, absolute URL to your main website's catalog.
   const browseOurRugs = () => {
     if (window.top) {
-        window.top.location.href = '/catalog';
+        window.top.location.href = 'http://localhost:5173/catalog';
     }
   };
 

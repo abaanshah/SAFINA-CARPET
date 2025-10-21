@@ -87,19 +87,32 @@ const EditProductDialog = ({ product, open, onOpenChange, onProductUpdated }) =>
     };
 
     const handleUpdate = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsUpdating(true);
-        try {
-            const config = { headers: { Authorization: `Bearer ${auth.token}` } };
-            const { data } = await axios.put(`/api/rugs/${product._id}`, updatedData, config);
-            onProductUpdated(data);
-            onOpenChange(false);
-        } catch (error) {
-            console.error("Failed to update product:", error);
-        } finally {
-            setIsUpdating(false);
-        }
+      e.preventDefault();
+      setIsUpdating(true);
+    
+      try {
+        const cleanedData = {
+          ...updatedData,
+          countInStock: Number(updatedData.countInStock) || 0,
+          price: Number(updatedData.price) || 0,
+          sku: updatedData.sku?.trim() || "N/A",
+          category: updatedData.category?.trim() || "Uncategorized",
+        };
+    
+        console.log("Sending cleaned data:", cleanedData);
+    
+        const config = { headers: { Authorization: `Bearer ${auth.token}` } };
+        const { data } = await axios.put(`http://localhost:8080/api/rugs/${product._id}`, cleanedData, config);
+    
+        onProductUpdated(data);
+        onOpenChange(false);
+      } catch (error) {
+        console.error("Failed to update product:", error.response?.data || error);
+      } finally {
+        setIsUpdating(false);
+      }
     };
+    
 
     if (!product) return null;
 
