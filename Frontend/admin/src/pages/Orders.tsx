@@ -38,7 +38,7 @@ import { Search, Eye, ShoppingCart, Clock, CheckCircle, XCircle, Truck, Loader2,
 import { format, formatDistanceToNow } from 'date-fns';
 import { AuthContext } from '@/context/authContext';
 
-// --- Order Details Modal Component (FIXED) ---
+// --- Order Details Modal Component ---
 const OrderDetailsModal = ({ order, open, onOpenChange }) => {
     if (!order) return null;
     return (
@@ -54,7 +54,6 @@ const OrderDetailsModal = ({ order, open, onOpenChange }) => {
                     <div>
                         <h4 className="font-semibold mb-2 text-gray-800">Customer</h4>
                         <div className="text-sm bg-gray-50 p-3 rounded-md border">
-                            {/* --- THIS IS THE FIX: Using optional chaining (?.) and fallbacks --- */}
                             <p><strong>Name:</strong> {order.user?.name || 'N/A'}</p>
                             <p><strong>Email:</strong> <a href={`mailto:${order.user?.email}`} className="text-blue-600 hover:underline">{order.user?.email || 'N/A'}</a></p>
                         </div>
@@ -267,6 +266,7 @@ export default function Orders() {
         <h1 className="text-3xl font-bold">Orders Management</h1>
         <p className="text-muted-foreground">Track and manage customer orders</p>
       </div>
+      
       <div className="grid gap-4 md:grid-cols-4">
         <Card><CardHeader className="flex flex-row items-center justify-between pb-2"><CardTitle className="text-sm font-medium">Total Orders</CardTitle><ShoppingCart className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-2xl font-bold">{stats.total}</div></CardContent></Card>
         <Card><CardHeader className="flex flex-row items-center justify-between pb-2"><CardTitle className="text-sm font-medium">Pending</CardTitle><Clock className="h-4 w-4 text-yellow-600" /></CardHeader><CardContent><div className="text-2xl font-bold">{stats.pending}</div></CardContent></Card>
@@ -277,8 +277,17 @@ export default function Orders() {
       <Card>
         <CardHeader><CardTitle>Order History</CardTitle></CardHeader>
         <CardContent>
+          
           <div className="flex flex-col md:flex-row gap-4 mb-4">
-            <div className="relative flex-1"><Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" /><Input placeholder="Search by ID, name, or email..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-10" /></div>
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input 
+                placeholder="Search by ID, name, or email..." 
+                value={searchTerm} 
+                onChange={(e) => setSearchTerm(e.target.value)} 
+                className="pl-10" 
+              />
+            </div>
             <Select value={selectedStatus} onValueChange={setSelectedStatus}>
               <SelectTrigger className="w-full md:w-[180px]"><SelectValue placeholder="Order Status" /></SelectTrigger>
               <SelectContent>
@@ -291,13 +300,14 @@ export default function Orders() {
               </SelectContent>
             </Select>
           </div>
+          
           <div className="rounded-md border">
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Order ID</TableHead>
                   <TableHead>Customer</TableHead>
-                  <TableHead>Date</TableHead>
+                  <TableHead>Date & Time</TableHead>
                   <TableHead>Total</TableHead>
                   <TableHead>Payment</TableHead>
                   <TableHead>Status</TableHead>
@@ -310,7 +320,7 @@ export default function Orders() {
                   <TableRow key={order._id}>
                     <TableCell className="font-medium">#{order._id.substring(0, 7).toUpperCase()}</TableCell>
                     <TableCell><div><div className="font-medium">{order.user?.name || 'N/A'}</div><div className="text-sm text-muted-foreground">{order.user?.email || 'N/A'}</div></div></TableCell>
-                    <TableCell>{formatDistanceToNow(new Date(order.createdAt), { addSuffix: true })}</TableCell>
+                    <TableCell>{format(new Date(order.createdAt), 'dd MMM yyyy, hh:mm a')}</TableCell>
                     <TableCell>{formatCurrency(order.totalPrice)}</TableCell>
                     <TableCell><Badge className={order.isPaid ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}>{order.isPaid ? 'Paid' : 'Pending'}</Badge></TableCell>
                     <TableCell><Badge className={getStatusColor(order.orderStatus)}>{order.orderStatus}</Badge></TableCell>

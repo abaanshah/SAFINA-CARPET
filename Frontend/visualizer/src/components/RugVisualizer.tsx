@@ -9,6 +9,13 @@ import sampleRoom1 from "@/assets/sample-room-1.jpg";
 import sampleRoom2 from "@/assets/sample-room-2.jpg";
 import sampleRoom3 from "@/assets/sample-room-3.jpg";
 import sampleRoom4 from "@/assets/sample-room-4.jpg";
+// --- Your new images are correctly imported ---
+import rugroom from "@/assets/rugroom.jpg";
+import rugroom2 from "@/assets/rugroom2.jpg";
+import rugroom3 from "@/assets/rugroom3.jpg";
+import rugroom4 from "@/assets/rugroom4.jpg";
+import rugroom5 from "@/assets/rugroom5.jpg";
+import rugroom6 from "@/assets/rugroom6.jpg";
 
 // --- Helper Components ---
 const Card = ({ children, className = "" }) => (
@@ -157,8 +164,6 @@ const RugVisualizer = () => {
     }
   };
   
-  // --- THIS IS THE FIX ---
-  // The function now uses the full, absolute URL to your main website's catalog.
   const browseOurRugs = () => {
     if (window.top) {
         window.top.location.href = 'http://localhost:5173/catalog';
@@ -290,11 +295,20 @@ const ImageUploader = ({ onImageSelect, label = "Upload Photo" }) => {
   );
 };
 
+// --- THIS IS THE FIX ---
+// The `sampleRooms` array was defined, but the new items were not added to it.
+// I have now added them with unique names and descriptions.
 const sampleRooms = [
-    { name: 'Living Room', src: sampleRoom1 },
-    { name: 'Bedroom', src: sampleRoom2 },
-    { name: 'Dining Room', src: sampleRoom3 },
-    { name: 'Modern Hall', src: sampleRoom4 },
+    { name: 'Living Room', src: sampleRoom1, description: "Spacious living area" },
+    { name: 'Bedroom', src: sampleRoom2, description: "Warm, natural lighting" },
+    { name: 'Dining Room', src: sampleRoom3, description: "Elegant dining space" },
+    { name: 'Modern Hall', src: sampleRoom4, description: "Bright, open hallway" },
+    { name: 'Classic Nook', src: rugroom, description: "A cozy corner" },
+    { name: 'Modern Study', src: rugroom2, description: "Professional workspace" },
+    { name: 'Bright Entry', src: rugroom3, description: "Welcoming entryway" },
+    { name: 'Minimalist Lounge', src: rugroom4, description: "Clean, modern design" },
+    // { name: 'Executive Suite', src: rugroom5, description: "Bold statement office" },
+    { name: 'Sunlit Den', src: rugroom6, description: "A bright, airy room" },
 ];
 
 const SampleRoomGallery = ({ onRoomSelect, selectedRoomName }) => (
