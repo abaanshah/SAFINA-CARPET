@@ -5,62 +5,73 @@ import { Heart, ShoppingBag, X, SlidersHorizontal } from "lucide-react";
 import { CartContext } from "../../context/CartContext";
 import { WishlistContext } from "../../context/WishlistContext";
 import { AuthContext } from "../../context/AuthContext";
+import { CurrencyContext } from "../../context/CurrencyContext"; // 1. Import CurrencyContext
 import { motion, AnimatePresence } from "framer-motion";
 
 // --- A refined, professional Product Card component ---
-const ProductCard = ({ product, handleWishlistToggle, addToCart, isItemInWishlist }) => (
-    <motion.div
-        layout
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.4 }}
-        className="group relative flex flex-col bg-white border border-gray-200 rounded-lg overflow-hidden transition-shadow hover:shadow-xl"
-    >
-        <div className="absolute top-3 right-3 z-10">
-            <button 
-                onClick={() => handleWishlistToggle(product)} 
-                className="bg-white/70 backdrop-blur-sm p-2 rounded-full shadow-md hover:bg-white transition-colors"
-                aria-label="Add to wishlist"
-            >
-                <Heart size={20} className={`transition-all ${isItemInWishlist(product._id) ? 'text-red-600 fill-red-600' : 'text-gray-700 hover:text-red-500'}`} />
-            </button>
-        </div>
-        
-        <Link to={`/purchase/${product._id}`} className="block">
-            <div className="aspect-square w-full overflow-hidden bg-gray-100">
-                <img
-                    src={product.imageUrl}
-                    alt={product.name}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/400x400/f8f8f8/333333?text=Image+Not+Found" }}
-                />
-            </div>
-        </Link>
-        
-        <div className="p-4 flex flex-col flex-grow">
-            <h3 className="text-base font-semibold text-gray-800 truncate">
-                <Link to={`/purchase/${product._id}`} className="hover:text-[#5c0b0a] transition-colors">{product.name}</Link>
-            </h3>
-            {/* --- THIS IS THE FIX: Size is now displayed next to Material --- */}
-            <div className="flex items-center text-sm text-gray-500 mt-1">
-                <span>{product.size}</span>
-                <span className="mx-2">|</span>
-                <span className="capitalize">{product.material}</span>
-            </div>
-            <div className="mt-auto pt-4 flex justify-between items-center">
-                <p className="text-lg font-bold text-gray-900">₹{product.price.toLocaleString('en-IN')}</p>
+const ProductCard = ({ product, handleWishlistToggle, addToCart, isItemInWishlist }) => {
+    // --- THIS IS THE FIX ---
+    // 2. Use the CurrencyContext to get the getPrice function
+    const { getPrice } = useContext(CurrencyContext); 
+    // 3. Get the correct dynamic price and symbol
+    const { price, symbol } = getPrice(product); 
+
+    return (
+        <motion.div
+            layout
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="group relative flex flex-col bg-white border border-gray-200 rounded-lg overflow-hidden transition-shadow hover:shadow-xl"
+        >
+            <div className="absolute top-3 right-3 z-10">
                 <button 
-                    onClick={() => addToCart(product)} 
-                    className="bg-gray-800 text-white p-2 rounded-lg shadow-md hover:bg-black transition-transform hover:scale-105"
-                    aria-label="Add to cart"
+                    onClick={() => handleWishlistToggle(product)} 
+                    className="bg-white/70 backdrop-blur-sm p-2 rounded-full shadow-md hover:bg-white transition-colors"
+                    aria-label="Add to wishlist"
                 >
-                    <ShoppingBag size={20} />
+                    <Heart size={20} className={`transition-all ${isItemInWishlist(product._id) ? 'text-red-600 fill-red-600' : 'text-gray-700 hover:text-red-500'}`} />
                 </button>
             </div>
-        </div>
-    </motion.div>
-);
+            
+            <Link to={`/purchase/${product._id}`} className="block">
+                <div className="aspect-square w-full overflow-hidden bg-gray-100">
+                    <img
+                        src={product.imageUrl}
+                        alt={product.name}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/400x400/f8f8f8/333333?text=Image+Not+Found" }}
+                    />
+                </div>
+            </Link>
+            
+            <div className="p-4 flex flex-col flex-grow">
+                <h3 className="text-base font-semibold text-gray-800 truncate">
+                    <Link to={`/purchase/${product._id}`} className="hover:text-[#5c0b0a] transition-colors">{product.name}</Link>
+                </h3>
+                <div className="flex items-center text-sm text-gray-500 mt-1">
+                    <span>{product.size}</span>
+                    <span className="mx-2">|</span>
+                    <span className="capitalize">{product.material}</span>
+                </div>
+                <div className="mt-auto pt-4 flex justify-between items-center">
+                    {/* 4. Display the dynamic price and symbol */}
+                    <p className="text-lg font-bold text-gray-900">
+                        {symbol}{price.toLocaleString('en-IN')}
+                    </p>
+                    <button 
+                        onClick={() => addToCart(product)} 
+                        className="bg-gray-800 text-white p-2 rounded-lg shadow-md hover:bg-black transition-transform hover:scale-105"
+                        aria-label="Add to cart"
+                    >
+                        <ShoppingBag size={20} />
+                    </button>
+                </div>
+            </div>
+        </motion.div>
+    );
+};
 
 // --- Main Catalog Component with Dynamic Filters ---
 const Catalog = () => {
@@ -82,6 +93,7 @@ const Catalog = () => {
     const { addToWishlist, removeFromWishlist, isItemInWishlist } = useContext(WishlistContext);
     const { user } = useContext(AuthContext);
 
+    // Effect 1: Fetch ALL products once to build dynamic filter options
     useEffect(() => {
         const fetchAllProducts = async () => {
             try {
@@ -103,6 +115,7 @@ const Catalog = () => {
         fetchAllProducts();
     }, []);
 
+    // Effect 2: Sync UI state with URL parameters whenever URL changes
     useEffect(() => {
         const query = new URLSearchParams(location.search);
         const urlFilters = {};
@@ -114,19 +127,23 @@ const Catalog = () => {
         window.scrollTo(0, 0);
     }, [location.search]);
 
+
+    // useMemo to apply filtering and sorting
     const filteredAndSortedProducts = useMemo(() => {
         let filtered = [...allProducts];
 
+        // Apply all filters from the URL
         Object.entries(filters).forEach(([key, value]) => {
             filtered = filtered.filter(product => 
                 product[key]?.toString().toLowerCase().includes(value.toLowerCase())
             );
         });
         
-        if (sortBy === 'newest') filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        // Apply sorting
+        if (sortBy === 'newest') filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         else if (sortBy === 'name-asc') filtered.sort((a, b) => a.name.localeCompare(b.name));
         else if (sortBy === 'price-asc') filtered.sort((a, b) => a.price - b.price);
-        else if (sortBy === 'price-desc') filtered.sort((a, b) => b.price - a.price);
+        else if (sortBy === 'price-desc') filtered.sort((a, b) => b.price - b.price);
         
         return filtered;
     }, [allProducts, filters, sortBy]);
@@ -189,7 +206,6 @@ const Catalog = () => {
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 
                
-
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12 items-start">
                     <aside className="lg:sticky top-28 hidden lg:block bg-gray-50 p-6 rounded-lg border">
                         <FilterSidebar />

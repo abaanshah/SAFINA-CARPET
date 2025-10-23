@@ -3,21 +3,28 @@ import mongoose from "mongoose";
 import cloudinary from "../config/cloudinaryConfig.js";
 
 // ---------- Helper Function ----------
-const generateSizeString = (shape, width, length) => {
-  if (shape === "round" && width) return `${width} ft Round`;
-  if (width && length) return `${width}x${length} ft`;
-  return "Standard";
+const generateSizeString = (shape, width, length, diameter) => {
+  if (shape === 'round' && diameter) {
+    return `${diameter} ft Round`;
+  }
+  if (shape === 'runner' && width && length) {
+    return `${width}x${length} ft Runner`;
+  }
+  if (width && length) {
+    return `${width}x${length} ft`;
+  }
+  return 'Standard'; // Fallback
 };
 
 // ---------- Get Rugs (Search + Filters) ----------
 export const getRugs = async (filters) => {
-  const caseInsensitiveFilters = {};
+  const flexibleFilters = {};
   for (const key in filters) {
     if (filters[key]) {
-      caseInsensitiveFilters[key] = { $regex: new RegExp(filters[key], "i") };
+      flexibleFilters[key] = { $regex: new RegExp(filters[key], "i") };
     }
   }
-  return await Rug.find(caseInsensitiveFilters);
+  return await Rug.find(flexibleFilters);
 };
 
 // ---------- Get Rug by ID ----------
@@ -28,11 +35,9 @@ export const getRugById = async (rugId) => {
   return rug;
 };
 
-// ---------- Create Rug ----------
+// --- THIS IS THE FULLY CORRECTED createRug FUNCTION ---
 export const createRug = async (productData, files, userId) => {
   const imageUrls = [];
-
-  // Upload all images to Cloudinary
   if (files && files.length > 0) {
     for (const file of files) {
       const base64Image = `data:${file.mimetype};base64,${file.buffer.toString("base64")}`;
@@ -49,89 +54,124 @@ export const createRug = async (productData, files, userId) => {
     }
   }
 
+  // Destructure ALL fields from the frontend form
   const {
     title,
+    sku,
     description,
+    personalization,
+    instructionForBuyers,
     priceInr,
+    priceUsd,
     quantity,
+    category,
     material,
     primaryColor,
     secondaryColor,
     width,
     length,
-    shape,
-    pattern,
     diameter,
+    pattern,
+    shape,
+    type,
+    pileHeight,
+    room,
   } = productData;
 
-  // Combine colors smartly
-  let combinedColor = primaryColor || "";
+  // --- 1. Create the nested priceData object ---
+  const priceData = {
+    inr: Number(priceInr) || 0,
+    usd: Number(priceUsd) || 0,
+  };
+  
+  // --- 2. Create the nested specifications object ---
+  const specifications = {
+    pattern,
+    shape,
+    primaryColor,
+    secondaryColor,
+    width: Number(width) || null,
+    length: Number(length) || null,
+    diameter: Number(diameter) || null,
+    type,
+    pileHeight,
+    room: room ? room.split(',').map(item => item.trim()) : [],
+  };
+
+  // --- 3. Generate the top-level filterable fields ---
+  const size = generateSizeString(shape, width, length, diameter);
+  let combinedColor = primaryColor || '';
   if (primaryColor && secondaryColor) {
     combinedColor = `${primaryColor} / ${secondaryColor}`;
   } else if (secondaryColor && !primaryColor) {
     combinedColor = secondaryColor;
   }
 
-  const effectiveWidth = shape === "round" ? diameter : width;
-
+  // --- 4. Create the new Rug instance with the correct structure ---
   const rug = new Rug({
     name: title,
+    sku,
     user: userId,
-    size: generateSizeString(shape, effectiveWidth, length),
-    color: combinedColor,
-    design: pattern,
-    material: material,
-    price: Number(priceInr) || 0,
+    description,
+    category,
+    material,
+    color: combinedColor, // The simple, filterable color
+    size, // The simple, filterable size
+    price: priceData.inr, // The main price (INR)
+    priceData, // The full price object
+    countInStock: Number(quantity) || 0,
+    specifications, // The full specifications object
+    personalization,
+    instructionForBuyers,
     imageUrl: imageUrls.length > 0 ? imageUrls[0] : "/images/placeholder.jpg",
     images: imageUrls,
-    shortDescription: description ? description.substring(0, 150) : "",
-    description: description || "",
-    countInStock: Number(quantity) || 0,
+    status: 'draft',
   });
 
   const createdRug = await rug.save();
   return createdRug;
 };
 
-// ---------- Update Rug (Handles Old Rugs Too) ----------
+// --- THIS IS THE FULLY CORRECTED updateRug FUNCTION ---
 export const updateRug = async (id, updateData) => {
   if (!mongoose.Types.ObjectId.isValid(id)) throw new Error("Invalid Rug ID");
 
   const rug = await Rug.findById(id);
   if (!rug) return null;
 
-  // 🧩 Normalize missing fields (for old data)
-  rug.price = rug.price ?? 0;
-  rug.countInStock = rug.countInStock ?? 0;
-  rug.description = rug.description ?? "";
-  rug.shortDescription = rug.shortDescription ?? "";
-  rug.name = rug.name ?? "Untitled Rug";
-
-  // 🧠 Update only provided fields
-  if (updateData.name) rug.name = updateData.name;
-  if (updateData.sku) rug.sku = updateData.sku;
-  if (updateData.description) {
-    rug.description = updateData.description;
-    rug.shortDescription = updateData.description.substring(0, 150);
-  }
-  if (updateData.category) rug.category = updateData.category;
-  if (updateData.material) rug.material = updateData.material;
-  if (updateData.size) rug.size = updateData.size;
+  // --- THIS IS THE FIX ---
+  // We now check if the incoming data is a non-empty string before updating
+  // This prevents saving an empty string to a 'required: true' field.
+  if (updateData.name && updateData.name.trim() !== '') rug.name = updateData.name;
+  if (updateData.sku && updateData.sku.trim() !== '') rug.sku = updateData.sku;
+  if (updateData.description && updateData.description.trim() !== '') rug.description = updateData.description;
+  if (updateData.category && updateData.category.trim() !== '') rug.category = updateData.category;
+  if (updateData.material && updateData.material.trim() !== '') rug.material = updateData.material;
   if (updateData.status) rug.status = updateData.status;
-  if (updateData.design) rug.design = updateData.design;
-  if (updateData.color) rug.color = updateData.color;
 
-  // Handle numbers safely
-  if (updateData.price !== undefined)
-    rug.price = Number(updateData.price) || 0;
-  if (updateData.countInStock !== undefined)
-    rug.countInStock = Number(updateData.countInStock) || 0;
-
-  // Optional: Update images if provided
-  if (updateData.images && Array.isArray(updateData.images)) {
-    rug.images = updateData.images;
-    rug.imageUrl = updateData.images[0] || rug.imageUrl;
+  // Safely update nested price data
+  if (updateData.priceInr !== undefined) {
+    rug.price = Number(updateData.priceInr) || 0;
+    rug.priceData.inr = Number(updateData.priceInr) || 0;
   }
+  if (updateData.priceUsd !== undefined) {
+    rug.priceData.usd = Number(updateData.priceUsd) || 0;
+  }
+  if (updateData.countInStock !== undefined) {
+    rug.countInStock = Number(updateData.countInStock) || 0;
+  }
+  
+  // Safely update nested specifications
+  if (updateData.width || updateData.length || updateData.shape || updateData.diameter) {
+      rug.specifications.width = Number(updateData.width) || rug.specifications.width;
+      rug.specifications.length = Number(updateData.length) || rug.specifications.length;
+      rug.specifications.diameter = Number(updateData.diameter) || rug.specifications.diameter;
+      rug.specifications.shape = updateData.shape || rug.specifications.shape;
+      // Re-generate the top-level size string
+      rug.size = generateSizeString(rug.specifications.shape, rug.specifications.width, rug.specifications.length, rug.specifications.diameter);
+  }
+
+  // ... (add any other spec fields you want to be editable) ...
 
   const updatedRug = await rug.save();
   return updatedRug;
@@ -146,3 +186,4 @@ export const deleteRug = async (id) => {
   await rug.deleteOne();
   return { success: true };
 };
+

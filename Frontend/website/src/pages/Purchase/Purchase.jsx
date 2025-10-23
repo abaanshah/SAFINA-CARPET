@@ -16,6 +16,7 @@ import {
 import { CartContext } from "../../context/CartContext";
 import { WishlistContext } from "../../context/WishlistContext";
 import { AuthContext } from "../../context/AuthContext";
+import { CurrencyContext } from "../../context/CurrencyContext"; // 1. IMPORT THE NEW CONTEXT
 import { motion, AnimatePresence } from "framer-motion";
 
 // --- VISUALIZER MODAL (Fully Integrated & Styled) ---
@@ -86,12 +87,12 @@ const AccordionItem = ({ title, content, isOpen, onClick }) => (
 
 // --- MAIN PURCHASE PAGE COMPONENT (Modern Redesign) ---
 export const Purchase = () => {
-  // --- All original state and logic is 100% preserved ---
   const { productId } = useParams();
   const { addToCart, cartItems } = useContext(CartContext);
   const { addToWishlist, removeFromWishlist, isItemInWishlist } =
     useContext(WishlistContext);
   const { user } = useContext(AuthContext);
+  const { getPrice } = useContext(CurrencyContext); // 2. USE THE CONTEXT
 
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -116,15 +117,14 @@ export const Purchase = () => {
         const initialCountInStock = data.countInStock;
         setProduct({ ...data, initialCountInStock });
 
-        // --- CLOUDINARY FIX: Use the full URL directly from the database ---
         const imageUrl =
           data.images && data.images.length > 0
             ? data.images[0]
             : data.imageUrl;
         setSelectedImage(imageUrl);
 
-        setSelectedSize(data.size || "Standard"); // Simplified to use the main size field
-        setSelectedColor(data.color || "Default"); // Simplified to use the main color field
+        setSelectedSize(data.size || "Standard");
+        setSelectedColor(data.color || "Default");
       } catch (err) {
         console.error("Error fetching product:", err);
         setProduct(null);
@@ -164,7 +164,6 @@ export const Purchase = () => {
       quantity,
     };
     addToCart(itemToAdd);
-    // You might want to add a toast notification here for better UX
   };
   const handleWishlistClick = () => {
     if (!user) {
@@ -174,7 +173,7 @@ export const Purchase = () => {
     if (!product) return;
     isItemInWishlist(product._id)
       ? removeFromWishlist(product._id)
-      : addToWishlist(product._id);
+      : addToWishlist(product.id);
   };
 
   if (isLoading)
@@ -190,16 +189,12 @@ export const Purchase = () => {
       </div>
     );
 
-  // --- CLOUDINARY FIX: The 'images' array now contains full URLs ---
   const images =
     product.images?.length > 0 ? product.images : [product.imageUrl];
-
-  // Simplified for clarity, assuming size and color arrays are not in the new model
   const sizes =
     product.specifications?.sizeOptions || [product.size].filter(Boolean);
   const colors =
     product.specifications?.colorOptions || [product.color].filter(Boolean);
-
   const availableStockForAdding = product.countInStock;
   const isLowStock =
     availableStockForAdding > 0 && availableStockForAdding <= 10;
@@ -222,10 +217,13 @@ export const Purchase = () => {
     },
   ];
 
+  // 3. GET THE DYNAMIC PRICE
+  const { price, symbol } = getPrice(product);
+
   return (
     <>
       <div className="bg-white pt-[130px]">
-        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8  ">
+        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8  ">
           <motion.div
             className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start"
             initial="hidden"
@@ -236,57 +234,55 @@ export const Purchase = () => {
             }}
           >
             {/* --- Left Column: Image Gallery --- */}
-           {/* --- Left Column: Image Gallery --- */}
-<motion.div
-  variants={{
-    hidden: { opacity: 0, x: -20 },
-    visible: { opacity: 1, x: 0 },
-  }}
-  className="lg:sticky top-24 self-start flex gap-4 items-start"
->
-  {/* Thumbnails - Vertical */}
-  <div className="flex flex-col gap-3 max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent">
-    {images.map((img, index) => (
-      <button
-        key={index}
-        onClick={() => setSelectedImage(img)}
-        className={`w-20 h-20 rounded-md overflow-hidden border-2 transition-all duration-200 ${
-          selectedImage === img
-            ? "border-[#5c0b0a] ring-2 ring-offset-2 ring-[#5c0b0a]"
-            : "border-gray-200 hover:border-gray-400"
-        }`}
-      >
-        <img
-          src={img}
-          alt={`Thumbnail ${index + 1}`}
-          className="w-full h-full object-cover"
-        />
-      </button>
-    ))}
-  </div>
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, x: -20 },
+                visible: { opacity: 1, x: 0 },
+              }}
+              className="lg:sticky top-24 self-start flex gap-4 items-start"
+            >
+              {/* Thumbnails - Vertical */}
+              <div className="flex flex-col gap-3 max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent">
+                {images.map((img, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedImage(img)}
+                    className={`w-20 h-20 rounded-md overflow-hidden border-2 transition-all duration-200 ${
+                      selectedImage === img
+                        ? "border-[#5c0b0a] ring-2 ring-offset-2 ring-[#5c0b0a]"
+                        : "border-gray-200 hover:border-gray-400"
+                    }`}
+                  >
+                    <img
+                      src={img}
+                      alt={`Thumbnail ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
 
-  {/* Main Image with Magnify Effect */}
-  <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden border border-gray-200 flex-1 group cursor-zoom-in">
-    {isOutOfStock && (
-      <div className="absolute top-4 left-4 bg-gray-800 text-white text-xs font-bold uppercase tracking-wider py-1.5 px-3 rounded-md z-10">
-        Out of Stock
-      </div>
-    )}
+              {/* Main Image with Magnify Effect */}
+              <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden border border-gray-200 flex-1 group cursor-zoom-in">
+                {isOutOfStock && (
+                  <div className="absolute top-4 left-4 bg-gray-800 text-white text-xs font-bold uppercase tracking-wider py-1.5 px-3 rounded-md z-10">
+                    Out of Stock
+                  </div>
+                )}
 
-    <AnimatePresence>
-      <motion.img
-        key={selectedImage}
-        src={selectedImage}
-        alt={product.name}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
-        className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-125 group-hover:cursor-zoom-in"
-      />
-    </AnimatePresence>
-  </div>
-</motion.div>
-
+                <AnimatePresence>
+                  <motion.img
+                    key={selectedImage}
+                    src={selectedImage}
+                    alt={product.name}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                    className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-125 group-hover:cursor-zoom-in"
+                  />
+                </AnimatePresence>
+              </div>
+            </motion.div>
 
             {/* --- Right Column: Product Details --- */}
             <motion.div
@@ -305,8 +301,9 @@ export const Purchase = () => {
               <h1 className="text-3xl lg:text-4xl font-bold text-gray-900">
                 {product.name}
               </h1>
+              {/* 4. DISPLAY THE DYNAMIC PRICE */}
               <p className="text-2xl font-medium text-[#5c0b0a] mt-2">
-                ₹{product.price?.toLocaleString("en-IN")}
+                {symbol}{price?.toLocaleString("en-IN")}
               </p>
 
               <div className="mt-4 border-b border-gray-200 pb-6">
@@ -428,3 +425,4 @@ export const Purchase = () => {
 };
 
 export default Purchase;
+

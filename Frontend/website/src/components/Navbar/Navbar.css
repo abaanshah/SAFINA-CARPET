@@ -260,3 +260,45 @@ header.show {
   animation: scale-fade 0.25s ease-out;
 }
 
+/* Add these styles to the bottom of your existing Navbar.css file
+*/
+
+/* --- Currency Toggle Button --- */
+.nav-currency-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px; /* Matches Jost font size */
+  font-weight: 500;
+  padding: 0 12px;
+  height: 36px;
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin: 0 5px; /* Add some spacing */
+}
+
+.nav-currency-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
+}
+
+/* --- Admin Link --- */
+.admin-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px dashed rgba(255, 193, 7, 0.5); /* Use an amber color to stand out */
+  border-radius: 50%;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin: 0 5px;
+}
+
+.admin-link:hover {
+  background-color: rgba(255, 193, 7, 0.2);
+  transform: scale(1.1);
+}

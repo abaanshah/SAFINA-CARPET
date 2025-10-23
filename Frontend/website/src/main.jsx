@@ -8,6 +8,7 @@ import { CartProvider } from "./context/CartContext";
 import { WishlistProvider } from "./context/WishlistContext";
 import { Toaster } from 'react-hot-toast';
 import './index.css';
+import { CurrencyProvider } from './context/CurrencyContext.jsx';
 // import "@fontsource/jost/200.css";
 
 createRoot(document.getElementById('root')).render(
@@ -16,12 +17,14 @@ createRoot(document.getElementById('root')).render(
       <AuthProvider>
         <CartProvider>
           <WishlistProvider>
+            <CurrencyProvider>
             <Toaster 
               // --- CHANGED THIS LINE ---
               position="top-center"
               reverseOrder={false}
             />
             <App />
+            </CurrencyProvider>
           </WishlistProvider>
         </CartProvider>
       </AuthProvider>
