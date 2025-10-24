@@ -66,7 +66,7 @@ const Wishlist = () => {
               >
                 <Link to={`/product/${item._id}`} className="flex-shrink-0 mb-4 md:mb-0">
                   <img
-                    src={`http://localhost:5000/${item.image}`}
+                    src={`http://localhost:5001/${item.image}`}
                     alt={item.name}
                     className="h-32 w-32 md:h-40 md:w-40 rounded-lg object-cover"
                     onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/400x400/f8f8f8/333333?text=Image+Not+Found" }}

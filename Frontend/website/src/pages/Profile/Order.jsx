@@ -58,7 +58,7 @@ const MyOrdersPage = () => {
     const fetchOrders = async () => {
       try {
         const config = { headers: { Authorization: `Bearer ${token}` } };
-        const { data } = await axios.get('http://localhost:5000/api/orders/myorders', config);
+        const { data } = await axios.get('http://localhost:5001/api/orders/myorders', config);
         // Sort orders by most recent first
         setOrders(data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
       } catch (error) {
@@ -134,7 +134,7 @@ const MyOrdersPage = () => {
                     {order.orderItems.map(item => (
                       <div key={item.product} className="flex items-center gap-4">
                         <img 
-                          src={item.image ? `http://localhost:5000/${item.image.split('\\').pop()}` : 'https://placehold.co/128x128/f8f8f8/333333?text=No+Image'}
+                          src={item.image ? `http://localhost:5001/${item.image.split('\\').pop()}` : 'https://placehold.co/128x128/f8f8f8/333333?text=No+Image'}
                           alt={item.name}
                           className="w-16 h-16 object-cover rounded-md"
                         />

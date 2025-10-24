@@ -112,7 +112,7 @@ export const Purchase = () => {
       try {
         setIsLoading(true);
         const { data } = await axios.get(
-          `http://localhost:5000/api/rugs/${productId}`
+          `http://localhost:5001/api/rugs/${productId}`
         );
         const initialCountInStock = data.countInStock;
         setProduct({ ...data, initialCountInStock });

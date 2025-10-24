@@ -15,7 +15,7 @@ export const CartProvider = ({ children }) => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // isLoading is for the initial sync
 
-  const API_URL = "http://localhost:5000/api/cart";
+  const API_URL = "http://localhost:5001/api/cart";
 
   const toastOptions = { /* ... your toast styles ... */ };
   

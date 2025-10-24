@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import session from "express-session";
+import config from "./config/index.js";
 
 // It's good practice to import models to prevent potential Mongoose errors
 import Order from "./models/order.js";
@@ -19,15 +20,19 @@ import userRoute from "./routes/userRoute.js";
 // Middleware
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 
-// Note: dotenv is no longer needed here as it's handled in server.js
-
 const app = express();
 
 // Middleware Setup
 app.use(
   cors({
-    origin: [process.env.FRONTEND_URL, process.env.ADMIN_URL],
+    origin: [
+      config.FRONTEND_URL || "http://localhost:5173",
+      config.ADMIN_URL || "http://localhost:8080",
+      "http://localhost:3000", // Additional fallback for development
+    ],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 app.use(express.json());
