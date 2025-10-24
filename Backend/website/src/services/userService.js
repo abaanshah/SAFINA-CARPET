@@ -57,4 +57,3 @@ export const getAllCustomers = async () => {
     throw new Error('Could not retrieve customers');
   }
 };
-

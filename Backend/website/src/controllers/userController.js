@@ -10,4 +10,3 @@ export const getAllCustomers = asyncHandler(async (req, res) => {
   const customers = await userService.getAllCustomers();
   res.json(customers);
 });
-
