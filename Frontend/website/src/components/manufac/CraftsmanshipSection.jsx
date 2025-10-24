@@ -15,19 +15,11 @@ const CraftsmanshipSection = () => {
   return (
     <section className="w-full py-5">
       <div className="container mx-auto">
-        <Card className="border-0 shadow-none">
-          <CardContent className="p-0">
-            <div className="flex flex-col md:flex-row gap-6">
-              {/* Left side - Image */}
-              <div
-                className="w-full md:w-[550px] h-[325px] bg-cover bg-center"
-                style={{
-                  backgroundImage: `url(${founderInfo.backgroundImage})`,
-                }}
-              />
-
-              {/* Right side - Text content */}
-              <div className="flex flex-col flex-1">
+        <Card className="border-0 shadow-lg rounded-lg overflow-hidden" style={{ backgroundColor: '#FFF5F5' }}>
+          <CardContent className="p-6">
+            <div className="flex flex-col md:flex-row gap-6 items-center">
+              {/* Text content - appears first on mobile */}
+              <div className="flex flex-col flex-1 order-1 md:order-2">
                 <h2 className="font-normal text-4xl text-m-3refprimaryprimary-30 mb-5 font-['Playfair_Display',Helvetica] leading-[44px]">
                   {founderInfo.title}
                 </h2>
@@ -43,6 +35,14 @@ const CraftsmanshipSection = () => {
                   ))}
                 </div>
               </div>
+
+              {/* Image - appears second on mobile */}
+              <div
+                className="w-full md:w-[550px] h-[325px] bg-cover bg-center order-2 md:order-1"
+                style={{
+                  backgroundImage: `url(${founderInfo.backgroundImage})`,
+                }}
+              />
             </div>
           </CardContent>
         </Card>

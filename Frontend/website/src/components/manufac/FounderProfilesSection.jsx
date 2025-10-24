@@ -5,9 +5,9 @@ const FounderProfilesSection = () => {
   return (
     <section className="w-full py-6 my-6">
       <div className="container mx-auto">
-        <Card className="border-none shadow-none">
-          <CardContent className="p-0">
-            <div className="flex flex-col md:flex-row gap-6">
+        <Card className="border-none shadow-lg rounded-lg overflow-hidden" style={{ backgroundColor: '#FFF5F5' }}>
+          <CardContent className="p-6">
+            <div className="flex flex-col md:flex-row gap-6 items-center">
               <div className="md:w-1/2 flex flex-col justify-center">
                 <h2 className="text-4xl mb-6 font-normal text-m-3refprimaryprimary-30 font-['Playfair_Display',Helvetica] leading-[44px]">
                   The Founder

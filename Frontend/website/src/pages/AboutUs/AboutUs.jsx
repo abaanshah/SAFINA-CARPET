@@ -1,8 +1,10 @@
 import React from "react";
 import { Card, CardContent } from "../../ui/card";
-import { Input } from "../../ui/Input";
-
+import { useEffect } from 'react';
 export const AboutUs = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const companyInfoLinks = [
     "Shop",
     "Custom Orders",
@@ -131,7 +133,7 @@ export const AboutUs = () => {
 
         {/* Our Legacy */}
         <div className="text-center mt-8 mb-8">
-          <h2 className="font-['Playfair_Display',Helvetica] font-normal text-black text-3xl sm:text-4xl leading-tight sm:leading-[44px]">
+          <h2 className="font-['Playfair_Display',serif] font-normal text-black text-3xl sm:text-4xl leading-tight sm:leading-[44px]">
             OUR LEGACY
           </h2>
         </div>
@@ -140,7 +142,7 @@ export const AboutUs = () => {
         <div className="w-full py-8 sm:py-12 md:py-16 bg-white">
           <div className="px-4 sm:px-8 md:px-[73px] flex flex-col md:flex-row gap-8 md:justify-between items-center w-full">
             <div className="w-full md:max-w-[60%] lg:max-w-[745px]">
-              <h3 className="font-['Playfair_Display',Helvetica] font-normal text-m-3refprimaryprimary-30 text-2xl sm:text-3xl md:text-4xl leading-tight md:leading-[44px] mb-4 sm:mb-6 md:mb-8">
+              <h3 className="font-['Playfair_Display',serif] font-normal text-[#860A0C] text-2xl sm:text-3xl md:text-4xl leading-tight md:leading-[44px] mb-4 sm:mb-6 md:mb-8">
                 A Story Spanning Generations
               </h3>
               <p className="font-['Jost',Helvetica] font-normal text-black text-sm sm:text-base leading-6 sm:leading-7">
@@ -159,10 +161,10 @@ export const AboutUs = () => {
                 a global audience.
               </p>
             </div>
-            <Card className="w-full sm:w-[80%] md:w-[40%] lg:w-[435px] border border-solid border-[#610505] relative">
+            <Card className="w-full sm:w-[80%] md:w-[40%] lg:w-[435px] relative">
               <CardContent className="p-0">
                 <img
-                  className="w-full h-auto object-cover m-2.5"
+                  className="w-full h-auto object-cover"
                   alt="Carpet craftsmanship"
                   src="https://c.animaapp.com/gH0bez6V/img/rectangle-29.svg"
                 />
@@ -174,17 +176,17 @@ export const AboutUs = () => {
         {/* The Founder Section 1 */}
         <div className="w-full py-8 sm:py-12 md:py-16 bg-white">
           <div className="px-4 sm:px-8 md:px-[63px] flex flex-col-reverse md:flex-row gap-8 md:justify-between items-center w-full">
-            <Card className="w-full sm:w-[80%] md:w-[40%] lg:w-[435px] border border-solid border-[#610505] relative">
+            <Card className="w-full sm:w-[80%] md:w-[40%] lg:w-[435px] relative">
               <CardContent className="p-0">
                 <img
-                  className="w-full h-auto object-cover m-2.5"
+                  className="w-full h-auto object-cover"
                   alt="Founder"
                   src="https://c.animaapp.com/gH0bez6V/img/rectangle-33.svg"
                 />
               </CardContent>
             </Card>
             <div className="w-full md:max-w-[60%] lg:max-w-[718px] md:ml-8 lg:ml-[100px]">
-              <h3 className="font-['Playfair_Display',Helvetica] font-normal text-m-3refprimaryprimary-30 text-2xl sm:text-3xl md:text-4xl leading-tight md:leading-[44px] mb-4 sm:mb-6 md:mb-8">
+              <h3 className="font-['Playfair_Display',serif] font-normal text-[#860A0C] text-2xl sm:text-3xl md:text-4xl leading-tight md:leading-[44px] mb-4 sm:mb-6 md:mb-8">
                 The Founder
               </h3>
               <div className="font-['Jost',Helvetica] font-normal text-black text-sm sm:text-base leading-6 sm:leading-7">
@@ -207,7 +209,7 @@ export const AboutUs = () => {
         <div className="w-full py-8 sm:py-12 md:py-16 bg-white">
           <div className="px-4 sm:px-8 md:px-[73px] flex flex-col md:flex-row gap-8 md:justify-between items-center w-full">
             <div className="w-full md:max-w-[60%] lg:max-w-[718px]">
-              <h3 className="font-['Playfair_Display',Helvetica] font-normal text-m-3refprimaryprimary-30 text-2xl sm:text-3xl md:text-4xl leading-tight md:leading-[44px] mb-4 sm:mb-6 md:mb-8">
+              <h3 className="font-['Playfair_Display',serif] font-normal text-[#860A0C] text-2xl sm:text-3xl md:text-4xl leading-tight md:leading-[44px] mb-4 sm:mb-6 md:mb-8">
                 The Founder
               </h3>
               <p className="font-['Jost',Helvetica] font-normal text-black text-sm sm:text-base leading-6 sm:leading-7">
@@ -216,10 +218,10 @@ export const AboutUs = () => {
                 and refinement.
               </p>
             </div>
-            <Card className="w-full sm:w-[80%] md:w-[40%] lg:w-[435px] border border-solid border-[#610505] relative">
+            <Card className="w-full sm:w-[80%] md:w-[40%] lg:w-[435px] relative">
               <CardContent className="p-0">
                 <img
-                  className="w-full h-auto object-cover m-2.5"
+                  className="w-full h-auto object-cover"
                   alt="Founder"
                   src="https://c.animaapp.com/gH0bez6V/img/rectangle-33-1.svg"
                 />
@@ -232,7 +234,7 @@ export const AboutUs = () => {
         <div className="w-full">
           <div className="w-full py-8 sm:py-12 md:py-16 bg-white">
             <div className="flex flex-col items-center px-4 sm:px-8">
-              <h3 className="font-['Caveat',Helvetica] font-normal text-m-3refprimaryprimary-30 text-2xl sm:text-3xl md:text-4xl leading-tight md:leading-[44px] mb-4 sm:mb-6 md:mb-8">
+              <h3 className="font-['Caveat',Helvetica] font-normal text-[#860A0C] text-2xl sm:text-3xl md:text-4xl leading-tight md:leading-[44px] mb-4 sm:mb-6 md:mb-8">
                 A Story Spanning Generations
               </h3>
               <p className="w-full md:w-[90%] lg:w-[1075px] text-center font-['Jost',Helvetica] font-normal text-black text-sm sm:text-base leading-6 sm:leading-7">
@@ -268,7 +270,7 @@ export const AboutUs = () => {
                   alt={member.name}
                   src={member.image}
                 />
-                <h4 className="font-['Playfair_Display',Helvetica] font-normal text-black text-lg sm:text-xl md:text-2xl text-center leading-tight md:leading-[44px] mt-4">
+                <h4 className="font-['Playfair_Display',serif] font-normal text-black text-lg sm:text-xl md:text-2xl text-center leading-tight md:leading-[44px] mt-4">
                   {member.name}
                 </h4>
               </div>

@@ -17,7 +17,7 @@ export const Guide = () => {
           <ImageGallerySection />
         </div>
 
-        {/* <HeaderSection /> */}
+         {/* <HeaderSection />  */}
         {/* <FooterSection /> */}
 
         <OverlayContentSection />

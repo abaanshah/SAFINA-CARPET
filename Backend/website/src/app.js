@@ -14,7 +14,6 @@ import materialRoute from "./routes/materialRoute.js";
 import rugRoutes from "./routes/rugRoute.js";
 import authRoutes from "./routes/authRoute.js";
 import cartRoute from "./routes/cartRoute.js";
-import userRoute from "./routes/userRoute.js";
 
 // Middleware
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
@@ -29,27 +28,27 @@ app.use(
     origin: [process.env.FRONTEND_URL, process.env.ADMIN_URL],
     credentials: true,
   })
-);
-app.use(express.json());
-app.use("/uploads", express.static("uploads"));
-
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || "supersecret",
-    resave: false,
-    saveUninitialized: false,
-  })
-);
-
-// API Routes
-app.use("/api/test", testRoute);
-app.use("/api/rugs", rugRoutes);
-app.use("/api/materials", materialRoute);
-app.use("/api/auth", authRoutes);
-app.use("/api/cart", cartRoute);
-app.use("/api/wishlist", wishlistRoute);
-app.use("/api/orders", orderRoute);
-app.use("/api/users",userRoute);
+  );
+  app.use(express.json());
+  app.use("/uploads", express.static("uploads"));
+  
+  // Session setup
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET || "supersecret",
+      resave: false,
+      saveUninitialized: false,
+    })
+    );
+    
+    // Routes
+    app.use("/api/test", testRoute);
+    app.use("/api/rugs", rugRoutes);
+    app.use("/api/materials", materialRoute);
+    app.use("/api/auth", authRoutes);
+    app.use("/api/cart", cartRoute);
+    app.use("/api/wishlist", wishlistRoute);
+    app.use('/api/orders', orderRoute); // <-- Add this
 
 // Root route for health checks
 app.get("/", (req, res) => {

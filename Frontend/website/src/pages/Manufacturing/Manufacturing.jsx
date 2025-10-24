@@ -7,6 +7,7 @@ import GroupWrapperSubsection from "../../components/manufac/GroupWrapperSubsect
 import ImageGallerySection from "../../components/manufac/ImageGallerySection";
 import ProcessTimelineSection from "../../components/manufac/ProcessTimelineSection";
 import StoryHighlightSection from "../../components/manufac/StoryHighlightSection";
+import { useEffect } from 'react';
 import TestimonialsSection from "../../components/manufac/TestimonialsSection";
 
 const Manufacturing = () => {
@@ -19,6 +20,9 @@ const Manufacturing = () => {
     { top: "top-[3546px]", left: "left-[708px]" },
     { top: "top-[3964px]", left: "left-[708px]" },
   ];
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <main className="bg-white flex flex-col items-center w-full" data-model-id="60335:11166">
@@ -30,10 +34,10 @@ const Manufacturing = () => {
         <section className="w-full bg-[url(https://c.animaapp.com/7kq845Cv/img/rectangle-25.svg)] bg-cover bg-center py-16 relative">
           <div className="container mx-auto px-4">
             <div className="mt-64">
-              <p className="text-white text-xs font-normal mb-2">
+              {/* <p className="text-white text-xs font-normal mb-2">
                 Welcome to Safina Carpets, a name synonymous with timeless
                 artistry and Mughal heritage.
-              </p>
+              </p> */}
               <p className="text-white text-xs font-normal">
                 As manufacturers and wholesalers of premium handmade carpets, we
                 bring the beauty of centuries-old craftsmanship to the modern
@@ -68,10 +72,10 @@ const Manufacturing = () => {
         <StoryHighlightSection />
         <CommunityEngagementSection />
         <GroupWrapperSubsection />
-        <TestimonialsSection />
+        {/* <TestimonialsSection /> */}
 
         {/* Timeline Arrows */}
-        {timelineArrows.map((arrow, index) => (
+        {/* {timelineArrows.map((arrow, index) => (
           <div
             key={`arrow-${index}`}
             className={`absolute w-4 h-12 ${arrow.top} ${arrow.left}`}
@@ -85,7 +89,7 @@ const Manufacturing = () => {
               />
             </div>
           </div>
-        ))}
+        ))} */}
 
         {/* Footer Section */}
         {/* <FooterSection /> */}

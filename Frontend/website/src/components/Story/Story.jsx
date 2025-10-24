@@ -42,7 +42,27 @@ export default function Story() {
     <div className="max-w-7xl mx-auto bg-gray-50">
       {/* Navigation Tabs */}
       <div className="bg-white shadow-sm">
-        <div className="flex justify-evenly space-x-18 px-10 py-4">
+        {/* Mobile: Horizontal scrollable tabs */}
+        <div className="md:hidden">
+          <div className="flex overflow-x-auto px-4 py-4 space-x-4 scrollbar-hide">
+            {tabs.map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`flex-shrink-0 text-sm font-medium tracking-wide transition-colors duration-200 hover:text-red-700 px-3 py-2 rounded-lg whitespace-nowrap ${
+                  activeTab === tab 
+                    ? 'text-red-700 bg-red-50 border border-red-200' 
+                    : 'text-gray-700'
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+        </div>
+        
+        {/* Desktop: Regular tab layout */}
+        <div className="hidden md:flex justify-evenly px-10 py-4">
           {tabs.map((tab) => (
             <button
               key={tab}
@@ -60,27 +80,30 @@ export default function Story() {
       </div>
 
       {/* Content Area */}
-      <div className="px-6 py-12">
-        <div className="flex items-center justify-between max-w-6xl mx-auto">
-          {/* Text Content */}
-          <div className="flex-1 max-w-lg pr-12">
-            <h2 className="text-4xl font-light text-gray-900 mb-6">
-              {tabsData[activeTab].title}
-            </h2>
-            <p className="text-gray-700 leading-relaxed text-base">
-              {tabsData[activeTab].content}
-            </p>
-          </div>
+      <div className="px-4 md:px-6 py-8 md:py-12">
+        <div className="max-w-6xl mx-auto">
+          {/* Mobile: Image first, then text (flex-col) */}
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8 md:gap-12">
+            {/* Image - Shows first on mobile */}
+            <div className="w-full md:flex-1 md:max-w-2xl order-1 md:order-2">
+              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-lg">
+                <img 
+                  src={tabsData[activeTab].image}
+                  alt={tabsData[activeTab].alt}
+                  className="w-full h-full object-cover transition-opacity duration-500"
+                  key={activeTab} // Force re-render for smooth transition
+                />
+              </div>
+            </div>
 
-          {/* Image */}
-          <div className="flex-1 max-w-2xl">
-            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-lg">
-              <img 
-                src={tabsData[activeTab].image}
-                alt={tabsData[activeTab].alt}
-                className="w-full h-full object-cover transition-opacity duration-500"
-                key={activeTab} // Force re-render for smooth transition
-              />
+            {/* Text Content - Shows second on mobile */}
+            <div className="w-full md:flex-1 md:max-w-lg order-2 md:order-1">
+              <h2 className="text-2xl md:text-4xl font-light text-gray-900 mb-4 md:mb-6">
+                {tabsData[activeTab].title}
+              </h2>
+              <p className="text-gray-700 leading-relaxed text-sm md:text-base">
+                {tabsData[activeTab].content}
+              </p>
             </div>
           </div>
         </div>
@@ -89,7 +112,7 @@ export default function Story() {
       {/* Decorative Elements */}
       <div className="flex justify-center pb-8">
         <div className="flex space-x-2">
-          {tabs.map((tab, index) => (
+          {tabs.map((tab) => (
             <div
               key={tab}
               className={`w-2 h-2 rounded-full transition-all duration-300 ${

@@ -5,9 +5,9 @@ const ImageGallerySection = () => {
   return (
     <section className="w-full py-6 my-6">
       <div className="container mx-auto">
-        <Card className="overflow-hidden border-none">
-          <CardContent className="p-0">
-            <div className="flex flex-col md:flex-row gap-6">
+        <Card className="overflow-hidden border-none shadow-lg rounded-lg">
+          <CardContent className="p-6">
+            <div className="flex flex-col md:flex-row gap-6 items-center">
               <div className="flex-1 p-6">
                 <h2 className="font-['Playfair_Display',Helvetica] font-normal text-m-3refprimaryprimary-30 text-4xl mb-8">
                   The Founder

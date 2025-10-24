@@ -81,94 +81,58 @@ const RugVisual = () => {
   };
 
   return (
-    // --- 2. Using the imported image as a background ---
-    <div 
-      className='w-full min-h-screen text-white flex flex-col items-center justify-center p-4 md:p-8 relative'
-      style={{
-        backgroundImage: `url(${rugvisualbg})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
-      {/* 3. Added an overlay for text readability */}
-      <div className="absolute inset-0 bg-[#660002] opacity-80"></div>
-      
-      <div className="relative z-10 w-full">
-        <h1 className='text-5xl md:text-6xl font-extrabold text-amber-50 text-center mb-12'>
-          Rug Visualizer
-        </h1>
-
-        <div className='w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12'>
-          
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-            className='relative w-full lg:w-8/12 aspect-[4/3] rounded-xl overflow-hidden'
+    <div className='w-full h-screen bg-[#660002] flex items-center justify-center'>
+      <div className='w-full h-full flex justify-center items-center relative'>
+        {/* Left Arrow */}
+        <div className="absolute top-1/2 left-5 -translate-y-1/2 z-10 cursor-pointer text-white">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-24 h-24 fill-current"
+            viewBox="0 0 24 24"
           >
-            <AnimatePresence initial={false}>
-              <motion.img
-                key={currentSlide}
-                src={slides[currentSlide]}
-                variants={variants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{
-                  opacity: { duration: 1.2, ease: 'easeInOut' },
-                }}
-                className='absolute w-full h-full object-contain'
-              />
-            </AnimatePresence>
-            
-            <button 
-              onClick={() => setSlide(currentSlide === 0 ? slides.length - 1 : currentSlide - 1)} 
-              className='absolute top-1/2 left-4 -translate-y-1/2 bg-red-900/50 p-3 rounded-full text-white hover:bg-red-900/80 transition z-20'
-            >
-              <ArrowLeft size={28} />
-            </button>
-            <button 
-              onClick={() => setSlide(currentSlide === slides.length - 1 ? 0 : currentSlide + 1)} 
-              className='absolute top-1/2 right-4 -translate-y-1/2 bg-red-900/50 p-3 rounded-full text-white hover:bg-red-900/80 transition z-20'
-            >
-              <ArrowRight size={28} />
-            </button>
+            <path d="M15.293 3.293 6.586 12l8.707 8.707 1.414-1.414L9.414 12l7.293-7.293-1.414-1.414z" />
+          </svg>
+        </div>
 
-            <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex space-x-4">
-              {slides.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSlide(index)}
-                  className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                    currentSlide === index ? 'bg-white scale-125' : 'bg-white/50 hover:bg-white'
-                  }`}
-                  aria-label={`Go to slide ${index + 1}`}
-                />
-              ))}
-            </div>
-          </motion.div>
+        {/* Overlay */}
+        <div className='absolute inset-0 bg-gradient-to-r from-black/60 to-black/0 z-[1] pointer-events-none'></div>
 
-          <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className='w-full lg:w-4/12 text-center lg:text-left'
+        {/* Text Section */}
+        <div className='absolute top-1/2 left-[12%] -translate-y-1/2 text-white max-w-[30%] z-[2]'>
+          <h1 className="text-7xl font-extrabold mb-12 leading-none">
+            RUG <br />
+            VISUALIZATION
+          </h1>
+          <p className="text-lg leading-tight ml-3">
+            You asking for a visualization of how a SAFINA CARPETS rug would
+            look in a room? If so, let me know the type of room (living room,
+            bedroom, office, etc.) and the style of carpet you'd like to see
+            (Persian, Mughal, modern, etc.), and I'll generate an image for you.
+          </p>
+          <button
+            onClick={toggleVisualizer}
+            className="mt-12 ml-3 text-white border border-white px-6 py-2 rounded-2xl cursor-pointer text-lg transition-colors hover:bg-[#660002] hover:border-[#660002]"
           >
-            <div className='flex items-center justify-center lg:justify-start gap-2 text-sm font-bold uppercase tracking-widest text-red-300 mb-4'>
-              <BrainCircuit size={16} />
-              <span>Powered by Safina AI</span>
-            </div>
-            <p className='text-lg leading-relaxed'>
-              Instantly visualize rugs in your space with AI-powered photorealistic previews. Make confident decisions with a realistic view of your room.
-            </p>
-            <button
-              onClick={() => setIsVisualizerOpen(true)}
-              className='group mt-6 bg-white text-[#660002] px-8 py-4 rounded-lg text-lg font-bold transition-all hover:bg-amber-50 hover:shadow-xl flex items-center gap-3 mx-auto lg:mx-0'
-            >
-              <Sparkles />
-              Try The AI Visualizer
-            </button>
-          </motion.div>
+            Try Now
+          </button>
+        </div>
+
+        {/* Background Image */}
+        <img
+          src={rugvisual}
+          alt="Rug visualization room"
+          className="w-[92%] h-[85%] rounded-3xl object-cover object-center"
+        />
+
+        {/* Right Arrow */}
+        <div className="absolute top-1/2 right-5 -translate-y-1/2 z-10 cursor-pointer text-white">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-24 h-24 fill-current"
+            viewBox="0 0 24 24"
+          >
+            <path d="M7.293 4.707 14.586 12l-7.293 7.293 1.414 1.414L17.414 12 8.707 3.293 7.293 4.707z" />
+          </svg>
         </div>
       </div>
 
