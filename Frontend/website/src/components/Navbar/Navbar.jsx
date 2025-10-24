@@ -22,6 +22,8 @@ import { CartContext } from "../../context/CartContext";
 import { WishlistContext } from "../../context/WishlistContext";
 import { Bell, BellDot, BellElectric, BellOff, ClipboardMinus } from "lucide-react";
 import BookAppointmentModal from "../BookAppointment/BookAppointmentModal";
+import { motion } from "framer-motion";
+
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
