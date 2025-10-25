@@ -16,6 +16,7 @@ header {
 
 /* Static navbar for non-home pages */
 header.static {
+  position: static !important;
   transform: translateY(0) !important;
   opacity: 1 !important;
 }

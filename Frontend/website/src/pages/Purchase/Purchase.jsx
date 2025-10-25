@@ -77,7 +77,7 @@ const AccordionItem = ({ title, content, isOpen, onClick }) => (
           className="overflow-hidden"
         >
           <div className="pb-5 text-gray-600 leading-relaxed text-sm">
-            <p>{content}</p>
+            <div style={{ whiteSpace: 'pre-wrap' }}>{content}</div>
           </div>
         </motion.div>
       )}
