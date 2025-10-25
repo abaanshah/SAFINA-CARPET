@@ -16,6 +16,7 @@ import rugRoutes from "./routes/rugRoute.js";
 import authRoutes from "./routes/authRoute.js";
 import cartRoute from "./routes/cartRoute.js";
 import userRoute from "./routes/userRoute.js";
+import paymentRoute from "./routes/paymentRoute.js";
 
 // Middleware
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
@@ -55,6 +56,7 @@ app.use("/api/cart", cartRoute);
 app.use("/api/wishlist", wishlistRoute);
 app.use("/api/orders", orderRoute);
 app.use("/api/users",userRoute);
+app.use("/api/payments", paymentRoute);
 
 // Root route for health checks
 app.get("/", (req, res) => {
