@@ -41,6 +41,7 @@ const Button = ({ children, variant, ...props }) => (
     {children}
   </button>
 );
+// This button remains for the disabled placeholders
 const SocialButton = ({ icon, children }) => (
   <button
     disabled
@@ -242,7 +243,7 @@ const Login = () => {
           className="w-full max-w-6xl lg:h-[75vh] flex flex-col lg:flex-row rounded-2xl shadow-2xl overflow-hidden"
         >
           {/* Left Image Panel */}
-          <div className="relative w-full lg:w-1/2 flex flex-col justify-center items-center text-white overflow-hidden group">
+          <div className="relative w-full lg:w-1/2 flex flex-col justify-center items-center text-white overflow-hidden group min-h-[400px] lg:min-h-full">
             {/* Background Image */}
             <img
               src={rugbg}
@@ -250,7 +251,7 @@ const Login = () => {
               className="absolute inset-0 w-full h-full object-cover"
             />
 
-            {/* Overlay — fades away smoothly on hover */}
+            {/* Overlay */}
             <div className="absolute inset-0 bg-black/50 transition-all duration-700 ease-in-out group-hover:bg-black/20"></div>
 
             {/* Magazine-style text at bottom-left */}
@@ -285,7 +286,7 @@ const Login = () => {
           </div>
 
           {/* Right Form Panel */}
-          <div className="w-full lg:w-1/2 p-8 md:p-12  flex flex-col justify-center">
+          <div className="w-full lg:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-white">
             <AnimatePresence mode="wait">
               <motion.div
                 key={isLoginView ? "login" : "signup"}
@@ -404,8 +405,16 @@ const Login = () => {
                       </span>
                     </div>
                   </div>
+                  {/* --- THIS IS THE FIX --- */}
                   <div className="mt-6 grid grid-cols-3 gap-3">
-                    <SocialButton icon={<GoogleIcon />}>Google</SocialButton>
+                    {/* 1. This is now a real <a> tag, styled to look like a button */}
+                    <a
+                      href="http://localhost:5000/api/auth/google" 
+                      className="w-full inline-flex justify-center items-center py-2.5 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                      <GoogleIcon />Google
+                    </a>
+                    {/* 2. These are still disabled placeholders */}
                     <SocialButton icon={<FacebookIcon />}>
                       Facebook
                     </SocialButton>
@@ -440,3 +449,4 @@ const Login = () => {
 };
 
 export default Login;
+

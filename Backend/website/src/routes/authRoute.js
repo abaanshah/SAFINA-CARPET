@@ -1,10 +1,9 @@
-// ===================================================================
-// FILE: src/routes/authRoute.js (Final Corrected Version)
-// ===================================================================
 import express from 'express';
-import { protect } from '../middleware/auth.js';
+import passport from 'passport'; // 1. Import passport
 
-// --- THIS IMPORT BLOCK IS NOW CORRECT ---
+// --- 2. THE FIX: Corrected the import path to use your working middleware ---
+import { protect } from '../middleware/authMiddleware.js'; 
+
 import { 
     signupController, 
     loginController, 
@@ -12,28 +11,44 @@ import {
     verifyEmailController, 
     verifyEmailLinkController,
     sendVerificationEmailController,
-    getMeController // It is now included in the list
+    getMeController,
+    googleLoginController // 3. Import the new Google controller
 } from '../controllers/authController.js';
 
 const router = express.Router();
 
 
-// Local Auth
+// --- Local Auth ---
 router.post('/signup', signupController);
 router.post('/login', loginController);
 
-// Email Validation
-router.post('/check-email', checkEmailController);
+// --- Google Auth Routes ---
+// 4. ADDED: This route starts the Google login process
+router.get('/google',
+  passport.authenticate('google', { 
+    scope: ['profile', 'email'], // What we ask Google for
+    session: false // We are using JWTs, not sessions
+  })
+);
 
-// Email Verification
+// 5. ADDED: This is the callback route Google sends the user back to
+router.get('/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login', session: false }),
+  googleLoginController // The final controller function
+);
+
+
+// --- Email Validation ---
+router.post('/check-email', checkEmailController);
 router.post('/verify-email', verifyEmailController);
 router.get('/verify-email/:token', verifyEmailLinkController);
 
-// Resend Verification Email
+// --- Resend Verification Email ---
 router.post('/send-verification-email', sendVerificationEmailController);
 
-// Protected route for getting the current user's data from a token
+// --- User Profile Route ---
 router.get('/me', protect, getMeController);
 
 
 export default router;
+

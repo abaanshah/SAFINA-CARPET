@@ -1,7 +1,7 @@
 // ===================================================================
-// FILE: src/routes/AppRoutes.jsx (Updated with Profile & Order Routes)
+// FILE: src/routes/AppRoutes.jsx (Updated with AuthCallback Route)
 // ===================================================================
-import { Routes, Route, Navigate } from "react-router-dom"; // Added Navigate
+import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "../pages/Home/Home";
 import { AboutUs } from "../pages/AboutUs/AboutUs";
 import MainLayout from "../Layouts/MainLayout";
@@ -32,6 +32,9 @@ import OrderConfirmation from "../pages/Profile/OrderConfirmation";
 import Addresses from "../pages/Profile/Addresses";
 import Settings from "../pages/Profile/Settings";
 
+// --- 1. Import the new AuthCallback component ---
+import AuthCallback from "../pages/Login/AuthCallback";
+
 function AppRoutes() {
   return (
     <MainLayout>
@@ -60,18 +63,18 @@ function AppRoutes() {
 
         {/* --- 2. ADD THE NEW ROUTES --- */}
 
+        {/* This is the new route for handling the token after Google login */}
+        <Route path="/auth/callback" element={<AuthCallback />} />
+
         {/* Route for the "Thank You" page after an order is placed */}
         <Route path="/order/:orderId" element={<OrderConfirmation />} />
 
         {/* Nested structure for the entire profile section */}
         <Route path="/profile" element={<ProfileLayout />}>
-          <Route index element={<ProfileDetail />} /> {/* Shows at /profile */}
-          <Route path="orders" element={<Orders />} />{" "}
-          {/* Shows at /profile/orders */}
-          <Route path="addresses" element={<Addresses />} />{" "}
-          {/* Shows at /profile/addresses */}
-          <Route path="settings" element={<Settings />} />{" "}
-          {/* Shows at /profile/settings */}
+          <Route index element={<ProfileDetail />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="addresses" element={<Addresses />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
         {/* Redirect for any old links pointing to /orders */}
         <Route
