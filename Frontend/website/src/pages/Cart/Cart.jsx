@@ -41,7 +41,7 @@ const Cart = () => {
               // ... your item mapping logic is perfect, no changes needed here ...
               <div key={item._id} className="flex items-center bg-white shadow-md rounded-lg p-4">
                 <img 
-                  src={item.image ? `http://localhost:5000/${item.image.split('\\').pop()}` : 'https://placehold.co/128x128/f8f8f8/333333?text=No+Image'} 
+                  src={item.image ? `http://localhost:5001/${item.image.split('\\').pop()}` : 'https://placehold.co/128x128/f8f8f8/333333?text=No+Image'} 
                   alt={item.name} 
                   className="w-24 h-24 sm:w-32 sm:h-32 object-cover rounded-md"
                 />

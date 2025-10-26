@@ -1,6 +1,7 @@
 import Rug from "../models/rug.js";
 import mongoose from "mongoose";
 import cloudinary from "../config/cloudinaryConfig.js";
+import sharp from "sharp";
 
 // ---------- Helper Function ----------
 const generateSizeString = (shape, width, length, diameter) => {
@@ -40,8 +41,21 @@ export const createRug = async (productData, files, userId) => {
   const imageUrls = [];
   if (files && files.length > 0) {
     for (const file of files) {
-      const base64Image = `data:${file.mimetype};base64,${file.buffer.toString("base64")}`;
       try {
+        // Compress the image using Sharp before uploading to Cloudinary
+        const compressedBuffer = await sharp(file.buffer)
+          .resize(1200, 1200, { 
+            fit: 'inside', 
+            withoutEnlargement: true 
+          })
+          .jpeg({ 
+            quality: 85,
+            progressive: true 
+          })
+          .toBuffer();
+
+        const base64Image = `data:image/jpeg;base64,${compressedBuffer.toString("base64")}`;
+        
         const result = await cloudinary.uploader.upload(base64Image, {
           folder: "safina_carpets/products",
           resource_type: "auto",

@@ -97,7 +97,7 @@ const Catalog = () => {
     useEffect(() => {
         const fetchAllProducts = async () => {
             try {
-                const { data } = await axios.get("http://localhost:5000/api/rugs");
+                const { data } = await axios.get("http://localhost:5001/api/rugs");
                 setAllProducts(data);
                 
                 const categories = [...new Set(data.map(p => p.category).filter(Boolean))];

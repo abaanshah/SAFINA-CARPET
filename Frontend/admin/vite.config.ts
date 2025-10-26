@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => ({
     proxy: {
       // Any request starting with '/api' will be sent to the backend
       '/api': {
-        target: 'http://localhost:5000', // Your backend server address
+        target: 'http://localhost:5001', // Your backend server address
         changeOrigin: true, // Recommended for security and avoiding CORS issues
         secure: false,      // Can be useful if your backend is not using HTTPS in dev
       },

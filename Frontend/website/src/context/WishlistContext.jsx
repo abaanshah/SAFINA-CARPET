@@ -13,7 +13,7 @@ export const WishlistProvider = ({ children }) => {
   const [wishlistItems, setWishlistItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const API_URL = "http://localhost:5000/api/wishlist";
+  const API_URL = "http://localhost:5001/api/wishlist";
 
   // 2. Sync with backend on login/logout
   useEffect(() => {

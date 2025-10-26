@@ -19,7 +19,7 @@ const UserProfile = () => {
     const fetchOrders = async () => {
       try {
         const config = { headers: { Authorization: `Bearer ${token}` } };
-        const { data } = await axios.get('http://localhost:5000/api/orders/myorders', config);
+        const { data } = await axios.get('http://localhost:5001/api/orders/myorders', config);
         setOrders(data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
       } catch (error) {
         console.error("Failed to fetch orders", error);
@@ -81,7 +81,7 @@ const UserProfile = () => {
                            <div className="space-y-3">
                                 {order.orderItems.map(item => (
                                     <div key={item.product} className="flex items-center gap-4">
-                                        <img src={item.image ? `http://localhost:5000/${item.image.split('\\').pop()}` : 'https://placehold.co/64x64'} alt={item.name} className="w-16 h-16 object-cover rounded"/>
+                                        <img src={item.image ? `http://localhost:5001/${item.image.split('\\').pop()}` : 'https://placehold.co/64x64'} alt={item.name} className="w-16 h-16 object-cover rounded"/>
                                         <div className="flex-grow">
                                             <p className="font-semibold">{item.name}</p>
                                             <p className="text-sm text-gray-500">{item.quantity} x ₹{item.price.toLocaleString('en-IN')}</p>

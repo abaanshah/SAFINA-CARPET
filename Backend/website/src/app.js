@@ -1,10 +1,7 @@
 import express from "express";
 import cors from "cors";
 import session from "express-session";
-
-// --- 1. Import Passport and your new config function ---
-import passport from "passport";
-import { configurePassport } from './config/passport.js';
+import config from "./config/index.js";
 
 // It's good practice to import models to prevent potential Mongoose errors
 import Order from "./models/order.js";
@@ -18,6 +15,7 @@ import rugRoutes from "./routes/rugRoute.js";
 import authRoutes from "./routes/authRoute.js";
 import cartRoute from "./routes/cartRoute.js";
 import userRoute from "./routes/userRoute.js";
+import paymentRoute from "./routes/paymentRoute.js";
 
 // Middleware
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
@@ -26,10 +24,16 @@ const app = express();
 
 // Middleware Setup
 app.use(
-  cors({
-  	origin: [process.env.FRONTEND_URL, process.env.ADMIN_URL],
-  	credentials: true,
-  })
+  cors({
+    origin: [
+      config.FRONTEND_URL || "http://localhost:5173",
+      config.ADMIN_URL || "http://localhost:8080",
+      "http://localhost:3000", // Additional fallback for development
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
 );
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
@@ -56,6 +60,7 @@ app.use("/api/cart", cartRoute);
 app.use("/api/wishlist", wishlistRoute);
 app.use("/api/orders", orderRoute);
 app.use("/api/users",userRoute);
+app.use("/api/payments", paymentRoute);
 
 // Root route for health checks
 app.get("/", (req, res) => {

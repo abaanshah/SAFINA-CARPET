@@ -6,10 +6,21 @@ import { AuthContext } from '../../context/AuthContext';
 import { CartContext } from '../../context/CartContext';
 import toast from 'react-hot-toast';
 
+// Load Razorpay script
+const loadRazorpayScript = () => {
+  return new Promise((resolve) => {
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
+
 // Renamed component to follow conventions
 const CheckOut = () => {
   const navigate = useNavigate();
-  const { token } = useContext(AuthContext);
+  const { token, user } = useContext(AuthContext);
   // Get all needed functions and state from CartContext
   const { cartItems, subtotal, clearCart } = useContext(CartContext);
 
@@ -40,6 +51,14 @@ const CheckOut = () => {
     setIsProcessing(true); // Disable the button
 
     try {
+      // Load Razorpay script
+      const isRazorpayLoaded = await loadRazorpayScript();
+      if (!isRazorpayLoaded) {
+        toast.error('Failed to load payment gateway. Please try again.');
+        setIsProcessing(false);
+        return;
+      }
+
       const shippingAddress = { address, city, postalCode, country };
       
       const config = {
@@ -49,20 +68,103 @@ const CheckOut = () => {
         },
       };
 
-      const { data } = await axios.post(
-        'http://localhost:5000/api/orders',
-        { shippingAddress, paymentMethod: 'Stripe' },
+      // Create Razorpay order
+      const orderResponse = await axios.post(
+        'http://localhost:5001/api/payments/create-order',
+        {
+          amount: subtotal,
+          currency: 'INR',
+          receipt: `receipt_${Date.now()}`,
+          notes: {
+            shippingAddress: JSON.stringify(shippingAddress),
+            cartItems: JSON.stringify(cartItems)
+          }
+        },
         config
       );
 
-      toast.success('Order placed successfully!');
-      clearCart(); // --- Call clearCart on success ---
-      navigate(`/order/${data._id}`); // We will create a page for this URL
+      const { order } = orderResponse.data;
+
+      // Razorpay payment options
+      const options = {
+        key: 'rzp_test_RXatv1oo8vK4Ys', // Your Razorpay key ID
+        amount: order.amount,
+        currency: order.currency,
+        name: 'Safina Carpets',
+        description: 'Premium Carpet Purchase',
+        image: '/logo.png', // Add your logo path
+        order_id: order.id,
+        handler: async function (response) {
+          try {
+            console.log('Razorpay payment response:', response);
+            
+            // Verify payment
+            const verifyResponse = await axios.post(
+              'http://localhost:5001/api/payments/verify-payment',
+              {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                orderData: {
+                  user: user._id, // Use the actual user ID from context
+                  orderItems: cartItems.map(item => ({
+                    product: item._id,
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                    image: item.images?.[0] || ''
+                  })),
+                  shippingAddress,
+                  totalPrice: subtotal,
+                  paymentMethod: 'Razorpay'
+                }
+              },
+              config
+            );
+
+            console.log('Payment verification response:', verifyResponse.data);
+
+            if (verifyResponse.data.success) {
+              toast.success('Payment successful! Order placed.');
+              clearCart();
+              navigate(`/order/${verifyResponse.data.order._id}`);
+            } else {
+              console.error('Payment verification failed:', verifyResponse.data);
+              toast.error('Payment verification failed. Please contact support.');
+            }
+          } catch (error) {
+            console.error('Payment verification error:', error);
+            console.error('Error response:', error.response?.data);
+            toast.error('Payment verification failed. Please contact support.');
+          }
+          setIsProcessing(false);
+        },
+        prefill: {
+          name: '', // You can get this from user context
+          email: '', // You can get this from user context
+          contact: '' // You can get this from user context
+        },
+        notes: {
+          address: `${address}, ${city}, ${postalCode}, ${country}`
+        },
+        theme: {
+          color: '#991B1B' // Red color matching your theme
+        },
+        modal: {
+          ondismiss: function() {
+            setIsProcessing(false);
+            toast.error('Payment cancelled');
+          }
+        }
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
 
     } catch (err) {
-      console.error('Error placing order:', err);
-      toast.error(err.response?.data?.message || 'Failed to place order.');
-      setIsProcessing(false); // Re-enable button on failure
+      console.error('Error creating order:', err);
+      toast.error(err.response?.data?.message || 'Failed to initiate payment.');
+      setIsProcessing(false);
     }
   };
 
@@ -137,7 +239,7 @@ const CheckOut = () => {
                 disabled={isProcessing} // Disable button when processing
                 className="w-full bg-red-800 text-white font-bold py-3 mt-6 rounded-lg hover:bg-red-900 transition text-lg uppercase tracking-wider disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
-                {isProcessing ? 'Processing...' : 'Place Order'}
+                {isProcessing ? 'Processing Payment...' : 'Pay with Razorpay'}
               </button>
             </div>
           </div>

@@ -77,7 +77,7 @@ const AccordionItem = ({ title, content, isOpen, onClick }) => (
           className="overflow-hidden"
         >
           <div className="pb-5 text-gray-600 leading-relaxed text-sm">
-            <p>{content}</p>
+            <div style={{ whiteSpace: 'pre-wrap' }}>{content}</div>
           </div>
         </motion.div>
       )}
@@ -112,7 +112,7 @@ export const Purchase = () => {
       try {
         setIsLoading(true);
         const { data } = await axios.get(
-          `http://localhost:5000/api/rugs/${productId}`
+          `http://localhost:5001/api/rugs/${productId}`
         );
         const initialCountInStock = data.countInStock;
         setProduct({ ...data, initialCountInStock });

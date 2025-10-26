@@ -16,7 +16,7 @@ const ShopMaterial = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/materials")
+    fetch("http://localhost:5001/api/materials")
       .then(res => res.json())
       .then(data => {
         if (data.length > 0) setMaterials(data);

@@ -4,12 +4,10 @@ import jwt from 'jsonwebtoken';
 import validator from 'validator'; // Using the validator library
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
-import config from '../config/index.js'; // --- 1. Import our central config ---
 
-// --- 2. Use the config object for all environment variables ---
-const JWT_SECRET = config.JWT_SECRET;
-const API_URL = config.API_URL || 'http://localhost:5000';
-const FRONTEND_URL = config.FRONTEND_URL || 'http://localhost:5173';
+const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
+const API_URL = process.env.API_URL || 'http://localhost:5000';
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
 // --- Signup with email verification ---
 export const signupUser = async ({ name, email, password }) => {

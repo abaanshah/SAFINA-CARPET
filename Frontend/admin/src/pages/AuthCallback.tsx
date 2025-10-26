@@ -19,7 +19,7 @@ const AuthCallback = () => {
 
         // Use the token to ask the backend who we are
         const config = { headers: { Authorization: `Bearer ${token}` } };
-        const { data: user } = await axios.get('http://localhost:5000/api/auth/me', config);
+        const { data: user } = await axios.get('http://localhost:5001/api/auth/me', config);
 
         // Now we have the token and the user, save them to the Zustand store
         login(token, user);

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import axios, { AxiosError } from 'axios';
 import { Button } from '@/components/ui/button';
@@ -21,7 +21,7 @@ import {
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Upload, X, Loader2, Image as ImageIcon, Video, FileText } from 'lucide-react';
-import { AuthContext } from '../context/authContext';
+import { useAuthStore } from '@/store';
 
 // --- UPDATED: Predefined options for the Material dropdown as you requested ---
 const materialOptions = ["Hand Made", "Staple", "Machine Made", "Wool", "Silk", "Cotton", "Jute", "Synthetic"];
@@ -51,8 +51,7 @@ const getFileIcon = (fileType: string) => {
 };
 
 export function AddProduct({ open, onOpenChange, onProductAdded }: AddProductProps) {
-  const auth = useContext(AuthContext);
-  const token = auth?.token;
+  const { token } = useAuthStore();
 
   // --- UPDATED: Simplified form state ---
   const initialFormState = {
