@@ -9,11 +9,11 @@ export const WishlistContext = createContext(null);
 
 export const WishlistProvider = ({ children }) => {
   // 1. Get user and token to authorize API calls
-  const { user, token } = useContext(AuthContext); 
+  const { user, token } = useContext(AuthContext);
   const [wishlistItems, setWishlistItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const API_URL = "http://localhost:5001/api/wishlist";
+  const API_URL = "http://localhost:5000/api/wishlist";
 
   // 2. Sync with backend on login/logout
   useEffect(() => {
@@ -66,10 +66,10 @@ export const WishlistProvider = ({ children }) => {
       console.error("Error removing from wishlist:", err);
     }
   };
-  
+
   // A helper function to check if an item is already in the wishlist
   const isItemInWishlist = (productId) => {
-    return wishlistItems.some(item => item._id === productId);
+    return wishlistItems.some((item) => item._id === productId);
   };
 
   const value = {
@@ -81,5 +81,9 @@ export const WishlistProvider = ({ children }) => {
     wishlistCount: wishlistItems.length,
   };
 
-  return <WishlistContext.Provider value={value}>{children}</WishlistContext.Provider>;
+  return (
+    <WishlistContext.Provider value={value}>
+      {children}
+    </WishlistContext.Provider>
+  );
 };

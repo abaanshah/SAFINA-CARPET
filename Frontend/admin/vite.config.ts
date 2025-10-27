@@ -10,18 +10,16 @@ export default defineConfig(({ mode }) => ({
     // --- ADDED: Proxy configuration to forward API requests ---
     proxy: {
       // Any request starting with '/api' will be sent to the backend
-      '/api': {
-        target: 'http://localhost:5001', // Your backend server address
+      "/api": {
+        target: "http://localhost:5000", // Your backend server address
         changeOrigin: true, // Recommended for security and avoiding CORS issues
-        secure: false,      // Can be useful if your backend is not using HTTPS in dev
+        secure: false, // Can be useful if your backend is not using HTTPS in dev
       },
     },
   },
-  plugins: [
-    react(),
-    mode === 'development' &&
-    componentTagger(),
-  ].filter(Boolean),
+  plugins: [react(), mode === "development" && componentTagger()].filter(
+    Boolean
+  ),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

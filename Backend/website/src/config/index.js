@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 
 // This is the first and most important step. Load the .env file.
 dotenv.config();
@@ -19,8 +19,10 @@ const config = {
 
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-  GOOGLE_CALLBACK_URL: process.env.GOOGLE_CALLBACK_URL, 
+  GOOGLE_CALLBACK_URL: process.env.GOOGLE_CALLBACK_URL,
+
+  RAZORPAY_API_KEY: process.env.Razorpay_API_Key,
+  RAZORPAY_API_SECRET: process.env.Razorpay_API_Secret,
 };
 
 export default config;
-

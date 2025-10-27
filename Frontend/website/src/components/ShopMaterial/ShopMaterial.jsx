@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import './ShopMaterial.css';
-import { ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import "./ShopMaterial.css";
+import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const fallbackCards = [
   { name: "Hand Made", image: "/uploads/handmade.png", bgColor: "#26425E" },
   { name: "Staple", image: "/uploads/staple.png", bgColor: "#891322" },
-  { name: "Machine Made", image: "/uploads/machinemade.png", bgColor: "#684D26" },
+  {
+    name: "Machine Made",
+    image: "/uploads/machinemade.png",
+    bgColor: "#684D26",
+  },
 ];
 
 const ShopMaterial = () => {
@@ -16,13 +20,13 @@ const ShopMaterial = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5001/api/materials")
-      .then(res => res.json())
-      .then(data => {
+    fetch("http://localhost:5000/api/materials")
+      .then((res) => res.json())
+      .then((data) => {
         if (data.length > 0) setMaterials(data);
         else setMaterials(fallbackCards);
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
         setMaterials(fallbackCards);
       });
@@ -41,19 +45,19 @@ const ShopMaterial = () => {
     };
 
     handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Navigation functions
   const nextSlide = () => {
     const maxSlide = Math.max(0, materials.length - cardsPerView);
-    setCurrentSlide(prev => (prev >= maxSlide ? 0 : prev + 1));
+    setCurrentSlide((prev) => (prev >= maxSlide ? 0 : prev + 1));
   };
 
   const prevSlide = () => {
     const maxSlide = Math.max(0, materials.length - cardsPerView);
-    setCurrentSlide(prev => (prev <= 0 ? maxSlide : prev - 1));
+    setCurrentSlide((prev) => (prev <= 0 ? maxSlide : prev - 1));
   };
 
   // Navigate to catalog with selected material
@@ -64,36 +68,36 @@ const ShopMaterial = () => {
   return (
     <div className="shopmaterial_container">
       <h2 className="shopmaterial_heading">Shop by Material</h2>
-      
+
       <div className="relative">
         {/* Navigation Arrows */}
-        <button 
+        <button
           onClick={prevSlide}
           className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110"
-          style={{ marginLeft: '-20px' }}
+          style={{ marginLeft: "-20px" }}
         >
           <ChevronLeft className="w-6 h-6 text-gray-700" />
         </button>
-        
-        <button 
+
+        <button
           onClick={nextSlide}
           className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110"
-          style={{ marginRight: '-20px' }}
+          style={{ marginRight: "-20px" }}
         >
           <ChevronRight className="w-6 h-6 text-gray-700" />
         </button>
 
         {/* Carousel Container */}
         <div className="overflow-hidden">
-          <div 
+          <div
             className="flex transition-transform duration-300 ease-in-out"
             style={{
               transform: `translateX(-${currentSlide * (100 / cardsPerView)}%)`,
             }}
           >
             {materials.map((material, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className="slider_card flex-shrink-0"
                 style={{ width: `${100 / cardsPerView}%` }}
                 onClick={() => handleClick(material.name)}
@@ -116,14 +120,16 @@ const ShopMaterial = () => {
 
         {/* Pagination Dots */}
         <div className="flex justify-center mt-6 space-x-2">
-          {Array.from({ length: Math.max(1, materials.length - cardsPerView + 1) }).map((_, index) => (
+          {Array.from({
+            length: Math.max(1, materials.length - cardsPerView + 1),
+          }).map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
               className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                index === currentSlide 
-                  ? 'bg-gray-800 w-6' 
-                  : 'bg-gray-300 hover:bg-gray-400'
+                index === currentSlide
+                  ? "bg-gray-800 w-6"
+                  : "bg-gray-300 hover:bg-gray-400"
               }`}
             />
           ))}

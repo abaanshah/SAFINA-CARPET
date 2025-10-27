@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import session from "express-session";
 import config from "./config/index.js";
+import { configurePassport } from "./config/passport.js";
 
 // It's good practice to import models to prevent potential Mongoose errors
 import Order from "./models/order.js";

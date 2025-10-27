@@ -31,7 +31,6 @@ const VisualizerContainer = ({ onClose, rugImageUrl }) => {
   const visualizerUrl = `http://localhost:8090?rugUrl=${encodeURIComponent(
     rugImageUrl
   )}`;
-  
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[1000] animate-fadeInOverlay">
@@ -77,7 +76,7 @@ const AccordionItem = ({ title, content, isOpen, onClick }) => (
           className="overflow-hidden"
         >
           <div className="pb-5 text-gray-600 leading-relaxed text-sm">
-            <div style={{ whiteSpace: 'pre-wrap' }}>{content}</div>
+            <div style={{ whiteSpace: "pre-wrap" }}>{content}</div>
           </div>
         </motion.div>
       )}
@@ -112,7 +111,7 @@ export const Purchase = () => {
       try {
         setIsLoading(true);
         const { data } = await axios.get(
-          `http://localhost:5001/api/rugs/${productId}`
+          `http://localhost:5000/api/rugs/${productId}`
         );
         const initialCountInStock = data.countInStock;
         setProduct({ ...data, initialCountInStock });
@@ -222,7 +221,7 @@ export const Purchase = () => {
 
   return (
     <>
-      <div className="bg-white pt-[130px]">
+      <div className="bg-white ">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8  ">
           <motion.div
             className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start"
@@ -303,7 +302,8 @@ export const Purchase = () => {
               </h1>
               {/* 4. DISPLAY THE DYNAMIC PRICE */}
               <p className="text-2xl font-medium text-[#5c0b0a] mt-2">
-                {symbol}{price?.toLocaleString("en-IN")}
+                {symbol}
+                {price?.toLocaleString("en-IN")}
               </p>
 
               <div className="mt-4 border-b border-gray-200 pb-6">
@@ -425,4 +425,3 @@ export const Purchase = () => {
 };
 
 export default Purchase;
-
