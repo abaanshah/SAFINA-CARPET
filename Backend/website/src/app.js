@@ -27,7 +27,7 @@ const app = express();
 app.use(
   cors({
     origin: [
-      config.FRONTEND_URL || "http://localhost:5173",
+      config.FRONTEND_URL || "https://safina-carpet-frontend.onrender.com",
       config.ADMIN_URL || "http://localhost:8080",
       "http://localhost:3000", // Additional fallback for development
     ],
