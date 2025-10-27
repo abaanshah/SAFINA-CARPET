@@ -36,8 +36,8 @@ const Hero = () => {
       <div className="hero_vid_overlay"></div>
       <video src={bgvideo} autoPlay muted loop playsInline></video>
       <div className="hero-container">
-        <h1>WELCOME TO SAFINA CARPET</h1>
-        <h2>HANDMADE & MACHINEMADE RUGS</h2>
+        {/* <h1>WELCOME TO SAFINA CARPET</h1>
+        <h2>HANDMADE & MACHINEMADE RUGS</h2> */}
         <button> <a href="/catalog">SHOP NOW</a> </button>
       </div>
       <Chatbot />
