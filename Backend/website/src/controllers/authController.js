@@ -38,7 +38,7 @@ export const loginController = async (req, res, next) => {
 
 // --- Verify Email Link Controller ---
 export const verifyEmailLinkController = async (req, res, next) => {
-  const FRONTEND_URL = config.FRONTEND_URL || "http://localhost:5173";
+  const FRONTEND_URL = config.FRONTEND_URL || "https://safina-carpet-frontend.onrender.com";
   try {
     const { token } = req.params;
     await verifyEmailToken(token);

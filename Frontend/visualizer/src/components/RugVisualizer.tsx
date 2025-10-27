@@ -190,7 +190,7 @@ const RugVisualizer = () => {
 
   const browseOurRugs = () => {
     if (window.top) {
-      window.top.location.href = "http://localhost:5173/catalog";
+      window.top.location.href = "https://safina-carpet-frontend.onrender.com/catalog";
     }
   };
 

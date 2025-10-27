@@ -99,7 +99,7 @@ export function AppSidebar() {
       <SidebarHeader className="p-4 border-b border-sidebar-border">
         {/* --- THIS IS THE ONLY CHANGE FROM YOUR ORIGINAL FILE --- */}
         <a 
-          href="http://localhost:5173" 
+          href="https://safina-carpet-frontend.onrender.com" 
           target="_blank" 
           rel="noopener noreferrer"
           className="flex items-center space-x-3"

@@ -30,7 +30,7 @@ app = FastAPI(
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8090", "http://localhost:5173"],  # Frontend URLs
+    allow_origins=["http://localhost:8090", "https://safina-carpet-frontend.onrender.com"],  # Frontend URLs
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

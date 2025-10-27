@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/cart"; // adjust port if needed
+const API_URL = "https://safina-carpet-backend-web-h0o5.onrender.com/api/cart"; // adjust port if needed
 
 async function testCart() {
   try {
