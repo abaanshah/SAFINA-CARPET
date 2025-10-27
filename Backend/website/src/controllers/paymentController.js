@@ -1,11 +1,12 @@
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
 import Order from '../models/order.js';
+import config from '../config/index.js';
 
 // Initialize Razorpay instance
 const razorpay = new Razorpay({
-  key_id: process.env.Razorpay_API_Key,
-  key_secret: process.env.Razorpay_API_Secret,
+  key_id: config.RAZORPAY_API_KEY,
+  key_secret: config.RAZORPAY_API_SECRET,
 });
 
 // Create Razorpay order
@@ -75,7 +76,7 @@ const verifyPayment = async (req, res) => {
     // Generate signature for verification
     const body = razorpay_order_id + '|' + razorpay_payment_id;
     const expectedSignature = crypto
-      .createHmac('sha256', process.env.Razorpay_API_Secret)
+      .createHmac('sha256', config.RAZORPAY_API_SECRET)
       .update(body.toString())
       .digest('hex');
 
@@ -83,7 +84,7 @@ const verifyPayment = async (req, res) => {
       body,
       expectedSignature,
       receivedSignature: razorpay_signature,
-      secretPresent: !!process.env.Razorpay_API_Secret
+      secretPresent: !!config.RAZORPAY_API_SECRET,
     });
 
     // Verify signature
