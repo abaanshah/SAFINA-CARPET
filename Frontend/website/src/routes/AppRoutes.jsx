@@ -33,10 +33,10 @@ import AuthCallback from "../pages/Login/AuthCallback";
 function AppRoutes() {
   return (
     <Routes>
-      {/* ⚡ Keep AuthCallback OUTSIDE MainLayout */}
+      {/* Auth callback stays separate (no layout) */}
       <Route path="/auth/callback" element={<AuthCallback />} />
 
-      {/* Everything else stays inside MainLayout */}
+      {/* Everything else inside MainLayout */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<AboutUs />} />

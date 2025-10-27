@@ -6,7 +6,7 @@ import crypto from "crypto";
 import nodemailer from "nodemailer";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
-const API_URL = process.env.API_URL || "https://safina-carpet-backend-web-h0o5.onrender.com";
+const API_URL = process.env.API_URL || "https://safina-carpet-backend-web-h0o5.onrender.com/api";
 const FRONTEND_URL = process.env.FRONTEND_URL || "https://safina-carpet-frontend.onrender.com";
 
 // --- Signup with email verification ---

@@ -1,30 +1,21 @@
 import { Footer } from "../components/Footer/Footer";
 import Navbar from "../components/Navbar/Navbar";
-import { useLocation } from "react-router-dom";
-import { useState } from "react";
-// import Cart from "../components/cart/cart"; // make sure path is correct
+import { useLocation, Outlet } from "react-router-dom";
 
-function MainLayout({ children }) {
+function MainLayout() {
   const location = useLocation();
   const noNavFooter = location.pathname === "/login"; // hide for login page
 
-  // state for cart visibility
-  // const [isCartOpen, setIsCartOpen] = useState(false);
-
   return (
     <div className="flex flex-col min-h-screen">
-      {!noNavFooter && (
-        <Navbar onCartClick={() => setIsCartOpen(true)} />
-      )}
+      {!noNavFooter && <Navbar />}
 
       <main className={`flex-grow ${!noNavFooter ? "pt-[50px]" : ""}`}>
-        {children}
+        {/* 👇 This is where page content will render */}
+        <Outlet />
       </main>
 
       {!noNavFooter && <Footer />}
-
-      {/* Cart overlay (fixed, always rendered at root level) */}
-      {/* <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} /> */}
     </div>
   );
 }
