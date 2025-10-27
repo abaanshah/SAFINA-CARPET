@@ -64,7 +64,7 @@ const MyOrdersPage = () => {
       try {
         const config = { headers: { Authorization: `Bearer ${token}` } };
         const { data } = await axios.get(
-          "http://localhost:5000/api/orders/myorders",
+          "https://safina-carpet-backend-web-h0o5.onrender.com/api/orders/myorders",
           config
         );
         // Sort orders by most recent first
@@ -185,7 +185,7 @@ const MyOrdersPage = () => {
                         <img
                           src={
                             item.image
-                              ? `http://localhost:5000/${item.image
+                              ? `https://safina-carpet-backend-web-h0o5.onrender.com/${item.image
                                   .split("\\")
                                   .pop()}`
                               : "https://placehold.co/128x128/f8f8f8/333333?text=No+Image"

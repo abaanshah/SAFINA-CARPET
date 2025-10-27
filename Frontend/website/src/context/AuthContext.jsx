@@ -6,7 +6,7 @@ import axios from "axios"; // Make sure axios is imported
 
 export const AuthContext = createContext(null);
 
-const API_BASE = "http://localhost:5000";
+const API_BASE = "https://safina-carpet-backend-web-h0o5.onrender.com";
 
 // --- 1. Create a custom Axios instance ---
 // This is the 'api' that your Checkout.jsx and other components will use.

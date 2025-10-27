@@ -409,7 +409,7 @@ const Login = () => {
                   <div className="mt-6 grid grid-cols-3 gap-3">
                     {/* 1. This is now a real <a> tag, styled to look like a button */}
                     <a
-                      href="http://localhost:5000/api/auth/google"
+                      href="https://safina-carpet-backend-web-h0o5.onrender.com/api/auth/google"
                       className="w-full inline-flex justify-center items-center py-2.5 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
                     >
                       <GoogleIcon />

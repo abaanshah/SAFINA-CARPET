@@ -20,7 +20,7 @@ const UserProfile = () => {
       try {
         const config = { headers: { Authorization: `Bearer ${token}` } };
         const { data } = await axios.get(
-          "http://localhost:5000/api/orders/myorders",
+          "https://safina-carpet-backend-web-h0o5.onrender.com/api/orders/myorders",
           config
         );
         setOrders(
@@ -116,7 +116,7 @@ const UserProfile = () => {
                         <img
                           src={
                             item.image
-                              ? `http://localhost:5000/${item.image
+                              ? `https://safina-carpet-backend-web-h0o5.onrender.com/${item.image
                                   .split("\\")
                                   .pop()}`
                               : "https://placehold.co/64x64"

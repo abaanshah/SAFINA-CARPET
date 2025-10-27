@@ -20,7 +20,7 @@ const AuthCallback = () => {
         // Use the token to ask the backend who we are
         const config = { headers: { Authorization: `Bearer ${token}` } };
         const { data: user } = await axios.get(
-          "http://localhost:5000/api/auth/me",
+          "https://safina-carpet-backend-web-h0o5.onrender.com/api/auth/me",
           config
         );
 

@@ -14,7 +14,7 @@ export const CartProvider = ({ children }) => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // isLoading is for the initial sync
 
-  const API_URL = "http://localhost:5000/api/cart";
+  const API_URL = "https://safina-carpet-backend-web-h0o5.onrender.com/api/cart";
 
   const toastOptions = {
     /* ... your toast styles ... */

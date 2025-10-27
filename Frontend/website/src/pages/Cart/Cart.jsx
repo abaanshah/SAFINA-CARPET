@@ -50,7 +50,7 @@ const Cart = () => {
                 <img
                   src={
                     item.image
-                      ? `http://localhost:5000/${item.image.split("\\").pop()}`
+                      ? `https://safina-carpet-backend-web-h0o5.onrender.com/${item.image.split("\\").pop()}`
                       : "https://placehold.co/128x128/f8f8f8/333333?text=No+Image"
                   }
                   alt={item.name}

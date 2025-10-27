@@ -78,7 +78,7 @@ const Wishlist = () => {
                   className="flex-shrink-0 mb-4 md:mb-0"
                 >
                   <img
-                    src={`http://localhost:5000/${item.image}`}
+                    src={`https://safina-carpet-backend-web-h0o5.onrender.com/${item.image}`}
                     alt={item.name}
                     className="h-32 w-32 md:h-40 md:w-40 rounded-lg object-cover"
                     onError={(e) => {

@@ -13,7 +13,7 @@ export const WishlistProvider = ({ children }) => {
   const [wishlistItems, setWishlistItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const API_URL = "http://localhost:5000/api/wishlist";
+  const API_URL = "https://safina-carpet-backend-web-h0o5.onrender.com/api/wishlist";
 
   // 2. Sync with backend on login/logout
   useEffect(() => {

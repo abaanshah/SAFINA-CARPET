@@ -123,7 +123,7 @@ const Catalog = () => {
   useEffect(() => {
     const fetchAllProducts = async () => {
       try {
-        const { data } = await axios.get("http://localhost:5000/api/rugs");
+        const { data } = await axios.get("https://safina-carpet-backend-web-h0o5.onrender.com/api/rugs");
         setAllProducts(data);
 
         const categories = [

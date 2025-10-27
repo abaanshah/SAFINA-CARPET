@@ -71,7 +71,7 @@ const CheckOut = () => {
 
       // Create Razorpay order
       const orderResponse = await axios.post(
-        "http://localhost:5000/api/payments/create-order",
+        "https://safina-carpet-backend-web-h0o5.onrender.com/api/payments/create-order",
         {
           amount: subtotal,
           currency: "INR",
@@ -101,7 +101,7 @@ const CheckOut = () => {
 
             // Verify payment
             const verifyResponse = await axios.post(
-              "http://localhost:5000/api/payments/verify-payment",
+              "https://safina-carpet-backend-web-h0o5.onrender.com/api/payments/verify-payment",
               {
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,

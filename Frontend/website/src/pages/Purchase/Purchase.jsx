@@ -111,7 +111,7 @@ export const Purchase = () => {
       try {
         setIsLoading(true);
         const { data } = await axios.get(
-          `http://localhost:5000/api/rugs/${productId}`
+          `https://safina-carpet-backend-web-h0o5.onrender.com/api/rugs/${productId}`
         );
         const initialCountInStock = data.countInStock;
         setProduct({ ...data, initialCountInStock });

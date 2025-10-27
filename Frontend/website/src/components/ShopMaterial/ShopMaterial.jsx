@@ -20,7 +20,7 @@ const ShopMaterial = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/materials")
+    fetch("https://safina-carpet-backend-web-h0o5.onrender.com/api/materials")
       .then((res) => res.json())
       .then((data) => {
         if (data.length > 0) setMaterials(data);
