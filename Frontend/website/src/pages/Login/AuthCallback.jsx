@@ -1,12 +1,14 @@
 import React, { useEffect, useContext } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { AuthContext, api } from '../../context/AuthContext';
+import { AuthContext, api } from '../../context/AuthContext'; // Import your AuthContext and api
 import { Loader2 } from 'lucide-react';
 
 const AuthCallback = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext); // Get the login function from your context
+  
+  // We don't need the login function from AuthContext, just the 'api'
+  // because the backend has already authenticated the user.
 
   useEffect(() => {
     const token = searchParams.get('token');
@@ -17,14 +19,15 @@ const AuthCallback = () => {
         const config = { headers: { Authorization: `Bearer ${token}` } };
         const { data: user } = await api.get('/api/auth/me', config);
 
-        // 2. We have the token AND the user. Now we save them.
-        // We can reuse the logic from your AuthContext's login function
-        // by saving the data to localStorage and then reloading the app.
+        // 2. We have the token AND the user. Save them to localStorage.
+        // This is the most critical step.
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(user));
 
-        // 3. Redirect to the homepage. The AuthContext will
-        // automatically load the new data on the next page load.
+        // 3. Redirect to the homepage.
+        // We use window.location.href to force a full page reload,
+        // which makes the AuthContext and Navbar re-check localStorage
+        // and see that you are now logged in.
         window.location.href = '/'; 
 
       } catch (error) {
@@ -36,7 +39,7 @@ const AuthCallback = () => {
     if (token) {
       verifyTokenAndLogin(token);
     } else {
-      // No token found
+      // No token found in URL
       navigate('/login?error=No token provided');
     }
   }, [searchParams, navigate]);
@@ -54,3 +57,4 @@ const AuthCallback = () => {
 };
 
 export default AuthCallback;
+
