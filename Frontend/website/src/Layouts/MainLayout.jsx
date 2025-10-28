@@ -17,7 +17,7 @@ function MainLayout() {
       <Navbar onCartClick={() => setIsCartOpen(true)} />
 
       {/* 3. The 'pt-[50px]' is now applied to the main content */}
-      <main className="flex-grow pt-[50px]">
+      <main className="flex-grow">
         {/* 4. 'Outlet' tells React Router where to render all the nested pages */}
         <Outlet />
       </main>
